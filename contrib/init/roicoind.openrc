@@ -1,0 +1,88 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/roicoin/.roicoin" ]; then
+	ROICOIND_DEFAULT_DATADIR="/var/lib/roicoin/.roicoin"
+else
+	ROICOIND_DEFAULT_DATADIR="/var/lib/roicoind"
+fi
+
+ROICOIND_CONFIGFILE=${ROICOIND_CONFIGFILE:-/etc/roicoin/roicoin.conf}
+ROICOIND_PIDDIR=${ROICOIND_PIDDIR:-/var/run/roicoind}
+ROICOIND_PIDFILE=${ROICOIND_PIDFILE:-${ROICOIND_PIDDIR}/roicoind.pid}
+ROICOIND_DATADIR=${ROICOIND_DATADIR:-${ROICOIND_DEFAULT_DATADIR}}
+ROICOIND_USER=${ROICOIND_USER:-${ROICOIN_USER:-roicoin}}
+ROICOIND_GROUP=${ROICOIND_GROUP:-roicoin}
+ROICOIND_BIN=${ROICOIND_BIN:-/usr/bin/roicoind}
+ROICOIND_NICE=${ROICOIND_NICE:-${NICELEVEL:-0}}
+ROICOIND_OPTS="${ROICOIND_OPTS:-${ROICOIN_OPTS}}"
+
+name="ROIcoin Core Daemon"
+description="ROIcoin cryptocurrency P2P network daemon"
+
+command="/usr/bin/roicoind"
+command_args="-pid=\"${ROICOIND_PIDFILE}\" \
+		-conf=\"${ROICOIND_CONFIGFILE}\" \
+		-datadir=\"${ROICOIND_DATADIR}\" \
+		-daemon \
+		${ROICOIND_OPTS}"
+
+required_files="${ROICOIND_CONFIGFILE}"
+start_stop_daemon_args="-u ${ROICOIND_USER} \
+			-N ${ROICOIND_NICE} -w 2000"
+pidfile="${ROICOIND_PIDFILE}"
+retry=60
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${ROICOIND_USER}:${ROICOIND_GROUP}" \
+	"${ROICOIND_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${ROICOIND_USER}:${ROICOIND_GROUP}" \
+	"${ROICOIND_PIDDIR}"
+
+	checkpath -f \
+	-o ${ROICOIND_USER}:${ROICOIND_GROUP} \
+	-m 0660 \
+	${ROICOIND_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${ROICOIND_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run roicoind."
+		eerror "The setting must appear in ${ROICOIND_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"ROIcoin Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

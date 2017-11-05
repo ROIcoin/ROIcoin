@@ -1,0 +1,6 @@
+usr/local/bin/roicoin-qt usr/bin
+share/pixmaps/roicoin32.xpm usr/share/pixmaps
+share/pixmaps/roicoin16.xpm usr/share/pixmaps
+share/pixmaps/roicoin128.png usr/share/pixmaps
+debian/roicoin-qt.desktop usr/share/applications
+debian/roicoin-qt.protocol usr/share/kde4/services/

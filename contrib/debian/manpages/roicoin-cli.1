@@ -1,0 +1,48 @@
+.TH ROICOIN-CLI "1" "February 2015" "roicoin-cli 0.10" 
+.SH NAME
+roicoin-cli \- a remote procedure call client for ROIcoin Core. 
+.SH SYNOPSIS
+roicoin-cli [options] <command> [params] \- Send command to ROIcoin Core. 
+.TP
+roicoin-cli [options] help \- Asks ROIcoin Core for a list of supported commands.
+.SH DESCRIPTION
+This manual page documents the roicoin-cli program. roicoin-cli is an RPC client used to send commands to ROIcoin Core.
+
+.SH OPTIONS
+.TP
+\fB\-?\fR
+Show the help message.
+.TP
+\fB\-conf=\fR<file>
+Specify configuration file (default: roicoin.conf).
+.TP
+\fB\-datadir=\fR<dir>
+Specify data directory.
+.TP
+\fB\-testnet\fR
+Connect to a ROIcoin Core instance running in testnet mode.
+.TP
+\fB\-regtest\fR
+Connect to a ROIcoin Core instance running in regtest mode (see documentation for -regtest on roicoind).
+.TP
+\fB\-rpcuser=\fR<user>
+Username for JSON\-RPC connections.
+.TP
+\fB\-rpcpassword=\fR<pw>
+Password for JSON\-RPC connections.
+.TP
+\fB\-rpcport=\fR<port>
+Listen for JSON\-RPC connections on <port> (default: 3377 or testnet: 33770).
+.TP
+\fB\-rpcconnect=\fR<ip>
+Send commands to node running on <ip> (default: 127.0.0.1).
+.TP
+\fB\-rpcssl\fR=\fI1\fR
+Use OpenSSL (https) for JSON\-RPC connections (see the ROIcoin Wiki for SSL setup instructions).
+
+.SH "SEE ALSO"
+\fBroicoind\fP, \fBroicoin.conf\fP
+.SH AUTHOR
+This manual page was written by Ciemon Dunville <ciemon@gmail.com>. Permission is granted to copy, distribute and/or modify this document under the terms of the MIT License.
+
+The complete text of the MIT License can be found on the web at \fIhttp://opensource.org/licenses/MIT\fP.

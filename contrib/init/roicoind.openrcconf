@@ -1,0 +1,27 @@
+# /etc/conf.d/roicoind: config file for /etc/init.d/roicoind
+
+# Config file location
+#ROICOIND_CONFIGFILE="/etc/roicoin/roicoin.conf"
+
+# What directory to write pidfile to?  (created and owned by $ROICOIND_USER)
+#ROICOIND_PIDDIR="/var/run/roicoind"
+
+# What filename to give the pidfile
+#ROICOIND_PIDFILE="${ROICOIND_PIDDIR}/roicoind.pid"
+
+# Where to write roicoind data (be mindful that the blockchain is large)
+#ROICOIND_DATADIR="/var/lib/roicoind"
+
+# User and group to own roicoind process
+#ROICOIND_USER="roicoin"
+#ROICOIND_GROUP="roicoin"
+
+# Path to roicoind executable
+#ROICOIND_BIN="/usr/bin/roicoind"
+
+# Nice value to run roicoind under
+#ROICOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+ROICOIND_OPTS="-disablewallet"
+

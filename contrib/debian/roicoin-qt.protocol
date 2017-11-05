@@ -1,0 +1,11 @@
+[Protocol]
+exec=roicoin-qt '%u'
+protocol=roicoin
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false

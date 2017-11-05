@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: ROIcoin Core consensus library
+Description: Library for the ROIcoin consensus protocol.
+Version: 1.0.2
+Libs: -L${libdir} -lroicoinconsensus
+Cflags: -I${includedir}
+Requires.private: libcrypto

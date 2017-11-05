@@ -1,0 +1,4 @@
+qt/qt_libroicoinqt_a-qrc_roicoin_locale.o: qt/qrc_roicoin_locale.cpp \
+ /usr/include/stdc-predef.h
+
+/usr/include/stdc-predef.h:

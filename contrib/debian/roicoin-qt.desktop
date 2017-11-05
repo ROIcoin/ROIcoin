@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=ROIcoin
+Comment=ROIcoin P2P Cryptocurrency
+Comment[fr]=ROIcoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=ROIcoin, eşten eşe kriptografik sanal para birimi
+Exec=roicoin-qt %u
+Terminal=false
+Type=Application
+Icon=roicoin128
+MimeType=x-scheme-handler/roicoin;
+Categories=Office;Finance;
