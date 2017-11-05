@@ -67,7 +67,7 @@ public:
 
 	consensus.nPowAdjustmentInterval = 20 * 60;   	//Twenty minutes
 	consensus.nPowMidasBlockStart 	 = 0;		//Block Start MIDAS
-	consensus.nPowMidasTimeStart  	 = 1509853643;	//date +%s
+	consensus.nPowMidasTimeStart  	 = 1509857120;	//date +%s
 
 
 	consensus.hashGenesisBlock = genesis.GetHash();
