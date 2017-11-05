@@ -66,7 +66,7 @@ public:
 
 
 	consensus.nPowAdjustmentInterval = 20 * 60;   	//Twenty minutes
-	consensus.nPowMidasBlockStart 	 = 0;		//Block Start MIDAS
+	consensus.nPowMidasBlockStart 	 = 1;		//Block Start MIDAS
 	consensus.nPowMidasTimeStart  	 = 1509857120;	//date +%s
 
 
