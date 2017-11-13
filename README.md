@@ -56,7 +56,7 @@
 
 ## Term Deposits
 
-##  Time	    Start Coins	  End Coins	  Coin Gain	  Interest
+#   Time	    Start Coins	  End Coins	  Coin Gain	  Interest
 > - 1 week	  100	          102.277	    2.277	      2.28%
 > - 2 week	  100	          104.846	    4.846	      4.85%
 > - 1 month	  100	          111.796	    11.796	    11.80%
