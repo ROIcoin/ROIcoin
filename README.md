@@ -52,16 +52,18 @@
 > - 120 second blocks
 > - 120 ROI subsidy per block (no halving)
 > - Total of 1,000,000,000 ROI will be mined over a 30 year period (7,884,000 blocks) or 86,400 coins per day.
+> - Total coinbase potentially 4 Billion coins. Variables depending on behavior of coin owners, term depositing and period of time for locked funds.
 
 ## Term Deposits
 
-Term     | % of Total APR
--------- | ------------------- 
-1 month  | ~ 33.4% p.a.
-2 month  | ~ 66.8% p.a.
-3 month  | ~ 100% p.a.
-6 month  | ~ 200% p.a.
-1 year   | ~ 400 % p.a. 
+Time	    Start Coins	  End Coins	  Coin Gain	  Interest
+1 week	  100	          102.277	    2.277	      2.28%
+2 week	  100	          104.846	    4.846	      4.85%
+1 month	  100	          111.796	    11.796	    11.80%
+3 month	  100	          150.433	    50.433	    50.43%
+6 month	  100	          246.898	    146.898	    146.90%
+12 month	100	          733.923	    633.923	    633.92%
+
 
 
 
@@ -73,9 +75,9 @@ Term     | % of Total APR
 
 ## Proof of Work
 
-### 1GB AES Pattern Search PoW
+### 1GB AES Pattern Search PoW (HOdl)
 
-ASIC/GPU resistant. Pattern Search involves filling up RAM with pseudo-random data, and then conducting a search for the start location of an AES encrypted data pattern in that data. Pattern Search is an evolution of the ProtoShares Momentum PoW, first used in MemoryCoin and later modified for use in CryptoNote (Monero,Bytecoin), Ethash(Ethereum), and ROI Coin.
+ASIC/GPU resistant. Pattern Search involves filling up RAM with pseudo-random data, and then conducting a search for the start location of an AES encrypted data pattern in that data. Pattern Search is an evolution of the ProtoShares Momentum PoW, first used in MemoryCoin and later modified for use in CryptoNote (Monero,Bytecoin), Ethash(Ethereum), HOdl Coin, EuropeCoin and now ROI Coin.
 
 ## ROI Coin Ubuntu Compile Dependencies
 
