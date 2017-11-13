@@ -52,7 +52,7 @@
 > - 120 second blocks
 > - 120 ROI subsidy per block (no halving)
 > - Total of 1,000,000,000 ROI will be mined over a 30 year period (7,884,000 blocks) or 86,400 coins per day.
-> - Total coinbase potentially 4 Billion coins. Variables depending on behavior of coin owners, term depositing and period of time for locked funds.
+> - Total coinbase potentially 7 Billion +/- coins. Variables depend on behavior of coin owners, term depositing and period of time for locked funds.
 
 ## Term Deposits
 
