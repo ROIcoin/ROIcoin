@@ -42,7 +42,7 @@ void initRateTable(){
 
     //Interest rate on each block 1+(1/2^18)
     for(int i=1;i<ONEYEARPLUS1;i++){
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20);
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
     }
 }
@@ -68,7 +68,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         CBigNum am(bonusAmount);
         CBigNum fac(TWOYEARS); //-outputBlockHeight);
         CBigNum div(TWOYEARS);
-        CBigNum result=  ((am*fac*fac*fac*fac)/(div*div*div*div))/40;
+        CBigNum result=  ((am*fac*fac*fac*fac)/(div*div*div*div))/10;
         bonusAmount=result.getuint64();
     }
 
@@ -85,7 +85,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
             CBigNum am(interestAmount);
             CBigNum fac(TWOYEARS-term);
             CBigNum div(TWOYEARS);
-            CBigNum result= am - ((am*fac*fac*fac*fac*fac*fac)/(div*div*div*div*div*div));
+            CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div));
             termDepositAmount=result.getuint64();
         }
     }

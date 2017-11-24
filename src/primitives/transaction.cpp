@@ -7,8 +7,7 @@
 #include "amount.h"
 #include "pow.h"
 #include "arith_uint256.h"
-
-
+#include "block.h"
 
 #include "hash.h"
 #include "tinyformat.h"
@@ -16,6 +15,7 @@
 #include "math.h"
 
 #include "test/bignum.h"
+
 
 std::string COutPoint::ToString() const
 {
@@ -191,9 +191,9 @@ std::string initRateTable(){
     bonusTable[0]=1;
     bonusTable[0]=bonusTable[0]<<52;
 
-    //Interest rate on each block 1+(1/2^22)
+    //Interest rate on each block 1+(1/2^18)
     for(int i=1;i<ONEYEARPLUS1;i++){
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //10.8% APR
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
     }
@@ -205,31 +205,32 @@ std::string initRateTable(){
     return str;
 }
 
+CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock)
 
+{
 
-
-CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock){
-
-    //These conditions generally should not occur
-    if(maturationBlock >= 500000000 || outputBlockHeight<0 || valuationHeight<0 || valuationHeight<outputBlockHeight){
+    	//These conditions generally should not occur
+    	if(maturationBlock >= 500000000 || outputBlockHeight<0 || valuationHeight<0 || 	valuationHeight<outputBlockHeight)
+	{
         return nValue;
-    }
+	}
 
-    //Regular deposits can have a maximum of 30 days interest
-    int blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
+	//Regular deposits can have a maximum of 30 days interest
+    	int blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
 
-    //Term deposits may have up to 1 year of interest
-    if(maturationBlock>0){
+    	//Term deposits may have up to 1 year of interest
+    	if(maturationBlock>0)
+	{
         blocks=std::min(ONEYEAR,valuationHeight-outputBlockHeight);
+	}
 
-
-    }
 
     CAmount standardInterest=getRateForAmount(blocks, nValue);
 
     CAmount bonusAmount=0;
-    //Reward balances more in early stages
-    if(outputBlockHeight<TWOYEARS){
+    
+    if(outputBlockHeight<TWOYEARS && valuationHeight < FORK1HEIGHT)
+	{
         //Calculate bonus rate based on outputBlockHeight
         bonusAmount=getBonusForAmount(blocks, nValue);
         CBigNum am(bonusAmount);
@@ -237,7 +238,20 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         CBigNum div(TWOYEARS);
         CBigNum result= am - ((am*fac*fac*fac*fac)/(div*div*div*div));
         bonusAmount=result.getuint64();
-    }
+	}
+
+    else if(outputBlockHeight<TWOYEARS && valuationHeight >= FORK1HEIGHT)
+	{
+	LogPrintf("Fork: Principle:%li outputBlockHeight:%d valuationHeight:%d maturationBlock:%d", nValue, outputBlockHeight, valuationHeight, maturationBlock);
+        //Calculate bonus rate based on outputBlockHeight
+        bonusAmount=getBonusForAmount(blocks, nValue);
+        CBigNum am(bonusAmount);
+        CBigNum fac(TWOYEARS);
+        CBigNum div(TWOYEARS);
+        CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/20; //605% One year Term Deposit Rate
+        bonusAmount=result.getuint64();
+	LogPrintf("Fork: BonusAmount: %li", bonusAmount);
+       	}
 
 
     CAmount interestAmount=standardInterest+bonusAmount;
@@ -245,18 +259,31 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     CAmount termDepositAmount=0;
 
     //Reward term deposits more
-    if(maturationBlock>0){
+    if(maturationBlock>0)
+	{
         int term=std::min(ONEYEAR,maturationBlock-outputBlockHeight);
 
-        //No advantage to term deposits of less than 2 days
-        if(term>720*2){
+    //No advantage to term deposits of less than 2 days
+    if(term>720*2  && valuationHeight < FORK1HEIGHT)
+	{
+        CBigNum am(interestAmount);
+        CBigNum fac(TWOYEARS-term);
+        CBigNum div(TWOYEARS);
+        CBigNum result= am - ((am*fac*fac*fac*fac*fac*fac)/(div*div*div*div*div*div));
+        termDepositAmount=result.getuint64();
+	}    
+
+
+    else if(term>720*2  && valuationHeight >= FORK1HEIGHT)
+	{
             CBigNum am(interestAmount);
             CBigNum fac(TWOYEARS-term);
             CBigNum div(TWOYEARS);
-            CBigNum result= am - ((am*fac*fac*fac*fac*fac*fac)/(div*div*div*div*div*div));
+            CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div));
             termDepositAmount=result.getuint64();
         }
     }
 
     return nValue+interestAmount+termDepositAmount;
-}
+  }
+
