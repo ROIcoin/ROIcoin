@@ -1,5 +1,7 @@
 # **ROI Coin is _"Return on Investment"_** 
 
+ROIcoin [(https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.1.0.0&x2=0)]
+
 This is the development branch, we will keep in here all the code for the next wallet.
 
 <img src="https://roi-coin.com/ow_userfiles/themes/theme_image_17.png?w1720=&h=521" width="1720">
