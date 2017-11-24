@@ -13,6 +13,7 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 #include "math.h"
+#include "util.h"
 
 #include "test/bignum.h"
 
