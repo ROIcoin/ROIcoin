@@ -200,17 +200,17 @@ std::string initRateTable()
     
 if(valuationHeight < FORK1HEIGHT)
     {
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  // 10.6% 
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
     }
 else if(valuationHeight > FORK1HEIGHT)
     {
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20);
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //605% Term Deposit 1 Year
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
     }
-
+}
     for(int i=0;i<ONEYEAR;i++)
     {
         str += strprintf("rate: %d %d %d\n",i,getRateForAmount(i,COIN*100),getBonusForAmount(i,COIN*100));
