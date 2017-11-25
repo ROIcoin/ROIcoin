@@ -18,6 +18,7 @@
 #include "test/bignum.h"
 
 int nHeight;
+	LogPrintf("Fork: nHeight:%d", nHeight);
 
 std::string COutPoint::ToString() const
 {
@@ -244,7 +245,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
 
     CAmount bonusAmount=0;
     
-    if(outputBlockHeight<TWOYEARS && valuationHeight < FORK1HEIGHT)
+    if(outputBlockHeight<TWOYEARS && nHeight < FORK1HEIGHT)
 	{
         //Calculate bonus rate based on outputBlockHeight
         bonusAmount=getBonusForAmount(blocks, nValue);
@@ -255,7 +256,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         bonusAmount=result.getuint64();
 	}
 
-    else if(outputBlockHeight<TWOYEARS && valuationHeight >= FORK1HEIGHT)
+    else if(outputBlockHeight<TWOYEARS && nHeight >= FORK1HEIGHT)
 	{
 	LogPrintf("Fork: Principle:%li outputBlockHeight:%d valuationHeight:%d maturationBlock:%d", nValue, outputBlockHeight, valuationHeight, maturationBlock);
         //Calculate bonus rate based on outputBlockHeight
@@ -279,7 +280,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         int term=std::min(ONEYEAR,maturationBlock-outputBlockHeight);
 
     //No advantage to term deposits of less than 2 days
-    if(term>720*2  && valuationHeight < FORK1HEIGHT)
+    if(term>720*2  && nHeight < FORK1HEIGHT)
 	{
         CBigNum am(interestAmount);
         CBigNum fac(TWOYEARS-term);
@@ -289,7 +290,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
 	}    
 
 
-    else if(term>720*2  && valuationHeight >= FORK1HEIGHT)
+    else if(term>720*2  && nHeight >= FORK1HEIGHT)
 	{
             CBigNum am(interestAmount);
             CBigNum fac(TWOYEARS-term);
