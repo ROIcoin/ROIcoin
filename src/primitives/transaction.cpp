@@ -202,7 +202,7 @@ std::string initRateTable(){
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
     }
-	 
+ 	 
  else if(nHeight > FORK1HEIGHT)
  {
     for(int i=1;i<ONEYEARPLUS1;i++)
@@ -217,7 +217,11 @@ std::string initRateTable(){
     }
 
     return str;
-}
+   }
+ 
+ }
+	 
+	 
 
 CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock)
 
