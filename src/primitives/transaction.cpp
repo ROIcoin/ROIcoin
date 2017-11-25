@@ -194,22 +194,23 @@ std::string initRateTable()
     bonusTable[0]=1;
     bonusTable[0]=bonusTable[0]<<52;
 
-    //Interest rate on each block 1+(1/2^22)
-    for(int i=1;i<ONEYEARPLUS1;i++)
-    
 if(chainActive.Height() < FORK1HEIGHT)
     {
+	for(int i=1;i<ONEYEARPLUS1;i++){
         rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
-	LogPrintf("Fork: chainActive.Height: %d, FORK1HEIGHT: %d", chainActive.Height(), FORK1HEIGHT); 
+	LogPrintf("Fork: chainActive.Height: %d, FORK1HEIGHT: %d", chainActive.Height(), FORK1HEIGHT);
+	}
     }
 else if(chainActive.Height() >= FORK1HEIGHT)
     {
+	for(int i=1;i<ONEYEARPLUS1;i++){
         rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //10% APR
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
-	LogPrintf("Fork: chainActive.Height: %d, FORK1HEIGHT: %d", chainActive.Height(), FORK1HEIGHT); 
+	LogPrintf("Fork: chainActive.Height: %d, FORK1HEIGHT: %d", chainActive.Height(), FORK1HEIGHT);
+	}
     }
 
     for(int i=0;i<ONEYEAR;i++)
