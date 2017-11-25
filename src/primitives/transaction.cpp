@@ -186,8 +186,6 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
 }
 
 std::string initRateTable()
-	
-CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock)	
 
 {
     std::string str;
@@ -222,7 +220,7 @@ else if(valuationHeight > FORK1HEIGHT)
  
  }
 	 
-//CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock) Moved to ln 190
+CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock)
 
 {
 
