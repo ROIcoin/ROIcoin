@@ -194,8 +194,6 @@ std::string initRateTable()
     bonusTable[0]=1;
     bonusTable[0]=bonusTable[0]<<52;
 
-    //Interest rate on each block 1+(1/2^18)
-
     //Interest rate on each block 1+(1/2^22)
     for(int i=1;i<ONEYEARPLUS1;i++)
     
@@ -218,7 +216,6 @@ else if(nHeight > FORK1HEIGHT)
     }
 
     return str;
-   }
  
  }
 	 
