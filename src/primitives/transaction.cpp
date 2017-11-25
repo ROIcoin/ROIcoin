@@ -185,7 +185,8 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
 
 }
 
-std::string initRateTable(){
+std::string initRateTable()
+{
     std::string str;
 
     rateTable[0]=1;
@@ -194,25 +195,25 @@ std::string initRateTable(){
     bonusTable[0]=bonusTable[0]<<52;
 
     //Interest rate on each block 1+(1/2^18)
- if(nHeight < FORK1HEIGHT)
- {
+
+    //Interest rate on each block 1+(1/2^22)
     for(int i=1;i<ONEYEARPLUS1;i++)
+    
+if(nHeight < FORK1HEIGHT)
     {
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18); //Old APR Rate pre-fork
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
     }
- 	 
- else if(nHeight > FORK1HEIGHT)
- {
-    for(int i=1;i<ONEYEARPLUS1;i++)
+else if(nHeight > FORK1HEIGHT)
     {
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //10.8% APR
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20);
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
     }
 
-    for(int i=0;i<ONEYEAR;i++){
+    for(int i=0;i<ONEYEAR;i++)
+    {
         str += strprintf("rate: %d %d %d\n",i,getRateForAmount(i,COIN*100),getBonusForAmount(i,COIN*100));
     }
 
