@@ -258,7 +258,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
 
     else if(outputBlockHeight<TWOYEARS && chainActive.Height() >= FORK1HEIGHT)
 	{
-	LogPrintf("Fork: Principle:%li outputBlockHeight:%d valuationHeight:%d maturationBlock:%d", nValue, outputBlockHeight, valuationHeight, maturationBlock);
+	//LogPrintf("Fork: Principle:%li outputBlockHeight:%d valuationHeight:%d maturationBlock:%d", nValue, outputBlockHeight, valuationHeight, maturationBlock);
         //Calculate bonus rate based on outputBlockHeight
         bonusAmount=getBonusForAmount(blocks, nValue);
         CBigNum am(bonusAmount);
