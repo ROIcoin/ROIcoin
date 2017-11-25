@@ -198,19 +198,19 @@ std::string initRateTable()
     //Interest rate on each block 1+(1/2^22)
     for(int i=1;i<ONEYEARPLUS1;i++)
     
-if(valuationHeight < FORK1HEIGHT)
+if(nHeight < FORK1HEIGHT)
     {
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  // 10.6% 
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
     }
-else if(valuationHeight > FORK1HEIGHT)
+else if(nHeight > FORK1HEIGHT)
     {
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //605% Term Deposit 1 Year
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //10% APR
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
     }
-}
+
     for(int i=0;i<ONEYEAR;i++)
     {
         str += strprintf("rate: %d %d %d\n",i,getRateForAmount(i,COIN*100),getBonusForAmount(i,COIN*100));
