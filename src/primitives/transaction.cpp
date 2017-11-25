@@ -204,7 +204,7 @@ if(chainActive.Height() < FORK1HEIGHT)
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
 	LogPrintf("Fork: chainActive.Height: %d, FORK1HEIGHT: %d", chainActive.Height(), FORK1HEIGHT); 
     }
-else if(chainActive.Height() > FORK1HEIGHT)
+else if(chainActive.Height() >= FORK1HEIGHT)
     {
         rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //10% APR
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
