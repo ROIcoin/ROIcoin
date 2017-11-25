@@ -18,7 +18,6 @@
 #include "test/bignum.h"
 
 int nHeight;
-	LogPrintf("Fork: nHeight:%d", nHeight);
 
 std::string COutPoint::ToString() const
 {
