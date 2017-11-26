@@ -18,6 +18,9 @@
 
 #include "test/bignum.h"
 
+
+
+
 std::string COutPoint::ToString() const
 {
     return strprintf("COutPoint(%s, %u)", hash.ToString().substr(0,10), n);
@@ -155,6 +158,8 @@ CAmount CTxOut::GetValueWithInterest(int outputBlockHeight, int valuationHeight)
 
     return GetInterest(nValue, outputBlockHeight, valuationHeight, scriptPubKey.GetTermDepositReleaseBlock());
     //return nValue;
+
+
 }
 
 static int THIRTYDAYS=720*30;
@@ -186,6 +191,7 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
 
 std::string initRateTable()
 
+
 {
     std::string str;
 
@@ -194,22 +200,23 @@ std::string initRateTable()
     bonusTable[0]=1;
     bonusTable[0]=bonusTable[0]<<52;
 
-if(chainActive.Height() < FORK1HEIGHT)
+    for(int i=1;i<ONEYEARPLUS1;i++)
     {
-	for(int i=1;i<ONEYEARPLUS1;i++){
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
-        bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
-        str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
-	LogPrintf("Fork: chainActive.Height: %d, FORK1HEIGHT: %d", chainActive.Height(), FORK1HEIGHT);
-	}
-    }
-else if(chainActive.Height() >= FORK1HEIGHT)
-    {
-	for(int i=1;i<ONEYEARPLUS1;i++){
+
+        if(nHeight < FORK1HEIGHT)
+        {
+         rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
+         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
+         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
+         LogPrintf("Fork: nHeight: %d, FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
+         }
+  
+        else if(nHeight >= FORK1HEIGHT)
+        {
         rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //10% APR
         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
-	LogPrintf("Fork: chainActive.Height: %d, FORK1HEIGHT: %d", chainActive.Height(), FORK1HEIGHT);
+	LogPrintf("Fork: nHeight: %d, FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
 	}
     }
 
@@ -245,8 +252,8 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     CAmount standardInterest=getRateForAmount(blocks, nValue);
 
     CAmount bonusAmount=0;
-    
-    if(outputBlockHeight<TWOYEARS && chainActive.Height() < FORK1HEIGHT)
+
+    if(outputBlockHeight<TWOYEARS && nHeight < FORK1HEIGHT)
 	{
         //Calculate bonus rate based on outputBlockHeight
         bonusAmount=getBonusForAmount(blocks, nValue);
@@ -257,7 +264,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         bonusAmount=result.getuint64();
 	}
 
-    else if(outputBlockHeight<TWOYEARS && chainActive.Height() >= FORK1HEIGHT)
+    else if(outputBlockHeight<TWOYEARS && nHeight >= FORK1HEIGHT)
 	{
 	//LogPrintf("Fork: Principle:%li outputBlockHeight:%d valuationHeight:%d maturationBlock:%d", nValue, outputBlockHeight, valuationHeight, maturationBlock);
         //Calculate bonus rate based on outputBlockHeight
@@ -281,7 +288,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         int term=std::min(ONEYEAR,maturationBlock-outputBlockHeight);
 
     //No advantage to term deposits of less than 2 days
-    if(term>720*2  && chainActive.Height() < FORK1HEIGHT)
+    if(term>720*2  && nHeight < FORK1HEIGHT)
 	{
         CBigNum am(interestAmount);
         CBigNum fac(TWOYEARS-term);
@@ -291,7 +298,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
 	}    
 
 
-    else if(term>720*2  && chainActive.Height() >= FORK1HEIGHT)
+    else if(term>720*2  && nHeight >= FORK1HEIGHT)
 	{
             CBigNum am(interestAmount);
             CBigNum fac(TWOYEARS-term);
@@ -303,4 +310,3 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
 
     return nValue+interestAmount+termDepositAmount;
   }
-
