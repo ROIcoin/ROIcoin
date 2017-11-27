@@ -266,7 +266,7 @@ int nHeight;
         CBigNum result= am - ((am*fac*fac*fac*fac)/(div*div*div*div));
         bonusAmount=result.getuint64();
 	LogPrintf("Pre_Fork: BonusAmount: %li", bonusAmount);
-        LogPrintf("Calc_Fork: nHeight: %d/n FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
+        LogPrintf("Calc_Bonus_preFork: nHeight: %d/n FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
 	}
 
     else if(outputBlockHeight<TWOYEARS && nHeight >= FORK1HEIGHT)
@@ -280,7 +280,7 @@ int nHeight;
         CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/20; //605% One year Term Deposit Rate
         bonusAmount=result.getuint64();
 	LogPrintf("Post_Fork: BonusAmount: %li", bonusAmount);
-        LogPrintf("Calc_Fork: nHeight: %d, FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
+        LogPrintf("Calc_Bonus_postFork: nHeight: %d, FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
        	}
 
 
@@ -302,7 +302,7 @@ int nHeight;
         CBigNum result= am - ((am*fac*fac*fac*fac*fac*fac)/(div*div*div*div*div*div));
         termDepositAmount=result.getuint64();
 	LogPrintf("PreFork: interestAmount: %li", interestAmount);
-        LogPrintf("Calc_Fork: nHeight: %d, FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
+        LogPrintf("Calc_int_preFork: nHeight: %d, FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
 	}    
 
 
@@ -314,7 +314,7 @@ int nHeight;
         CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div));
         termDepositAmount=result.getuint64();
 	LogPrintf("PostFork: interestAmount: %li", interestAmount);
-        LogPrintf("Calc_Fork: nHeight: %d, FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
+        LogPrintf("Calc_int_postFork: nHeight: %d, FORK1HEIGHT: %d", nHeight, FORK1HEIGHT);
         }
     }
 
