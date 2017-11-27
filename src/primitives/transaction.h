@@ -11,7 +11,6 @@
 #include "serialize.h"
 #include "uint256.h"
 
-
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
 {
@@ -238,6 +237,7 @@ public:
     // Compute modified tx size for priority calculation (optionally given tx size)
     unsigned int CalculateModifiedSize(unsigned int nTxSize=0) const;
 
+
     bool IsCoinBase() const
     {
         return (vin.size() == 1 && vin[0].prevout.IsNull());
@@ -286,6 +286,7 @@ struct CMutableTransaction
 
 CAmount getRateForAmount(int periods, CAmount theAmount);
 std::string initRateTable();
+int setNumBlock(int currentHeight);
 CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock);
 
 #endif // ROICOIN_PRIMITIVES_TRANSACTION_H

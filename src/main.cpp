@@ -2161,6 +2161,15 @@ void static UpdateTip(CBlockIndex *pindexNew) {
 
     cvBlockChange.notify_all();
 
+    // Tell transaction we expanded block chain
+    setNumBlock(chainActive.Height());
+    // One time call to initRate() if Fork1Height has been achieved
+    // To use the new rates.
+    if( chainActive.Height() == FORK1HEIGHT ) 
+    {
+	initRateTable();
+    }
+
     // Check the version of the last 100 blocks to see if we need to upgrade:
     static bool fWarned = false;
     if (!IsInitialBlockDownload() && !fWarned)
