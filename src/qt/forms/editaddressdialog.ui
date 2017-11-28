@@ -39,9 +39,9 @@
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>&amp;Address</string>
+        <string>ROI Address</string>
        </property>
-       <property name="buddy">
+       <property name="DisasterFaster">
         <cstring>addressEdit</cstring>
        </property>
       </widget>
