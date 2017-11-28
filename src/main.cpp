@@ -2161,13 +2161,7 @@ void static UpdateTip(CBlockIndex *pindexNew) {
 
     // Tell transaction we expanded block chain
     setNumBlock(chainActive.Height());
-    // One time call to initRate() if Fork1Height has been achieved
-    // To use the new rates.
-    if( chainActive.Height() == FORK1HEIGHT ) 
-    {
-	initRateTable();
-    }
-
+    // Tell wallet we forked, note this should not change the maturation value of already locked coins
     cvBlockChange.notify_all();
 
     // Check the version of the last 100 blocks to see if we need to upgrade:

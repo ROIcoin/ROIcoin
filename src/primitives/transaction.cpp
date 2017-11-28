@@ -195,12 +195,20 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
 
 }
 
+CAmount getPostRateForAmount(int periods, CAmount theAmount){
+
+    double result;
+    double multiplier = 0.0000005975;
+    for ( int i = 1; i < periods; i++)
+    {
+	result = theAmount * pow(1.0 + multiplier, i);
+    }
+    return CAmount(result)-theAmount;
+}
+
 std::string initRateTable()
 {
-
     std::string str;
- 
-
     rateTable[0]=1;
     rateTable[0]=rateTable[0]<<60;
     bonusTable[0]=1;
@@ -211,18 +219,14 @@ std::string initRateTable()
 
         if(chainHeight < FORK1HEIGHT)
         {
-         rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
-         bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
-         str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
-         LogPrintf("Pre_Rate_Fork: chainHeight: %d, FORK1HEIGHT: %d\n", chainHeight, FORK1HEIGHT);
+           rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
+           bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
+           str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
          }
-  
-        else if(chainHeight >= FORK1HEIGHT)
+        else
         {
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //10% APR
-        bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
-        str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
-	LogPrintf("Post_Rate_Fork: chainHeight: %d, FORK1HEIGHT: %d\n", chainHeight, FORK1HEIGHT);
+           bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
+           str += strprintf("%d %x\n",i, bonusTable[i]);
 	}
     }
 
@@ -254,12 +258,20 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         blocks=std::min(ONEYEAR,valuationHeight-outputBlockHeight);
     }
 
-    CAmount standardInterest=getRateForAmount(blocks, nValue);
+    CAmount standardInterest;
+    if (chainHeight < FORK1HEIGHT) 
+    {
+        standardInterest=getRateForAmount(blocks, nValue);
+    }
+    else
+    {
+        standardInterest=getPostRateForAmount(blocks, nValue);
+    }
 
     CAmount bonusAmount=0;
 
     if(outputBlockHeight<TWOYEARS && chainHeight < FORK1HEIGHT)
-	{
+    {
         //Calculate bonus rate based on outputBlockHeight
         bonusAmount=getBonusForAmount(blocks, nValue);
         CBigNum am(bonusAmount);
@@ -267,22 +279,18 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         CBigNum div(TWOYEARS);
         CBigNum result= am - ((am*fac*fac*fac*fac)/(div*div*div*div));
         bonusAmount=result.getuint64();
-	LogPrintf("Pre_Fork: Principal: %d BonusAmount: %li\n", nValue,bonusAmount);
-        LogPrintf("Calc_Bonus_preFork: chainHeight: %d: FORK1HEIGHT: %d :\n", chainHeight, FORK1HEIGHT);
-	}
-
+	LogPrintf("Pre_Fork: chainHeight: %d lockHeight: %d Principal: %d BonusAmount: %li\n", chainHeight,outputBlockHeight,nValue,bonusAmount);
+    }
     else if(outputBlockHeight<TWOYEARS && chainHeight >= FORK1HEIGHT)
     {
-	//LogPrintf("Fork: Principle:%li outputBlockHeight:%d valuationHeight:%d maturationBlock:%d", nValue, outputBlockHeight, valuationHeight, maturationBlock);
         //Calculate bonus rate based on outputBlockHeight
         bonusAmount=getBonusForAmount(blocks, nValue);
         CBigNum am(bonusAmount);
         CBigNum fac(TWOYEARS);
         CBigNum div(TWOYEARS);
-        CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/20; //605% One year Term Deposit Rate
+        CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/10; //605% One year Term Deposit Rate
         bonusAmount=result.getuint64();
-	LogPrintf("Post_Fork: Principal: %d  BonusAmount: %li\n", nValue, bonusAmount);
-        LogPrintf("Calc_Bonus_postFork: chainHeight: %d :, FORK1HEIGHT: %d :\n", chainHeight, FORK1HEIGHT);
+	LogPrintf("Post_Fork: chainHeight: %d lockHeight: %d Principal: %d  BonusAmount: %li\n", chainHeight, outputBlockHeight, nValue, bonusAmount);
      }
 
     CAmount interestAmount=standardInterest+bonusAmount;
@@ -293,26 +301,27 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     {
         int term=std::min(ONEYEAR,maturationBlock-outputBlockHeight);
 
-        //No advantage to term deposits of less than 2 days
-        if(term>720*2 && chainHeight < FORK1HEIGHT)
+        if(term>720*2)
 	{
-           CBigNum am(interestAmount);
-           CBigNum fac(TWOYEARS-term);
-           CBigNum div(TWOYEARS);
-           CBigNum result= am - ((am*fac*fac*fac*fac*fac*fac)/(div*div*div*div*div*div));
-           termDepositAmount=result.getuint64();
-	   LogPrintf("PreFork: principal: %d termDepositAmount: %li\n", nValue, termDepositAmount);
-           LogPrintf("Calc_int_preFork: chainHeight: %d :, FORK1HEIGHT: %d :\n", chainHeight, FORK1HEIGHT);
-	}    
-        else if(term>720*2 && chainHeight >= FORK1HEIGHT)
-	{
-          CBigNum am(interestAmount);
-          CBigNum fac(TWOYEARS-term);
-          CBigNum div(TWOYEARS);
-          CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div));
-          termDepositAmount=result.getuint64();
-	  LogPrintf("PostFork: principal: %d termDepositAmount: %li\n", nValue, termDepositAmount);
-          LogPrintf("Calc_int_postFork: chainHeight: %d :, FORK1HEIGHT: %d :\n", chainHeight, FORK1HEIGHT);
+          // Already locked coins benefit from the old pre-fork rate.
+          if(chainHeight < FORK1HEIGHT || outputBlockHeight < FORK1HEIGHT)
+	  {
+             CBigNum am(interestAmount);
+             CBigNum fac(TWOYEARS-term);
+             CBigNum div(TWOYEARS);
+             CBigNum result= am - ((am*fac*fac*fac*fac*fac*fac)/(div*div*div*div*div*div));
+             termDepositAmount=result.getuint64();
+	     LogPrintf("Pre_Fork: chainHeight: %d lockHeight: %d principal: %d termDepositAmount: %li\n", chainHeight, outputBlockHeight, nValue, termDepositAmount);
+	  }    
+          else
+	  {
+             CBigNum am(interestAmount);
+             CBigNum fac(TWOYEARS-term);
+             CBigNum div(TWOYEARS);
+             CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div));
+             termDepositAmount=result.getuint64();
+	     LogPrintf("Post_Fork: chainHeight: %d lockHeight: %d principal: %d termDepositAmount: %li\n", chainHeight, outputBlockHeight, nValue, termDepositAmount);
+          }
         }
     }
     return nValue+interestAmount+termDepositAmount;
