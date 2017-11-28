@@ -41,7 +41,7 @@
        <property name="text">
         <string>ROI Address</string>
        </property>
-       <property name="DisasterFaster">
+       <property name="buddy">
         <cstring>addressEdit</cstring>
        </property>
       </widget>
