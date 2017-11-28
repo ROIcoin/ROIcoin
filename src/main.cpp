@@ -2159,8 +2159,6 @@ void static UpdateTip(CBlockIndex *pindexNew) {
       Checkpoints::GuessVerificationProgress(chainParams.Checkpoints(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1<<20)), pcoinsTip->GetCacheSize());
     LogPrintf("Block:%s\n",chainActive.Tip()->ToString());
 
-    cvBlockChange.notify_all();
-
     // Tell transaction we expanded block chain
     setNumBlock(chainActive.Height());
     // One time call to initRate() if Fork1Height has been achieved
@@ -2169,6 +2167,8 @@ void static UpdateTip(CBlockIndex *pindexNew) {
     {
 	initRateTable();
     }
+
+    cvBlockChange.notify_all();
 
     // Check the version of the last 100 blocks to see if we need to upgrade:
     static bool fWarned = false;

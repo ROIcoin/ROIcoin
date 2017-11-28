@@ -12,6 +12,7 @@ static int ONEYEAR=720*365;
 static int ONEYEARPLUS1=ONEYEAR+1;
 static int TWOYEARS=ONEYEAR*2;
 
+static uint64_t postRateTable[720*365+1];
 static uint64_t rateTable[720*365+1];
 static uint64_t bonusTable[720*365+1];
 
@@ -24,6 +25,7 @@ CAmount getBonusForAmount(int periods, CAmount theAmount){
     CBigNum rate0256(bonusTable[0]);
     CBigNum result=(amount256*rate256)/rate0256;
     return result.getuint64()-theAmount;
+
 }
 
 CAmount getRateForAmount(int periods, CAmount theAmount){
@@ -36,25 +38,37 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
 
 }
 
+CAmount getPostRateForAmount(int periods, CAmount theAmount){
+
+    CBigNum amount256(theAmount);
+    CBigNum rate256(postRateTable[periods]);
+    CBigNum rate0256(postRateTable[0]);
+    CBigNum result=(amount256*rate256)/rate0256;
+    return  result.getuint64()-theAmount;
+}
+
+
 void initRateTable(){
 
     rateTable[0]=1;
     rateTable[0]=rateTable[0]<<60;
     bonusTable[0]=1;
     bonusTable[0]=bonusTable[0]<<52;
+    postRateTable[0]=1;
+    postRateTable[0]=postRateTable[0]<<60;
 
     for(int i=1;i<ONEYEARPLUS1;i++)
     {
 
         if(chainHeight < FORK1HEIGHT)
         {
-           rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
-           bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
+             rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
+             bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         }
         else if(chainHeight >= FORK1HEIGHT)
         {
-          rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>20); //10% APR
-          bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
+            postRateTable[i]=postRateTable[i-1]+(postRateTable[i-1]>>20); //10% APR
+            bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
 	}
     }
 }
@@ -67,7 +81,16 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     }
 
     int blocks=valuationHeight-outputBlockHeight;
-    CAmount standardInterest=getRateForAmount(blocks, nValue);
+    CAmount standardInterest;
+
+    if (chainHeight < FORK1HEIGHT) 
+    {
+        standardInterest=getRateForAmount(blocks, nValue);
+    }
+    else
+    {
+        standardInterest=getPostRateForAmount(blocks, nValue);
+    }
 
     CAmount bonusAmount=0;
 
@@ -142,10 +165,9 @@ int main(int argc, char* argv[])
 
   CAmount bonus = getBonusForAmount(termblocks, principal);
   CAmount rate  = getRateForAmount(termblocks , principal);
-  //EXAMPLE GetInterest(principal, i, i+(ONEDAY*364), i+(ONEDAY*364))-principal)*100.0)
-
+  CAmount postrate = getPostRateForAmount(termblocks, principal);
   CAmount interest = GetInterest(principal, blockheight , (blockheight+termblocks), (blockheight+termblocks));
 
-  printf("result for %li RIO at %li term_blocks BONUS:%li RATE:%li INTEREST:%li \n",principal,termblocks,bonus,rate,interest);
+  printf("result for %li RIO at %li term_blocks BONUS:%li RATE:%li POSTRATE:%li INTEREST:%li \n",principal,termblocks,bonus,rate,postrate,interest);
 }
 
