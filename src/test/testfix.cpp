@@ -12,7 +12,6 @@ static int ONEYEAR=720*365;
 static int ONEYEARPLUS1=ONEYEAR+1;
 static int TWOYEARS=ONEYEAR*2;
 
-static uint64_t postRateTable[720*365+1];
 static uint64_t rateTable[720*365+1];
 static uint64_t bonusTable[720*365+1];
 
@@ -25,7 +24,6 @@ CAmount getBonusForAmount(int periods, CAmount theAmount){
     CBigNum rate0256(bonusTable[0]);
     CBigNum result=(amount256*rate256)/rate0256;
     return result.getuint64()-theAmount;
-
 }
 
 CAmount getRateForAmount(int periods, CAmount theAmount){
@@ -35,16 +33,19 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
     CBigNum rate0256(rateTable[0]);
     CBigNum result=(amount256*rate256)/rate0256;
     return  result.getuint64()-theAmount;
-
 }
 
 CAmount getPostRateForAmount(int periods, CAmount theAmount){
 
-    CBigNum amount256(theAmount);
-    CBigNum rate256(postRateTable[periods]);
-    CBigNum rate0256(postRateTable[0]);
-    CBigNum result=(amount256*rate256)/rate0256;
-    return  result.getuint64()-theAmount;
+    double result;
+    double multiplier = 0.0000005975;
+    for ( int i = 1; i < periods; i++)
+    {
+	result = theAmount * pow(1.0 + multiplier, i);
+    }
+    printf("getPostRateForAmount = %.12f\n",result-theAmount);
+
+    return CAmount(result)-theAmount;
 }
 
 
@@ -54,8 +55,6 @@ void initRateTable(){
     rateTable[0]=rateTable[0]<<60;
     bonusTable[0]=1;
     bonusTable[0]=bonusTable[0]<<52;
-    postRateTable[0]=1;
-    postRateTable[0]=postRateTable[0]<<60;
 
     for(int i=1;i<ONEYEARPLUS1;i++)
     {
@@ -65,9 +64,8 @@ void initRateTable(){
              rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
              bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
         }
-        else if(chainHeight >= FORK1HEIGHT)
+        else
         {
-            postRateTable[i]=postRateTable[i-1]+(postRateTable[i-1]>>20); //10% APR
             bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
 	}
     }
@@ -113,7 +111,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         CBigNum am(bonusAmount);
         CBigNum fac(TWOYEARS);
         CBigNum div(TWOYEARS);
-        CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/20; //605% One year Term Deposit Rate
+        CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/10; //605% One year Term Deposit Rate
         bonusAmount=result.getuint64();
 	printf("Post_Fork: Principal: %li  BonusAmount: %li\n", nValue, bonusAmount);
     }
@@ -141,7 +139,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
           CBigNum am(interestAmount);
           CBigNum fac(TWOYEARS-term);
           CBigNum div(TWOYEARS);
-          CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div));
+          CBigNum result= (((am*fac*fac*fac*fac)/(div*div*div*div)));
           termDepositAmount=result.getuint64();
 	  printf("Post_Fork: principal: %li termDepositAmount: %li\n", nValue, termDepositAmount);
         }
@@ -157,11 +155,12 @@ int main(int argc, char* argv[])
      exit(1);
   }
 
-  initRateTable();
   CAmount principal= atoi(argv[1]);
   CAmount termblocks = atoi(argv[2]);
   CAmount blockheight = atoi(argv[3]);
+
   chainHeight = blockheight;
+  initRateTable();
 
   CAmount bonus = getBonusForAmount(termblocks, principal);
   CAmount rate  = getRateForAmount(termblocks , principal);
