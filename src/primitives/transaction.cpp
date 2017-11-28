@@ -216,18 +216,9 @@ std::string initRateTable()
 
     for(int i=1;i<ONEYEARPLUS1;i++)
     {
-
-        if(chainHeight < FORK1HEIGHT)
-        {
-           rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
-           bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
-           str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
-         }
-        else
-        {
-           bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
-           str += strprintf("%d %x\n",i, bonusTable[i]);
-	}
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18);  
+        bonusTable[i]=bonusTable[i-1]+(bonusTable[i-1]>>16);
+        str += strprintf("%d %x %x\n",i,rateTable[i], bonusTable[i]);
     }
 
     for(int i=0;i<ONEYEAR;i++)
@@ -236,7 +227,6 @@ std::string initRateTable()
     }
 
     return str;
- 
  }
 	 
 CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock)
@@ -259,7 +249,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     }
 
     CAmount standardInterest;
-    if (chainHeight < FORK1HEIGHT) 
+    if (chainHeight < FORK1HEIGHT || outputBlockHeight < FORK1HEIGHT) 
     {
         standardInterest=getRateForAmount(blocks, nValue);
     }
@@ -270,7 +260,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
 
     CAmount bonusAmount=0;
 
-    if(outputBlockHeight<TWOYEARS && chainHeight < FORK1HEIGHT)
+    if(outputBlockHeight<TWOYEARS && chainHeight < FORK1HEIGHT || outputBlockHeight < FORK1HEIGHT)
     {
         //Calculate bonus rate based on outputBlockHeight
         bonusAmount=getBonusForAmount(blocks, nValue);
