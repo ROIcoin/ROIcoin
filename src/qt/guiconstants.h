@@ -45,7 +45,7 @@ static const int MAX_URI_LENGTH = 255;
 #define SPINNER_FRAMES 35
 
 #define QAPP_ORG_NAME "ROIcoin"
-#define QAPP_ORG_DOMAIN "holdcoin.com"
+#define QAPP_ORG_DOMAIN "roi-coin.com"
 #define QAPP_APP_NAME_DEFAULT "ROIcoin-Qt"
 #define QAPP_APP_NAME_TESTNET "ROIcoin-Qt-testnet"
 
