@@ -18,8 +18,8 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "ROIcoin"
-            VALUE "FileDescription",    "ROIcoin Core (GUI node for ROIcoin)"
+            VALUE "CompanyName",        "ROI coin"
+            VALUE "FileDescription",    "ROI Coin Core (GUI node for ROIcoin)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "ROIcoin-qt"
             VALUE "LegalCopyright",     COPYRIGHT_STR
