@@ -273,17 +273,14 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     }
     else if(outputBlockHeight<TWOYEARS && chainHeight >= FORK1HEIGHT)
     {
-        if(maturationBlock>0)
-        {
-           //Calculate bonus rate based on outputBlockHeight
-           bonusAmount=getBonusForAmount(blocks, nValue);
-           CBigNum am(bonusAmount);
-           CBigNum fac(TWOYEARS);
-           CBigNum div(TWOYEARS);
-           CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/10; //605% One year Term Deposit Rate
-           bonusAmount=result.getuint64();
-	   //LogPrintf("Post_Fork: chainHeight: %d lockHeight: %d Principal: %d  BonusAmount: %li\n", chainHeight, outputBlockHeight, nValue, bonusAmount);
-        }
+         //Calculate bonus rate based on outputBlockHeight
+         bonusAmount=getBonusForAmount(blocks, nValue);
+         CBigNum am(bonusAmount);
+         CBigNum fac(TWOYEARS);
+         CBigNum div(TWOYEARS);
+         CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/10; //605% One year Term Deposit Rate
+         bonusAmount=result.getuint64();
+	 //LogPrintf("Post_Fork: chainHeight: %d lockHeight: %d Principal: %d  BonusAmount: %li\n", chainHeight, outputBlockHeight, nValue, bonusAmount);
     }
 
     CAmount interestAmount=standardInterest+bonusAmount;
