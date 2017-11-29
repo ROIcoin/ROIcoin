@@ -269,19 +269,22 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         CBigNum div(TWOYEARS);
         CBigNum result= am - ((am*fac*fac*fac*fac)/(div*div*div*div));
         bonusAmount=result.getuint64();
-	LogPrintf("Pre_Fork: chainHeight: %d lockHeight: %d Principal: %d BonusAmount: %li\n", chainHeight,outputBlockHeight,nValue,bonusAmount);
+	//LogPrintf("Pre_Fork: chainHeight: %d lockHeight: %d Principal: %d BonusAmount: %li\n", chainHeight,outputBlockHeight,nValue,bonusAmount);
     }
     else if(outputBlockHeight<TWOYEARS && chainHeight >= FORK1HEIGHT)
     {
-        //Calculate bonus rate based on outputBlockHeight
-        bonusAmount=getBonusForAmount(blocks, nValue);
-        CBigNum am(bonusAmount);
-        CBigNum fac(TWOYEARS);
-        CBigNum div(TWOYEARS);
-        CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/10; //605% One year Term Deposit Rate
-        bonusAmount=result.getuint64();
-	LogPrintf("Post_Fork: chainHeight: %d lockHeight: %d Principal: %d  BonusAmount: %li\n", chainHeight, outputBlockHeight, nValue, bonusAmount);
-     }
+        if(maturationBlock>0)
+        {
+           //Calculate bonus rate based on outputBlockHeight
+           bonusAmount=getBonusForAmount(blocks, nValue);
+           CBigNum am(bonusAmount);
+           CBigNum fac(TWOYEARS);
+           CBigNum div(TWOYEARS);
+           CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div))/10; //605% One year Term Deposit Rate
+           bonusAmount=result.getuint64();
+	   //LogPrintf("Post_Fork: chainHeight: %d lockHeight: %d Principal: %d  BonusAmount: %li\n", chainHeight, outputBlockHeight, nValue, bonusAmount);
+        }
+    }
 
     CAmount interestAmount=standardInterest+bonusAmount;
     CAmount termDepositAmount=0;
@@ -301,7 +304,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
              CBigNum div(TWOYEARS);
              CBigNum result= am - ((am*fac*fac*fac*fac*fac*fac)/(div*div*div*div*div*div));
              termDepositAmount=result.getuint64();
-	     LogPrintf("Pre_Fork: chainHeight: %d lockHeight: %d principal: %d termDepositAmount: %li\n", chainHeight, outputBlockHeight, nValue, termDepositAmount);
+	     //LogPrintf("Pre_Fork: chainHeight: %d lockHeight: %d principal: %d termDepositAmount: %li\n", chainHeight, outputBlockHeight, nValue, termDepositAmount);
 	  }    
           else
 	  {
@@ -310,9 +313,12 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
              CBigNum div(TWOYEARS);
              CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div));
              termDepositAmount=result.getuint64();
-	     LogPrintf("Post_Fork: chainHeight: %d lockHeight: %d principal: %d termDepositAmount: %li\n", chainHeight, outputBlockHeight, nValue, termDepositAmount);
+	     //LogPrintf("Post_Fork: chainHeight: %d lockHeight: %d principal: %d termDepositAmount: %li\n", chainHeight, outputBlockHeight, nValue, termDepositAmount);
           }
         }
     }
+
+    LogPrintf("GetInterest: chainHeight: %d lockHeight: %d principal: %d interest: %li pos: %li deposit: %li\n", chainHeight, outputBlockHeight, nValue, interestAmount, standardInterest, termDepositAmount);
+
     return nValue+interestAmount+termDepositAmount;
   }
