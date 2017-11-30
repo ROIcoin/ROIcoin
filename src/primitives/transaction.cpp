@@ -176,13 +176,26 @@ static int TWOYEARS=ONEYEAR*2;
 static uint64_t rateTable[720*365+1];
 static uint64_t bonusTable[720*365+1];
 
+/*
+ * This function validates the coins never to be negative or exceed MAX_MONEY
+ */
+CAmount validateCoins(CAmount theAmount){
+    // Never return a negative amount
+    if(theAmount < 0) { return CAmount(0); }
+
+    // Never return a value larger than MAX_MONEY
+    if(!MoneyRange(theAmount)) { return MAX_MONEY; }
+
+    return theAmount;
+}
+
 CAmount getBonusForAmount(int periods, CAmount theAmount){
 
     CBigNum amount256(theAmount);
     CBigNum rate256(bonusTable[periods]);
     CBigNum rate0256(bonusTable[0]);
     CBigNum result=(amount256*rate256)/rate0256;
-    return result.getuint64()-theAmount;
+    return validateCoins(result.getuint64()-theAmount);
 }
 
 CAmount getRateForAmount(int periods, CAmount theAmount){
@@ -191,8 +204,8 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
     CBigNum rate256(rateTable[periods]);
     CBigNum rate0256(rateTable[0]);
     CBigNum result=(amount256*rate256)/rate0256;
-    return  result.getuint64()-theAmount;
 
+    return validateCoins(result.getuint64()-theAmount);
 }
 
 CAmount getPostRateForAmount(int periods, CAmount theAmount){
@@ -203,7 +216,9 @@ CAmount getPostRateForAmount(int periods, CAmount theAmount){
     {
 	result = theAmount * pow(1.0 + multiplier, i);
     }
-    return CAmount(result)-theAmount;
+    CAmount rate = CAmount(result)-theAmount;
+
+    return validateCoins(rate);
 }
 
 std::string initRateTable()
