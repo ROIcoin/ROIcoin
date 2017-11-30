@@ -332,5 +332,5 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
 
     LogPrintf("GetInterest: chainHeight: %d lockHeight: %d principal: %d interest: %li pos: %li deposit: %li\n", chainHeight, outputBlockHeight, nValue, interestAmount, standardInterest, termDepositAmount);
 
-    return nValue+interestAmount+termDepositAmount;
+    return validateCoins(nValue+interestAmount+termDepositAmount);
   }
