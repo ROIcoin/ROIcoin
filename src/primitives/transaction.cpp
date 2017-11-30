@@ -184,7 +184,7 @@ CAmount validateCoins(CAmount theAmount){
     if(theAmount < 0) { return CAmount(0); }
 
     // Never return a value larger than MAX_MONEY
-    if(!MoneyRange(theAmount)) { return MAX_MONEY; }
+    if(!MoneyRange(theAmount)) { return MAX_MONEY-1; }
 
     return theAmount;
 }
