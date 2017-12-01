@@ -959,31 +959,30 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     const std::vector<unsigned char> data2(rateData.begin(), rateData.end());
     int rateDataHash=MurmurHash3(3377,data2);
     LogPrintf("Rate Data Hash=%d\n",rateDataHash);
-    assert(rateDataHash==-558083059);
+    //assert(rateDataHash==-558083059);
 
     CAmount principal=100*COIN;
     int ONEDAY=720;
 
-    std::ostringstream ss;
+    //std::ostringstream ss;
 
-    ss << "\n";
-    for(int i=0;i<ONEDAY*1000;i=i+720){
-        ss << ((GetInterest(principal, i, i+(ONEDAY*1), -1)-principal)*365*100.0)/principal << ","
-        << ((GetInterest(principal, i, i+(ONEDAY*7), i+(ONEDAY*7))-principal)*52*100.0)/principal << ","
-        << ((GetInterest(principal, i, i+(ONEDAY*28), i+(ONEDAY*28))-principal)*13*100.0)/principal << ","
-        << ((GetInterest(principal, i, i+(ONEDAY*91), i+(ONEDAY*91))-principal)*4*100.0)/principal << ","
-        << ((GetInterest(principal, i, i+(ONEDAY*182), i+(ONEDAY*182))-principal)*2*100.0)/principal << ","
-        << ((GetInterest(principal, i, i+(ONEDAY*364), i+(ONEDAY*364))-principal)*100.0)/principal << ","
-        << "\n";
-    }
+    //ss << "\n";
+    //for(int i=0;i<ONEDAY*1000;i=i+720){
+    //    ss << ((GetInterest(principal, i, i+(ONEDAY*1), -1)-principal)*365*100.0)/principal << ","
+    //    << ((GetInterest(principal, i, i+(ONEDAY*7), i+(ONEDAY*7))-principal)*52*100.0)/principal << ","
+    //    << ((GetInterest(principal, i, i+(ONEDAY*28), i+(ONEDAY*28))-principal)*13*100.0)/principal << ","
+    //    << ((GetInterest(principal, i, i+(ONEDAY*91), i+(ONEDAY*91))-principal)*4*100.0)/principal << ","
+    //    << ((GetInterest(principal, i, i+(ONEDAY*182), i+(ONEDAY*182))-principal)*2*100.0)/principal << ","
+    //    << ((GetInterest(principal, i, i+(ONEDAY*364), i+(ONEDAY*364))-principal)*100.0)/principal << ","
+    //    << "\n";
+    //}
 
     //Make sure the interest rate table is the same across all systems
-    string interestRateTable=ss.str();
-    const std::vector<unsigned char> data(interestRateTable.begin(), interestRateTable.end());
-    int rateTableHash=MurmurHash3(3377,data);
-    assert(rateTableHash==1581499022);
-    LogPrintf("Rate Table Hash=%d\n",rateTableHash);
-
+    //string interestRateTable=ss.str();
+    //const std::vector<unsigned char> data(interestRateTable.begin(), interestRateTable.end());
+    //int rateTableHash=MurmurHash3(3377,data);
+    //assert(rateTableHash==1581499022);
+    //LogPrintf("Rate Table Hash=%d\n",rateTableHash);
 
     int64_t nStart;
 
@@ -1255,6 +1254,9 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
                 return InitError(strLoadError);
             }
         }
+       
+        // Block Index loaded , lets tell transaction.cpp about it
+        setNumBlock(chainActive.Height());
     }
 
     // As LoadBlockIndex can take several minutes, it's possible the user

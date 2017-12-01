@@ -1,4 +1,8 @@
-# **ROI Coin is _"Return on Investment"_** 
+# **ROI coin is _"Return on Investment"_** 
+
+ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.1.0.0&x2=0">
+
+This is the development branch, we will keep in here all the code for the next wallet.
 
 ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.0.2.700&x2=0">
 
@@ -10,10 +14,10 @@ ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=
 > * __Google Plus:__ [https://plus.google.com/b/109809615316952270396/109809615316952270396](https://plus.google.com/b/109809615316952270396/109809615316952270396)
 > * __YouTube:__ [https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g](https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g)
 
-## What is ROI Coin?
+## What is ROI coin?
 
-> **ROI Coin** is a Cryptocurrency built on the ROI Coin core ver. 11.3, incorporating HOdl PoS to reward savers.  
-> It pays interest on every balance as well as higher interest rates for locked term deposits and that is precisely why ROI Coin is Return on Investment.
+> **ROI coin** is a Cryptocurrency built on the ROI coin core ver. 11.3, incorporating HOdl PoS to reward savers.  
+> It pays interest on every balance as well as higher interest rates for locked term deposits and that is precisely why ROI coin is Return on Investment.
 
 ### Compound Interest on _all Balances_
 
@@ -33,8 +37,6 @@ ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=
 
 > - Paid on Term Deposits (aka Fixed deposit / time deposit)
 > - Regular deposits can have a maximum of 1 year interest
-> - Term deposits may have up to 2 years of interest
-> - This allows users to lock up funds for a specified amount of time up to two years.
 
 ## Why?
 
@@ -60,18 +62,17 @@ ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=
 
 | Time     | Start Coins | End Coins | Coin Gain | Interest |
 | :--------: | :--------: | :--------: | :--------: | :--------: |
-| 1 week  | 100 | 102.277 | 2.277 | 2.28% |
-| 2 weeks  | 100 | 104.846 | 4.846 | 4.85% |
-| 1 month  | 100 | 111.796 | 11.796 | 11.80% |
-| 3 months  | 100 | 150.433 | 50.433 | 50.43% |
-| 6 months   | 100 | 246.898 | 146.898 | 146.90% |
-| 12 months | 100 | 733.923 | 633.923 | 633.92% |
+| 1 week | 1000 | 1021 | 21 | 2,10% |
+| 2 weeks | 1000 | 1043 | 43 | 4,30% |
+| 1 month | 1000 | 1096 | 96 | 9,60% |
+| 3 months | 1000 | 1331 | 331 | 33,10% |
+| 6 months | 1000 | 1929 | 929 | 92,90% |
+| 12 months | 1000 | 6933 | 5933 | 593,30% |
 
 > **Note:**
 > 
 > - When a Term Deposit matures, it stops earning interest - you need to move it to start earning interest again.
-> -  Bonus rates are paid on regular balances as well.
-> - The bonus rate is locked at the time of the transaction, the rate you can achieve reduces over time due to the multiplier, but once you're earning that bonus rate, it doesn't reduce.
+> - Bonus rates are paid on regular balances as well. 15% APR
 
 ## Proof of Work
 
@@ -98,12 +99,13 @@ To Build
 
 ```bash
 ./autogen.sh
-./configure
+./configure --enable-tests=no
 make
 make install # optional
 ```
 
 This will build bitcoin-qt as well if the dependencies are met.
+It wont build the tests which take a long time.
 
 Dependencies
 ---------------------
@@ -349,7 +351,6 @@ A list of additional configure flags can be displayed with:
 
     ./configure --help
 
-
 ### Github Source Code: (note: do not "git" under sudo)
 
 git clone https://github.com/ROIcoin/ROICoin.git ROIcoin
@@ -358,7 +359,7 @@ cd ROIcoin/
 
 ```bash
 ./autogen.sh
-./configure
+./configure --enable-tests=no
 make
 make install # optional
 ```

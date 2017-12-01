@@ -262,7 +262,8 @@ RES_ICONS = \
   qt/res/icons/tx_mined.png \
   qt/res/icons/warning.png \
   qt/res/icons/verify.png \
-  qt/res/icons/roi.png
+  qt/res/icons/roi.png \
+  qt/res/icons/roi_coin.png
 
 ROICOIN_QT_CPP = \
   qt/roicoinaddressvalidator.cpp \
