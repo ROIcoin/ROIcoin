@@ -26,6 +26,7 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
     QWidget(0, f), curAlignment(0)
 {
     // set reference point, paddings
+
     int paddingRight            = 50;
     int paddingTop              = 50;
     int titleVersionVSpace      = 17;
@@ -38,10 +39,11 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
 #endif
 
     // define text to place
-    QString titleText       = tr("ROICoin - Core");
+    QString titleText       = tr("ROI Coin - Core");
     QString versionText     = QString("Version %1").arg(QString::fromStdString(FormatFullVersion()));
-    QString copyrightText   = QChar(0xA9)+QString("2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin developers"));
-    QString copyrightText2  = QChar(0xA9)+QString("2017-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The ROIcoin developers"));
+    QString copyrightText  = QChar(0xA9)+QString("2017-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The ROI coin developers"));
+    QString copyrightText2   = QChar(0xA9)+QString("2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin developers"));
+
 
     const char *inspirationals[] = {
         "ROI Coin is Return on Investment"
@@ -49,14 +51,14 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
 
     srand(time(NULL)+clock());
     QString inspirationalText  = QString(inspirationals[rand() % 1]);
-    QString authorText = QString("https://roi-coin.com");
+    QString authorText = QString("https://ROI-Coin.com");
 
     QString titleAddText    = networkStyle->getTitleAddText();
 
     QString font            = QApplication::font().toString();
 
     // create a bitmap according to device pixelratio
-    QSize splashSize(577*devicePixelRatio,277*devicePixelRatio);
+    QSize splashSize(720*devicePixelRatio,460*devicePixelRatio);
     pixmap = QPixmap(splashSize);
 
 #if QT_VERSION > 0x050100
@@ -65,19 +67,19 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
 #endif
 
     QPainter pixPaint(&pixmap);
-    pixPaint.setPen(QColor(0,0,0));
+    pixPaint.setPen(QColor(255,255,255));
 
     // draw a slightly radial gradient
     QRadialGradient gradient(QPoint(0,0), splashSize.width()/devicePixelRatio);
     gradient.setColorAt(0, Qt::white);
-    gradient.setColorAt(1, QColor(183,183,183));
+    gradient.setColorAt(0, QColor(0,0,0));
     QRect rGradient(QPoint(0,0), splashSize);
     pixPaint.fillRect(rGradient, gradient);
 
     // draw the roicoin icon, expected size of PNG: 1024x1024
-	QRect rectIcon(QPoint(14,9), QSize(256,256));
+	QRect rectIcon(QPoint(0,0), QSize(450,450));
 
-    const QSize requiredSize(1024,1024);
+    const QSize requiredSize(450,450);
     QPixmap icon(networkStyle->getAppIcon().pixmap(requiredSize));
 
     pixPaint.drawPixmap(rectIcon, icon);
@@ -112,8 +114,8 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
     pixPaint.drawText(pixmap.width()/devicePixelRatio-titleTextWidth-paddingRight,paddingTop+titleCopyrightVSpace,copyrightText);
     pixPaint.drawText(pixmap.width()/devicePixelRatio-titleTextWidth-paddingRight,paddingTop+titleCopyrightVSpace+12,copyrightText2);
     pixPaint.setFont(QFont(font, 16*fontFactor));
-    pixPaint.drawText(pixmap.width()/devicePixelRatio-titleTextWidth-paddingRight,paddingTop+titleCopyrightVSpace+86,inspirationalText);
-    pixPaint.drawText(pixmap.width()/devicePixelRatio-titleTextWidth-paddingRight,paddingTop+titleCopyrightVSpace+106,authorText);
+    pixPaint.drawText(pixmap.width()/devicePixelRatio-titleTextWidth-paddingRight,paddingTop+titleCopyrightVSpace+288,inspirationalText);
+    pixPaint.drawText(pixmap.width()/devicePixelRatio-titleTextWidth-paddingRight,paddingTop+titleCopyrightVSpace+308,authorText);
 
 
     // draw additional text if special network
@@ -205,7 +207,7 @@ void SplashScreen::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.drawPixmap(0, 0, pixmap);
-    QRect r = rect().adjusted(5, 5, -5, -5);
+    QRect r = rect().adjusted(0, 0, 0, 0);
     painter.setPen(curColor);
     painter.drawText(r, curAlignment, curMessage);
 }
