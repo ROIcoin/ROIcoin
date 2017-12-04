@@ -16,6 +16,7 @@ New term deposits created after the hardfork will obey the new term deposit rate
 | 12 months | 1000 | 6933 | 5933 | 593,30% |
 
 The PoS calculation has been adjusted to 15% APR 
+
 **Note:** the old HOdl per block 30 day interest still applies on top of ROI PoS rate.
 
 We also applied cosmetic branding changes to the Wallet splashscreen and background.
