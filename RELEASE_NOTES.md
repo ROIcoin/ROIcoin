@@ -23,7 +23,7 @@ We also applied cosmetic branding changes to the Wallet splashscreen and backgro
 
 ## Hardfork at block 25000
 ### Notice to miners:
-* If you are solo-mining you must upgrade to v1.1.0.0 before reaching block 20000 , any blocks found with the old wallet after the fork will be on the wrong chain !.
+* If you are solo-mining you must upgrade to v1.1.0.0 before reaching block 25000 , any blocks found with the old wallet after the fork will be on the wrong chain !.
 * If you are pool-mining make sure to check with the pool owner that their wallet has upgraded to v1.1.0.0 before block 25000
 * Exchange owners please upgrade to v1.1.0.0 as soon as possible.
 
