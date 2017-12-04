@@ -44,7 +44,7 @@ then run the installer (on Windows) or just copy over ROIcoin-qt (on Linux).
 ### Downgrade warning
 
 Because this release issues a hard-fork of the network, downgrading to prior versions
-will not be possible once the network reaches a block height of 20000.
+will not be possible once the network reaches a block height of 25000.
 
 ## Credits:
 * PlainKoin
