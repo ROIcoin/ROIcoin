@@ -12,7 +12,7 @@
 
 #include "consensus/consensus.h" 
 
-static const unsigned int FORK1HEIGHT = 20000;
+static const unsigned int FORK1HEIGHT = 25000;
 const uint32_t BIP_009_MASK = 0x20000000;
 const uint32_t BASE_VERSION = 0x20000000;  // Will accept 2MB blocks
 const uint32_t FORK_BIT_2MB = 0x10000000;  // Vote for 2MB fork
