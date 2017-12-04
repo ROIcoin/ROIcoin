@@ -2,9 +2,9 @@
 
 This release contains one critical and some minor fixes.
 
-The critical fix is for the term deposit interest rate algorithm bug that kept increasing on every block.
-The new wallet will make sure that if you have pre-fork locked term deposits, the maturation interest will remain unchanged.
-New term deposits created after the hardfork will obey the new term deposit rates:
+- The critical fix is for the term deposit interest rate algorithm bug that kept increasing on every block.
+- The new wallet will make sure that if you have pre-fork locked term deposits, the maturation interest will remain unchanged.
+- New term deposits created after the hardfork will obey the new term deposit rates:
 
 | Time     | Start Coins | End Coins | Coin Gain | Interest |
 | :--------: | :--------: | :--------: | :--------: | :--------: |
