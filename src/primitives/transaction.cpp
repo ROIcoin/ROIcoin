@@ -4,7 +4,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "primitives/transaction.h"
-#include "consensus/params.h"
 #include "amount.h"
 #include "pow.h"
 #include "arith_uint256.h"
@@ -14,12 +13,12 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 #include "math.h"
-#include "util.h"
-#include "main.h"
+
+#ifndef WIN32
+# include "util.h"
+#endif
 
 #include "test/bignum.h"
-#include <boost/thread/thread.hpp>
-
 
 int nHeight;
 int chainHeight = nHeight;
@@ -329,8 +328,8 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
           }
         }
     }
-
+#ifndef WIN32
     LogPrintf("GetInterest: chainHeight: %d lockHeight: %d principal: %d interest: %li pos: %li deposit: %li matureblock: %d\n", chainHeight, outputBlockHeight, nValue, interestAmount, standardInterest, termDepositAmount,maturationBlock);
-
+#endif
     return validateCoins(nValue+interestAmount+termDepositAmount);
   }
