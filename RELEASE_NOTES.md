@@ -1,4 +1,4 @@
-# ** ROIcoin Release Notes for v1.1.0.0
+# ROIcoin Release Notes for v1.1.0.0
 
 This release contains one critical and some minor fixes.
 
