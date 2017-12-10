@@ -81,7 +81,7 @@ ASIC/GPU resistant. Pattern Search involves filling up RAM with pseudo-random da
 ### Compiling on Ubuntu (16.04 tested)):
 
 Note
----------------------
+----------------------
 Always use absolute paths to configure and compile bitcoin and the dependencies,
 for example, when specifying the path of the dependency:
 
