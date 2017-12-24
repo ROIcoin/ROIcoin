@@ -81,13 +81,9 @@ ASIC/GPU resistant. Pattern Search involves filling up RAM with pseudo-random da
 ### Compiling on Ubuntu (16.04 tested)):
 
 Note
-<<<<<<< HEAD
 ---------------------
 Always use absolute paths to configure and compile ROIcoin and the dependencies,
-=======
-----------------------
-Always use absolute paths to configure and compile bitcoin and the dependencies,
->>>>>>> 4c3a3550e057ee24fa0c73ca7d240611c0857fc0
+
 for example, when specifying the path of the dependency:
 
 	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
