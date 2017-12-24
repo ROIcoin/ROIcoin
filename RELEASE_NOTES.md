@@ -1,3 +1,48 @@
+# ROIcoin Release Notes for v1.1.1.0
+
+This release contains one critical and some minor fixes.
+
+- issue #6 A variable initialisation bug in the interest rate calculation caused 
+           windows wallet to crash. (found by elbandi)
+
+- issue #7 The windows miner stops after encountering a block validation error 
+           due to "too high fee". (caused by issue 6)
+           We added a retry mechansim around runtime errors, the timeout is 
+           configurable via a new flag called "-minerblocktimeout" (default 30000 ms) 
+
+Other minor fixes:
+- max outbound connections was increased from 8 to 16
+- roicoin.icns was fixed for the MAC OSX wallet
+- build instructions are now provided for MAC OSX, CentOS7 and Fedora27
+
+Both issues were only affecting windows users, but we still recommend all users to upgrade to v1.1.1
+
+ROIcoin core v1.1.1.0 is now available at:
+https://github.com/ROIcoin/ROIcoin/releases/
+
+Please report bugs using the issue tracker at github:
+https://github.com/ROIcoin/ROIcoin/issues
+
+## Upgrading and downgrading
+### How to Upgrade
+
+If you are running an older version, shut it down. Wait until it has completely
+shut down (which might take a few minutes for older versions).
+Backup your wallet.dat file ( which you should always do regardless of an upgrade event )
+then run the installer (on Windows) or just copy over ROIcoin-qt (on Linux).
+
+Credits:
+
+* PlainKoin
+* DisasterFaster
+* ghobson2013
+* elbandi
+
+Testers Credits:
+
+* mjentsch
+* TheTDD 
+
 # ROIcoin Release Notes for v1.1.0.0
 
 This release contains one critical and some minor fixes.
@@ -47,7 +92,3 @@ Because this release issues a hard-fork of the network, downgrading to prior ver
 will not be possible once the network reaches a block height of 25000.
 
 ## Credits:
-* PlainKoin
-* DisasterFaster
-* ghobson2013
-

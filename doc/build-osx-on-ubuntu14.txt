@@ -1,0 +1,50 @@
+The following instructions were used to build the MAC wallet.
+
+Pre-requirements:
+- ubuntu 14.04 server ( trusty ).
+- apt-get install libssl-dev cmake imagemagick gcc g++ python-setuptools libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python-dev autoconf libtool automake faketime bsdmainutils fonts-tuffy
+
+git clone https://github.com/ROIcoin/ROIcoin.git
+cd ROIcoin
+mkdir depends/sources
+mkdir depends/SDKs
+mkdir depends/sdk-sources
+cd depends
+make download-osx
+
+Note: some downloads will fail, ignore it.
+
+- You may need to download the MAXOSX10.9 SDK manually
+cd depends/sdk-sources
+curl --location --fail http://www.fuzzbawls.pw/sdks/MacOSX10.9.sdk.tar.gz -o MacOSX10.9.sdk.tar.gz
+- From here we unpack it to SDKs folder:
+tar -C ../SDKs/ -xf MacOSX10.9.sdk.tar.gz
+
+export BITCOIN_CONFIG="--enable-reduce-exports"
+export OSX_SDK=10.9
+export HOST=x86_64-apple-darwin11
+export PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g")
+unset CC; unset CXX
+
+- from the ROIcoin folder do:
+make -C depends HOST=x86_64-apple-darwin11
+
+- If this completes without errors:
+export CCACHE_SIZE=100M
+export CCACHE_TEMPDIR=/tmp/.ccache-temp
+export CCACHE_COMPRESS=1
+export OUTDIR=/root/ROIcoin/out
+export BITCOIN_CONFIG_ALL="--disable-dependency-tracking --prefix=/root/ROIcoin/depends/$HOST --bindir=$OUTDIR/bin --libdir=$OUTDIR/lib"
+depends/$HOST/native/bin/ccache --max-size=$CCACHE_SIZE
+./configure --cache-file=config.cache $BITCOIN_CONFIG_ALL $BITCOIN_CONFIG || ( cat config.log && false)
+ 
+make distdir PACKAGE=bitcoin VERSION=$HOST
+export GOAL="deploy"
+make -j2 $GOAL || ( echo "Build failure. Verbose build follows." && make $GOAL V=1 ; false )
+
+The final MacOSX unsigned damage file will be in the ROIcoin/bitcoin-x86_64-apple-darwin11 subfolder.
+
+Goodluck.
+
+
+

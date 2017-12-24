@@ -1,4 +1,5 @@
-#include "bignum.h"
+
+//#include "bignum.h"
 #include "uint256.h"
 
 namespace patternsearch {

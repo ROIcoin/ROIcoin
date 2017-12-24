@@ -1,28 +1,28 @@
-Name "ROICoin Core (-bit)"
+Name "ROIcoin Core (-bit)"
 
 RequestExecutionLevel highest
 SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 1.0.2
+!define VERSION 1.1.1
 !define COMPANY "ROIcoin Core project"
 !define URL http://www.ROIcoin.com/
 
 # MUI Symbol Definitions
-!define MUI_ICON "/home/roi/ROIcoin/share/pixmaps/roicoin.ico"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "/home/roi/ROIcoin/share/pixmaps/nsis-wizard.bmp"
+!define MUI_ICON "/root/dev/ROIcoin/share/pixmaps/roicoin.ico"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "/root/dev/ROIcoin/share/pixmaps/nsis-wizard.bmp"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
-!define MUI_HEADERIMAGE_BITMAP "/home/roi/ROIcoin/share/pixmaps/nsis-header.bmp"
+!define MUI_HEADERIMAGE_BITMAP "/root/dev/ROIcoin/share/pixmaps/nsis-header.bmp"
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT HKLM
 !define MUI_STARTMENUPAGE_REGISTRY_KEY ${REGKEY}
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER "ROICoin Core"
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "ROIcoin Core"
 !define MUI_FINISHPAGE_RUN $INSTDIR\ROIcoin-qt.exe
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP "/home/roi/ROIcoin/share/pixmaps/nsis-wizard.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "/root/dev/ROIcoin/share/pixmaps/nsis-wizard.bmp"
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
 
 # Included files
@@ -48,7 +48,7 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-OutFile /home/roi/ROIcoin/ROIcoin-${VERSION}-win-setup.exe
+OutFile /root/dev/ROIcoin/ROIcoin-${VERSION}-win-setup.exe
 !if "" == "64"
 InstallDir $PROGRAMFILES64\ROIcoin
 !else
@@ -58,7 +58,7 @@ CRCCheck on
 XPStyle on
 BrandingText " "
 ShowInstDetails show
-VIProductVersion ${VERSION}.7
+VIProductVersion ${VERSION}.0
 VIAddVersionKey ProductName "ROIcoin Core"
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
@@ -73,14 +73,14 @@ ShowUninstDetails show
 Section -Main SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
-    File /home/roi/ROIcoin/release/ROIcoin-qt.exe
-    File /oname=COPYING.txt /home/roi/ROIcoin/COPYING
-    File /oname=readme.txt /home/roi/ROIcoin/doc/README_windows.txt
+    File /root/dev/ROIcoin/release/ROIcoin-qt.exe
+    File /oname=COPYING.txt /root/dev/ROIcoin/COPYING
+    File /oname=readme.txt /root/dev/ROIcoin/doc/README_windows.txt
     SetOutPath $INSTDIR\daemon
-    File /home/roi/ROIcoin/release/ROIcoind.exe
-    File /home/roi/ROIcoin/release/ROIcoin-cli.exe
+    File /root/dev/ROIcoin/release/ROIcoind.exe
+    File /root/dev/ROIcoin/release/ROIcoin-cli.exe
     SetOutPath $INSTDIR\doc
-    File /r /home/roi/ROIcoin/doc\*.*
+    File /r /root/dev/ROIcoin/doc\*.*
     SetOutPath $INSTDIR
     WriteRegStr HKCU "${REGKEY}\Components" Main 1
 

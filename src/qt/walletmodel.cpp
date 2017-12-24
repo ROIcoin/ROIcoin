@@ -258,10 +258,10 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                 //Special code to send term deposit
                 std::ostringstream ss;
                 if(termDepositLength<=720*2){
-                    ss <<"!!!!!WARNING: There is no interest rate advantage of using a Term Deposit for a period of less than 1,123 blocks. It is recommended that you cancel this transaction. ";
+                    ss <<"!!!!!WARNING: There is no interest rate advantage of using a Term Deposit for a period of less than 1,440 blocks. It is recommended that you cancel this transaction. ";
                 }
                 if(termDepositLength>720*365){
-                    ss <<"!!!!!WARNING: There is no interest rate advantage of using a Term Deposit for a period of more than 204,765 blocks. It is recommended that you cancel this transaction. ";
+                    ss <<"!!!!!WARNING: There is no interest rate advantage of using a Term Deposit for a period of more than 262,800 blocks. It is recommended that you cancel this transaction. ";
                 }
                 ss <<"Term Deposit Instruction Detected: ";
                 ss <<"This will send the amount of " << (0.0+rcp.amount)/COIN <<" ROI ";
@@ -271,7 +271,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                 ss <<"Upon maturation, it will be worth " << (0.0+withInterest)/COIN << " ROI. ";
                 CAmount interestOnly=withInterest-rcp.amount;
                 double interestRateForTime=(0.0+interestOnly)/(rcp.amount);
-                double fractionOfaYear=204765.0/termDepositLength;
+                double fractionOfaYear=262800.0/termDepositLength;
 
                 double interestRatePerBlock=pow(1+interestRateForTime,1.0/termDepositLength)-1;
                 //ss <<" IRPB = " << interestRatePerBlock;

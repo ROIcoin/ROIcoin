@@ -209,7 +209,7 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
 
 CAmount getPostRateForAmount(int periods, CAmount theAmount){
 
-    double result;
+    double result = 0.0;
     double multiplier = 0.0000005975;
     for ( int i = 1; i < periods; i++)
     {
@@ -329,7 +329,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         }
     }
 #ifndef WIN32
-    LogPrintf("GetInterest: chainHeight: %d lockHeight: %d principal: %d interest: %li pos: %li deposit: %li matureblock: %d\n", chainHeight, outputBlockHeight, nValue, interestAmount, standardInterest, termDepositAmount,maturationBlock);
+    //LogPrintf("GetInterest: chainHeight: %d lockHeight: %d principal: %d interest: %li pos: %li deposit: %li matureblock: %d\n", chainHeight, outputBlockHeight, nValue, interestAmount, standardInterest, termDepositAmount,maturationBlock);
 #endif
     return validateCoins(nValue+interestAmount+termDepositAmount);
   }

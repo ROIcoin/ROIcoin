@@ -1,0 +1,40 @@
+The following instructions are for building the ROIcoin core only.
+Building the wallet currently does not work on CentOS 7.
+
+
+first checkout the development branch
+git clone -b development https://github.com/ROIcoin/ROIcoin.git ROIDEV
+cd ROIDEV
+
+# Install pre-requirements
+yum -y install automake autoconf gcc-c++ 
+yum -y install epel-release openssl-devel boost-devel libdb4-devel libdb-cxx-devel protobuf-devel qrencode-devel libevent-devel
+
+./autogen.sh
+./configure --without-gui --disable-wallet --enable-tests=no
+
+# double check to see if there are no errors otherwise you missed a library
+
+./make ( you can use -j2 if you have 2 cores or -j4 if you have 4cores available to speed up )
+
+# Create your first ROIcoin.conf file in ~/.ROIcoin/ folder , here is an example:
+
+rpcuser=john
+rpcpassword=123
+rpcallowip=127.0.0.1
+server=1
+daemon=1
+gen=0
+minermemory=1
+genproclimit=1
+listen=0  # Note this is required on CentOS 7 
+debug=all
+testnet=0
+
+At this point you should be able to call ROIcoind and use ROIcoin-cli with it.
+You will need to tell the firewall to allow port 3377
+firewall-cmd --zone=public --permanent --add-port=3377/tcp
+firewall-cmd --zone=public --permanent --add-port=3377/udp
+
+tip: you may need to disable SELINUX
+

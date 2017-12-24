@@ -1,6 +1,6 @@
 # **ROI coin is _"Return on Investment"_** 
 
-ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.1.0.0&x2=0">
+ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.1.1.0&x2=0">
 
 <img src="https://roi-coin.com/ow_userfiles/themes/theme_image_17.png?w1720=&h=521" width="1720">
 
@@ -82,7 +82,7 @@ ASIC/GPU resistant. Pattern Search involves filling up RAM with pseudo-random da
 
 Note
 ---------------------
-Always use absolute paths to configure and compile bitcoin and the dependencies,
+Always use absolute paths to configure and compile ROIcoin and the dependencies,
 for example, when specifying the path of the dependency:
 
 	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
@@ -100,7 +100,7 @@ make
 make install # optional
 ```
 
-This will build bitcoin-qt as well if the dependencies are met.
+This will build ROIcoin-qt as well if the dependencies are met.
 It wont build the tests which take a long time.
 
 Dependencies
@@ -201,7 +201,7 @@ libqrencode (optional) can be installed with:
 
     sudo apt-get install libqrencode-dev
 
-Once these are installed, they will be found by configure and a bitcoin-qt executable will be
+Once these are installed, they will be found by configure and a ROIcoin-qt executable will be
 built by default.
 
 Dependency Build Instructions: Fedora
@@ -224,7 +224,7 @@ libqrencode (optional) can be installed with:
 
 Notes
 -----
-The release is built with GCC and then "strip bitcoind" to strip the debug
+The release is built with GCC and then "strip ROIcoind" to strip the debug
 symbols, which reduces the executable size by about 90%.
 
 
@@ -247,7 +247,7 @@ It is recommended to use Berkeley DB 4.8. If you have to build it yourself:
 ```bash
 BITCOIN_ROOT=$(pwd)
 
-# Pick some path to install BDB to, here we create a directory within the bitcoin directory
+# Pick some path to install BDB to, here we create a directory within the ROIcoin directory
 BDB_PREFIX="${BITCOIN_ROOT}/db4"
 mkdir -p $BDB_PREFIX
 
@@ -282,7 +282,7 @@ If you need to build Boost yourself:
 
 Security
 --------
-To help make your bitcoin installation more secure by making certain attacks impossible to
+To help make your ROIcoin installation more secure by making certain attacks impossible to
 exploit even if a vulnerability is found, binaries are hardened by default.
 This can be disabled with:
 
@@ -306,7 +306,7 @@ Hardening enables the following features:
 
     To test that you have built PIE executable, install scanelf, part of paxutils, and use:
 
-    	scanelf -e ./bitcoin
+    	scanelf -e ./ROIcoin
 
     The output should contain:
 
@@ -315,13 +315,13 @@ Hardening enables the following features:
 
 * Non-executable Stack
     If the stack is executable then trivial stack based buffer overflow exploits are possible if
-    vulnerable buffers are found. By default, bitcoin should be built with a non-executable stack
+    vulnerable buffers are found. By default, ROIcoin should be built with a non-executable stack
     but if one of the libraries it uses asks for an executable stack or someone makes a mistake
     and uses a compiler extension which requires an executable stack, it will silently build an
     executable without the non-executable stack protection.
 
     To verify that the stack is non-executable after compiling use:
-    `scanelf -e ./bitcoin`
+    `scanelf -e ./ROIcoin`
 
     the output should contain:
 	STK/REL/PTL
@@ -331,7 +331,7 @@ Hardening enables the following features:
 
 Disable-wallet mode
 --------------------
-When the intention is to run only a P2P node without a wallet, bitcoin may be compiled in
+When the intention is to run only a P2P node without a wallet, ROIcoin may be compiled in
 disable-wallet mode with:
 
     ./configure --disable-wallet
@@ -349,7 +349,7 @@ A list of additional configure flags can be displayed with:
 
 ### Github Source Code: (note: do not "git" under sudo)
 
-git clone https://github.com/ROIcoin/ROICoin.git ROIcoin
+git clone https://github.com/ROIcoin/ROIcoin.git ROIcoin
 
 cd ROIcoin/
 

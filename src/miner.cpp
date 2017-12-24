@@ -26,6 +26,7 @@
 
 #include "aligned_malloc.h"
 #include <boost/thread.hpp>
+#include <inttypes.h>
 
 using namespace std;
 
@@ -281,6 +282,15 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
                 continue;
 
             CAmount nTxFees = view.GetValueIn(tx,nHeight)-tx.GetValueOut();
+            LogPrintf("DEBUG: TXID: %s nHeight: %d nTxFees: %li vout: %li TX: %s\n",tx.GetHash().ToString(),nHeight,nTxFees,tx.GetValueOut(),tx.ToString());
+            if (!tx.IsCoinBase()) {            
+                for (unsigned int i = 0; i < tx.vin.size(); i++){
+                    CTxOut outTX=view.GetOutputFor(tx.vin[i]);
+                    const COutPoint &prevout = tx.vin[i].prevout;
+                    const CCoins* coins = view.AccessCoins(prevout.hash);
+                    LogPrintf("DEBUG: loop: %d tx: %s coins->nHeight: %d nHeight: %d nFee: %" PRId64  "\n",i,outTX.ToString(),coins->nHeight,nHeight, outTX.GetValueWithInterest(coins->nHeight,nHeight));
+                }
+           }
 
             nTxSigOps += GetP2SHSigOpCount(tx, view);
             if (nBlockSigOps + nTxSigOps >= MAX_BLOCK_SIGOPS)
@@ -337,7 +347,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
         txNew.vout[0].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
         txNew.vin[0].scriptSig = CScript() << nHeight << OP_0;
         pblock->vtx[0] = txNew;
-        pblocktemplate->vTxFees[0] = -nFees;
+        pblocktemplate->vTxFees[0] = -nFees; // We could set UPPER CAP here of 120 ROI standard block reward 
 
         // Fill in header
         pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
@@ -383,9 +393,9 @@ CBlockTemplate* CreateNewBlockWithAddress(std::string address)
 {
     CScript scriptPubKey;
     if(chainActive.Height()+1>=1)
-	{
+    {
         scriptPubKey = GetScriptForDestination(CROIcoinAddress(address).Get());
-	}
+    }
 
     return CreateNewBlock(scriptPubKey);
 }
@@ -493,11 +503,14 @@ std::vector<std::string> split(const std::string &s, char delim) {
 
 void static ROIcoinMiner(CWallet *pwallet, uint32_t minerI, uint32_t minerN, int nThreads)
 {
-	fGenerate = true;
-	minerStopFlag = 0;
+    fGenerate = true;
+    minerStopFlag = 0;
     LogPrintf("ROIcoinMiner started\n");
     srand(clock());
     string ma=GetArg("-miningaddress", "");
+    int tSleep=atoi(GetArg("-minerblocktimeout","30000"));
+
+    LogPrintf("ROIcoinMiner using address: [%s] with minerblocktimeout: %d\n",ma,tSleep);
 
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("ROIcoin-miner");
@@ -506,16 +519,7 @@ void static ROIcoinMiner(CWallet *pwallet, uint32_t minerI, uint32_t minerN, int
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
     unsigned int nExtraNonce = 0;
-
     char __attribute__ ((aligned (32))) *scratchpad = (char*)aligned_malloc(1<<30);
-    /*
-		__thread char *scratchpad = NULL;
-		scratchpad = (char*) mmap(0, 1<<30, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB | MAP_POPULATE, 0, 0);
-		if (scratchpad == MAP_FAILED) {
-			LogPrintf("Scratchpad mmap failed: %d\n", errno);
-			scratchpad = (char*) malloc(1<<30);
-		}
-		*/
 
     long startTime = time(NULL);
     long totalHashes=0;
@@ -524,19 +528,24 @@ void static ROIcoinMiner(CWallet *pwallet, uint32_t minerI, uint32_t minerN, int
             if (chainparams.MiningRequiresPeers()) {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
+                LogPrintf("ROIcoinMiner waiting for network peers...\n");
                 do {
-                    bool fvNodesEmpty;
-                    {
+                      bool fvNodesEmpty;
+                      {
                         LOCK(cs_vNodes);
                         fvNodesEmpty = vNodes.empty();
-                    }
-                    startTime = time(NULL);
-                    totalHashes=0;
-                    if (!fvNodesEmpty && !IsInitialBlockDownload())
-                        break;
-                    MilliSleep(1000);
+                      }
+                      startTime = time(NULL);
+                      totalHashes=0;
+                      if (!fvNodesEmpty && !IsInitialBlockDownload())
+                          break;
+                      MilliSleep(1000);
                 } while (true);
+
+                LogPrintf("ROIcoinMiner network peers completed.\n");
             }
+
+            LogPrintf("ROIcoinMiner creating new block...\n");
             //
             // Create new block
             //
@@ -544,24 +553,36 @@ void static ROIcoinMiner(CWallet *pwallet, uint32_t minerI, uint32_t minerN, int
             CBlockIndex* pindexPrev = chainActive.Tip();
 
             auto_ptr<CBlockTemplate> pblocktemplate;
-
-            if(ma!=""){
-            	if(validateAddress(ma)) {
+            
+            try{
+               if(ma!=""){
+            	 if(validateAddress(ma)) {
                     LogPrintf("ROIcoinMiner: Mining to User supplied address %s\n",ma);
                     pblocktemplate= auto_ptr<CBlockTemplate>(CreateNewBlockWithAddress(ma));
-                }else{
+                 }else{
                     LogPrintf("ROIcoinMiner: WARNING! User supplied address is invalid, defaulting to keypool address.\n");
                     pblocktemplate= auto_ptr<CBlockTemplate>(CreateNewBlockWithKey(reservekey));
-                }
-            }else{
-                LogPrintf("ROIcoinMiner: Mining to keypool address.\n");
-                pblocktemplate= auto_ptr<CBlockTemplate>(CreateNewBlockWithKey(reservekey));
+                 }
+               }else{
+                 LogPrintf("ROIcoinMiner: Mining to keypool address.\n");
+                 pblocktemplate= auto_ptr<CBlockTemplate>(CreateNewBlockWithKey(reservekey));
+              }
+            } 
+            catch (const std::runtime_error &e){
+                LogPrintf("ROIcoinMiner runtime error: %s\n ... retrying...", e.what());
+                aligned_free(scratchpad);
+                scratchpad = (char*)aligned_malloc(1<<30);
+                
+                MilliSleep(tSleep);
+                continue;
             }
+
             if (!pblocktemplate.get())
             {
                 LogPrintf("ROIcoinMiner: ERROR! Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
                 return;
             }
+
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
@@ -589,16 +610,14 @@ void static ROIcoinMiner(CWallet *pwallet, uint32_t minerI, uint32_t minerN, int
                     hash = pblock->FindBestPatternHash(collisions, scratchpad, nThreads, &minerStopFlag);
                     totalHashes = totalHashes + collisions;
                     dHashesPerSec = (time(NULL) != startTime ? totalHashes / (time(NULL) - startTime) : 0);
-                    LogPrintf("ROIcoinMiner: %d/%d\n", minerI, minerN);
-                    LogPrintf("search finished - best hash  \n  hash: %s collisions:%d gethash:%s ba:%d bb:%d nonce:%d \ntarget: %s\n", hash.GetHex(), collisions, pblock->GetHash().GetHex(), pblock->nStartLocation, pblock->nFinalCalculation, pblock->nNonce, hashTarget.GetHex());
+                    LogPrintf("ROIcoinMiner: %d/%d , search finished - best hash  \n  hash: %s collisions:%d gethash:%s ba:%d bb:%d nonce:%d \ntarget: %s\n", minerI, minerN, hash.GetHex(), collisions, pblock->GetHash().GetHex(), pblock->nStartLocation, pblock->nFinalCalculation, pblock->nNonce, hashTarget.GetHex());
                     assert(hash.GetHex()==pblock->GetHash().GetHex());
-                    LogPrintf("Hashes Per Second=%d (total seconds=%d hashes=%d)\n", dHashesPerSec, time(NULL) - startTime, totalHashes);
+                    LogPrintf("ROIcoinMiner: Hashes Per Second=%d (total seconds=%d hashes=%d)\n", dHashesPerSec, time(NULL) - startTime, totalHashes);
                     
                     if (UintToArith256(hash) <= hashTarget) {
                         assert(hash == pblock->GetHash());
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                        LogPrintf("ROIcoinMiner:\n");
-                        LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex(), hashTarget.GetHex());
+                        LogPrintf("ROIcoinMiner: proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex(), hashTarget.GetHex());
                         ProcessBlockFound(pblock, *pwallet, reservekey);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
 

@@ -109,7 +109,7 @@ ROIcoinGUI::ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     GUIUtil::restoreWindowGeometry("nWindow", QSize(1200, 700), this);
 	qApp->setStyleSheet("QMainWindow { background-image:url(:icons/roi);border:none;font-family:'Open Sans,sans-serif'; }");
 
-    QString windowTitle = tr("ROICoin Core") + " - ";
+    QString windowTitle = tr("ROIcoin Core") + " - ";
 #ifdef ENABLE_WALLET
     /* if compiled with wallet support, -disablewallet can still disable the wallet */
     enableWallet = !GetBoolArg("-disablewallet", false);
