@@ -8,6 +8,7 @@
 #endif
 
 #include "netbase.h"
+#include "net.h"
 
 #include "hash.h"
 #include "sync.h"
@@ -498,6 +499,15 @@ bool static ConnectSocketDirectly(const CService &addrConnect, SOCKET& hSocketRe
             if (nRet != 0)
             {
                 LogPrintf("connect() to %s failed after select(): %s\n", addrConnect.ToString(), NetworkErrorString(nRet));
+                if (nRet == 111 || nRet == 113) {                                                                                                                                                                              // refused or no route - set to ban
+                    CNetAddr netAddr(addrConnect);
+                    if (!CNode::IsBanned(netAddr)) {
+                        int64_t banTime = 0;
+                        bool absolute = false;
+                        CNode::Ban(netAddr, BanReasonNetworkIssue, banTime, absolute);
+                        LogPrintf("%s banned because of network issue\n",netAddr.ToString());
+                    }
+                }
                 CloseSocket(hSocket);
                 return false;
             }

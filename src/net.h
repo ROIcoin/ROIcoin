@@ -233,7 +233,8 @@ typedef enum BanReason
 {
     BanReasonUnknown          = 0,
     BanReasonNodeMisbehaving  = 1,
-    BanReasonManuallyAdded    = 2
+    BanReasonManuallyAdded    = 2,
+    BanReasonNetworkIssue     = 3
 } BanReason;
 
 class CBanEntry
@@ -282,6 +283,8 @@ public:
             return "node misbehabing";
         case BanReasonManuallyAdded:
             return "manually added";
+        case BanReasonNetworkIssue:
+            return "network issue";
         default:
             return "unknown";
         }
