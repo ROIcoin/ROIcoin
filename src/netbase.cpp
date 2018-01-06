@@ -16,6 +16,7 @@
 #include "random.h"
 #include "util.h"
 #include "utilstrencodings.h"
+#include <errno.h>
 
 #ifdef HAVE_GETADDRINFO_A
 #include <netdb.h>
@@ -500,7 +501,7 @@ bool static ConnectSocketDirectly(const CService &addrConnect, SOCKET& hSocketRe
             {
                 bool fAutoBan = GetBoolArg("-autoban", false );
                 LogPrintf("connect() to %s failed after select(): %s autoban:%s\n", addrConnect.ToString(), NetworkErrorString(nRet), fAutoBan);
-                if (nRet == 111 || nRet == 113) {                                                                                                                                                                              // refused or no route - set to ban
+                if (nRet == ECONNREFUSED || nRet == EHOSTUNREACH) {                                                      // refused or no route - set to ban
                     CNetAddr netAddr(addrConnect);
                     if (fAutoBan && !CNode::IsBanned(netAddr)) {
                         int64_t banTime = 0;
