@@ -4061,10 +4061,12 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE,
                                strprintf("Version must be %d or greater", MIN_PEER_PROTO_FORK2_VERSION));
             pfrom->fDisconnect = true;
-            CNetAddr netAddr(pfrom->addr);
-            if (GetBoolArg("-banobsoleteversion", false ) && !CNode::IsBanned(netAddr)) {
-                CNode::Ban(netAddr, BanReasonObsoleteVersion);
-                LogPrintf("%s banned because of obsolete wallet version\n",netAddr.ToString());
+            if (GetBoolArg("-banobsoleteversion", false )) {
+                CNetAddr netAddr(pfrom->addr);
+		if (!CNode::IsBanned(netAddr)) {
+                    CNode::Ban(netAddr, BanReasonObsoleteVersion);
+                    LogPrintf("%s banned because of obsolete wallet version\n",netAddr.ToString());
+                }
             }
             return false;
         }
