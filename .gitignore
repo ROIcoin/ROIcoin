@@ -1,5 +1,7 @@
 *.tar.gz
 
+Build.My
+
 *.exe
 src/roicoin
 src/roicoind

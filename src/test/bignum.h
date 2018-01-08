@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ROICOIN_TEST_BIGNUM_H
-#define ROICOIN_TEST_BIGNUM_H
+#ifndef BITCOIN_TEST_BIGNUM_H
+#define BITCOIN_TEST_BIGNUM_H
 
 #include <algorithm>
 #include <limits>
@@ -15,6 +15,9 @@
 
 #include <openssl/bn.h>
 
+#define likely(x)       __builtin_expect((x),1)
+#define unlikely(x)     __builtin_expect((x),0)
+
 class bignum_error : public std::runtime_error
 {
 public:
@@ -23,53 +26,69 @@ public:
 
 
 /** C++ wrapper for BIGNUM (OpenSSL bignum) */
-class CBigNum : public BIGNUM
+class CBigNum
 {
+private:
+   BIGNUM *content = NULL;
+
 public:
     CBigNum()
     {
-        BN_init(this);
+        this->content = BN_new();
     }
 
     CBigNum(const CBigNum& b)
     {
-        BN_init(this);
-        if (!BN_copy(this, &b))
+	this->content = BN_new();
+        if (unlikely(!BN_copy(this->content, b.get0())))
         {
-            BN_clear_free(this);
+            BN_clear_free(this->content);
             throw bignum_error("CBigNum::CBigNum(const CBigNum&): BN_copy failed");
+        }
+    }
+
+    CBigNum(const BIGNUM* b) {
+	this->content = BN_new();
+        if (unlikely(!BN_copy(this->content, b)))
+        {
+            BN_clear_free(this->content);
+            throw bignum_error("CBigNum::CBigNum(const BIGNUM*): BN_copy failed");
         }
     }
 
     CBigNum& operator=(const CBigNum& b)
     {
-        if (!BN_copy(this, &b))
+        if (unlikely(!BN_copy(this->content, b.get0())))
             throw bignum_error("CBigNum::operator=: BN_copy failed");
         return (*this);
     }
 
     ~CBigNum()
     {
-        BN_clear_free(this);
+        BN_clear_free(content);
     }
 
-    CBigNum(long long n)          { BN_init(this); setint64(n); }
+    CBigNum(long long n)          { this->content = BN_new(); setint64(n); }
 
     explicit CBigNum(const std::vector<unsigned char>& vch)
     {
-        BN_init(this);
+        this->content = BN_new();
         setvch(vch);
+    }
+
+    BIGNUM *get0() const {
+	return this->content;
     }
 
     unsigned long getulong() const
     {
-        return BN_get_word(this);
+        return BN_get_word(this->content);
     }
 
     int getint() const
     {
-        BN_ULONG n = BN_get_word(this);
-        if (!BN_is_negative(this))
+        BN_ULONG n = BN_get_word(this->content);
+        if (!BN_is_negative(this->content))
             return (n > (BN_ULONG)std::numeric_limits<int>::max() ? std::numeric_limits<int>::max() : n);
         else
             return (n > (BN_ULONG)std::numeric_limits<int>::max() ? std::numeric_limits<int>::min() : -(int)n);
@@ -77,15 +96,15 @@ public:
 
    uint64_t getuint64()
         {
-            unsigned int nSize = BN_bn2mpi(this, NULL);
+            unsigned int nSize = BN_bn2mpi(this->content, NULL);
             if (nSize < 4)
                 return 0;
             std::vector<unsigned char> vch(nSize);
-            BN_bn2mpi(this, &vch[0]);
+            BN_bn2mpi(this->content, &vch[0]);
             if (vch.size() > 4)
                 vch[4] &= 0x7f;
             uint64_t n = 0;
-            for (int i = 0, j = vch.size()-1; i < sizeof(n) && j >= 4; i++, j--)
+            for (int_fast32_t i = 0, j = vch.size()-1; i < sizeof(n) && j >= 4; i++, j--)
                 ((unsigned char*)&n)[i] = vch[j];
             return n;
         }
@@ -111,7 +130,7 @@ public:
         }
 
         bool fLeadingZeroes = true;
-        for (int i = 0; i < 8; i++)
+        for (uint_fast8_t i = 0; i < 8; i++)
         {
             unsigned char c = (n >> 56) & 0xff;
             n <<= 8;
@@ -132,7 +151,7 @@ public:
         pch[1] = (nSize >> 16) & 0xff;
         pch[2] = (nSize >> 8) & 0xff;
         pch[3] = (nSize) & 0xff;
-        BN_mpi2bn(pch, p - pch, this);
+        BN_mpi2bn(pch, p - pch, this->content);
     }
 
     void setvch(const std::vector<unsigned char>& vch)
@@ -147,16 +166,16 @@ public:
         vch2[3] = (nSize >> 0) & 0xff;
         // swap data to big endian
         reverse_copy(vch.begin(), vch.end(), vch2.begin() + 4);
-        BN_mpi2bn(&vch2[0], vch2.size(), this);
+        BN_mpi2bn(&vch2[0], vch2.size(), this->content);
     }
 
     std::vector<unsigned char> getvch() const
     {
-        unsigned int nSize = BN_bn2mpi(this, NULL);
+        unsigned int nSize = BN_bn2mpi(this->content, NULL);
         if (nSize <= 4)
             return std::vector<unsigned char>();
         std::vector<unsigned char> vch(nSize);
-        BN_bn2mpi(this, &vch[0]);
+        BN_bn2mpi(content, &vch[0]);
         vch.erase(vch.begin(), vch.begin() + 4);
         reverse(vch.begin(), vch.end());
         return vch;
@@ -170,7 +189,7 @@ inline const CBigNum operator*(const CBigNum& a, const CBigNum& b)
 {
     CBigNum r;
     BN_CTX *ctx = BN_CTX_new();
-    if (!BN_mul(&r, &a, &b, ctx))
+    if (unlikely(!BN_mul(r.get0(), a.get0(), b.get0(), ctx)))
         throw bignum_error("CBigNum::operator*: BN_mul failed");
     BN_CTX_free(ctx);
     return r;
@@ -181,7 +200,7 @@ inline const CBigNum operator/(const CBigNum& a, const CBigNum& b)
     CBigNum r;
     BIGNUM *rem = BN_new();
     BN_CTX *ctx = BN_CTX_new();
-    if (!BN_div(&r, rem, &a, &b, ctx))
+    if (unlikely(!BN_div(r.get0(), rem, a.get0(), b.get0(), ctx)))
         throw bignum_error("CBigNum::operator/: BN_div failed");
     BN_free(rem);
     BN_CTX_free(ctx);
@@ -191,7 +210,7 @@ inline const CBigNum operator/(const CBigNum& a, const CBigNum& b)
 inline const CBigNum operator+(const CBigNum& a, const CBigNum& b)
 {
     CBigNum r;
-    if (!BN_add(&r, &a, &b))
+    if (unlikely(!BN_add(r.get0(), a.get0(), b.get0())))
         throw bignum_error("CBigNum::operator+: BN_add failed");
     return r;
 }
@@ -199,23 +218,23 @@ inline const CBigNum operator+(const CBigNum& a, const CBigNum& b)
 inline const CBigNum operator-(const CBigNum& a, const CBigNum& b)
 {
     CBigNum r;
-    if (!BN_sub(&r, &a, &b))
+    if (unlikely(!BN_sub(r.get0(), a.get0(), b.get0())))
         throw bignum_error("CBigNum::operator-: BN_sub failed");
     return r;
 }
 
 inline const CBigNum operator-(const CBigNum& a)
 {
-    CBigNum r(a);
-    BN_set_negative(&r, !BN_is_negative(&r));
+    CBigNum r(a.get0());
+    BN_set_negative(r.get0(), !BN_is_negative(r.get0()));
     return r;
 }
 
-inline bool operator==(const CBigNum& a, const CBigNum& b) { return (BN_cmp(&a, &b) == 0); }
-inline bool operator!=(const CBigNum& a, const CBigNum& b) { return (BN_cmp(&a, &b) != 0); }
-inline bool operator<=(const CBigNum& a, const CBigNum& b) { return (BN_cmp(&a, &b) <= 0); }
-inline bool operator>=(const CBigNum& a, const CBigNum& b) { return (BN_cmp(&a, &b) >= 0); }
-inline bool operator<(const CBigNum& a, const CBigNum& b)  { return (BN_cmp(&a, &b) < 0); }
-inline bool operator>(const CBigNum& a, const CBigNum& b)  { return (BN_cmp(&a, &b) > 0); }
+inline bool operator==(const CBigNum& a, const CBigNum& b) { return (BN_cmp(a.get0(), b.get0()) == 0); }
+inline bool operator!=(const CBigNum& a, const CBigNum& b) { return (BN_cmp(a.get0(), b.get0()) != 0); }
+inline bool operator<=(const CBigNum& a, const CBigNum& b) { return (BN_cmp(a.get0(), b.get0()) <= 0); }
+inline bool operator>=(const CBigNum& a, const CBigNum& b) { return (BN_cmp(a.get0(), b.get0()) >= 0); }
+inline bool operator<(const CBigNum& a, const CBigNum& b)  { return (BN_cmp(a.get0(), b.get0()) < 0); }
+inline bool operator>(const CBigNum& a, const CBigNum& b)  { return (BN_cmp(a.get0(), b.get0()) > 0); }
 
-#endif // ROICOIN_TEST_BIGNUM_H
+#endif // BITCOIN_TEST_BIGNUM_H
