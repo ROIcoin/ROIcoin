@@ -210,7 +210,7 @@ void sha512Compute32b_parallel(uint64_t *data[SHA512_PARALLEL_N], uint64_t *dige
     
     for (i=0; i<4; ++i) {
         context[0].w[i] = _mm256_set_epi64x ( data[3][i], data[2][i], data[1][i], data[0][i] );
-        context[1].w[i] = _mm256_set_epi64x ( data[7][i], data[6][i], data[5][i], data[4][i]  );
+        context[1].w[i] = _mm256_set_epi64x ( data[7][i], data[6][i], data[5][i], data[4][i] );
     }
 
     for (i=0; i<10; ++i) {
@@ -289,6 +289,7 @@ void sha512Compute32b_parallel(uint64_t *data[SHA512_PARALLEL_N], uint64_t *dige
 void sha512Compute32b_parallel(
         uint64_t *data[SHA512_PARALLEL_N],
         uint64_t *digest[SHA512_PARALLEL_N]) {
+	LogPrintf("AVX2 mining not supported on this platform, exiting\n");
 	exit(1);
 }
 
