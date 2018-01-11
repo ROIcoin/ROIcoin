@@ -46,7 +46,7 @@ public:
         nMinerThreads 		= 0;
         nMaxTipAge 		= 24 * 60 * 60;
         nPruneAfterHeight 	= 262800;
-
+/*
         const char* pszTimestamp = "But about that day or hour no one knows, not even the angels in heaven... Matthew 24:36";
         CMutableTransaction txNew;
         txNew.vin.resize(1);
@@ -91,7 +91,7 @@ public:
 	vSeeds.push_back(CDNSSeedData("seed13.roi-coin.com", "seed13.roi-coin.com"));  
 	vSeeds.push_back(CDNSSeedData("seed14.roi-coin.com", "seed14.roi-coin.com"));  
 	vSeeds.push_back(CDNSSeedData("seed15.roi-coin.com", "seed15.roi-coin.com"));  
-
+*/
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);
 	base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,122);
         base58Prefixes[SECRET_KEY]     = std::vector<unsigned char>(1,128);
@@ -170,7 +170,7 @@ public:
 	consensus.nPowMidasTimeStart  	 = 1511385339;	//date +%s
 
 
-/*	
+	
 if(genesis.GetHash() != uint256S("008872e5582924544e5c707ee4b839bb82c28a9e94e917c94b40538d5658c04b") ){
             arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
             uint256 thash;
@@ -199,7 +199,7 @@ if(genesis.GetHash() != uint256S("008872e5582924544e5c707ee4b839bb82c28a9e94e917
             LogPrintf("block.nFinalCalculation = %u \n", genesis.nFinalCalculation);
 
         }
-*/	
+	
 	consensus.hashGenesisBlock = genesis.GetHash();
 	assert(consensus.hashGenesisBlock == genesis.GetHash());
 
