@@ -1,5 +1,8 @@
 *.tar.gz
 
+Build.My
+Pull.Master
+
 *.exe
 src/roicoin
 src/roicoind
