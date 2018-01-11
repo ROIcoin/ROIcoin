@@ -1249,8 +1249,8 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex)
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
 
-    if(nHeight < 50)			{ return 77 * COIN;}
-    if(nHeight < 100 && nHeight > 50)	{ return 777 * COIN;}
+    if(nHeight < 50)			{ return 500000 * COIN;}  //77
+    if(nHeight < 100 && nHeight > 50)	{ return 500000 * COIN;} //777
     if(nHeight < 201 && nHeight > 100)	{ return 600000 * COIN;}  //6% Investor Payout.
     if(nHeight < 7884000 && nHeight > 201){ return 120 * COIN;}
 
