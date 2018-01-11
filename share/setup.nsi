@@ -5,7 +5,7 @@ SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 1.1.1
+!define VERSION 1.1.4
 !define COMPANY "ROIcoin Core project"
 !define URL http://www.ROIcoin.com/
 
