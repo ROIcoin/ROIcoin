@@ -1,3 +1,91 @@
+# ROIcoin Release Notes for v1.1.4.0
+
+Changes in 1.1.4.0
+
+- issue #15 a new flag -autoban (default is off) was introduced to automaticaly ban peers for 24hrs if they returned "Connection Refused" or "Host unreachable". This will reduce the cpu load when handling peers.
+- issue #16 a new flag -banobsoleteversion (default is off) was introduced to automaticaly ban peers for 24hrs who have obsolete old wallet version ( < v1.1.3 ).
+- issue #19 the wallet rpcport was wrongly configured and conflicted with the p2p port, this explains a lot of slow syncing and low peer counts we have been experiencing. The rpcport is now set to 3376
+- issue #22 the sending addressbook will now contain the send and receive addresses combined , this will facilitate sending matured coins or combining inputs to yourself.
+- windows 64 cross-build instructions were added to the doc folder.
+
+ROIcoin core v1.1.4.0 is now available at:
+https://github.com/ROIcoin/ROIcoin/releases/
+
+Please report bugs using the issue tracker at github:
+https://github.com/ROIcoin/ROIcoin/issues
+
+## Upgrading and downgrading
+### How to Upgrade
+
+If you are running an older version, shut it down. Wait until it has completely
+shut down (which might take a few minutes for older versions).
+Backup your wallet.dat file ( which you should always do regardless of an upgrade event )
+then run the installer (on Windows) or just copy over ROIcoin-qt (on Linux).
+
+Credits:
+- PlainKoin
+- TheTDD
+- Elbandi
+- ghobson2013
+
+# ROIcoin Release Notes for v1.1.3.0
+
+## Optional BETA Release to help System Administrators
+
+In my daily duty to manage the seed nodes and block explorer , I often encounter malicious peer nodes.
+To help administrators out there I have added the following 3 new RPC calls, 
+These RPC calls are available both via ROIcoin-cli and the GUI debug window.
+
+* setban ip or ip/netmask add/remove  - manually add or remove a peer to ban list
+* listbanned  -  list banned peers
+* clearbanned -  clears all banned
+
+Note: banlist is persisted in banlist.dat file, so the server will remember on restart.
+
+Example:
+
+```code
+ROIcoin-cli setban 10.10.10.15 add
+ROIcoin-cli listbanned
+ [
+   {
+       “address” : “10.10.10.15/255.255.255.255",
+       “banned_until” : 1514554316,
+       “ban_created” : 1514467916,
+       “ban_reason” : “manually added”
+   }
+ ]
+ ROIcoin-cli getpeerinfo | grep 10.10.10.15
+  gone !!
+```
+
+Note: This can also be helpful in temporarily banning peers who are on the wrong chain.
+Warning: this is a PRE-RELEASE, I am still endurance testing it, its in use on our seed nodes.
+
+# ROIcoin Release Notes for v1.1.2.0
+
+## Emergency Release
+The previous critical bug fix in v1.1.1 created a consensus disagreement between 2 windows miners mining the same block, Miner1 was on v1.1.0 and Miner2 on v1.1.1, both had a different result when calculating fees. This caused a fork in our block chain at height 29732
+
+To resolve this situation we are hard forking at block nr. 31000 to make sure all miners are on v1.1.2.
+
+## Checking your blockchain
+In addition to mandatory upgrade, you may need to reindex your blockchain to the same chain our 
+exchanges and block explorer are using.
+
+Go to Help->debug window-> console tab and type "getblockhash 29732"
+if you see "0000006aef642158383b16bd16b67d762a41a63ae2cfbdc6479d65d229818175" then you
+are on the correct chain, otherwise you need to:
+ * delete your blockchain folders named "blocks" and "chainstate" usually stored in c:\users\<USER>\AppData\Roaming\ROIcoin and on linux in $HOME/.ROIcoin folder.
+ * download our bootstrap-27122017-chain-x175.zip file
+ * unzip it 
+ * run ROIcoin-qt.exe -loadblock=c:\FULL-PATH-TO\bootstrap.dat 
+
+## How to Upgrade
+
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions). 
+Backup your wallet.dat file ( which you should always do regardless of an upgrade event ) then just copy over ROIcoin-qt.exe (win64) or ROIcoin-qt (linux).
+
 # ROIcoin Release Notes for v1.1.1.0
 
 This release contains one critical and some minor fixes.
