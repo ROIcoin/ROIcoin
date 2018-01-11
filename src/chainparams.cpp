@@ -160,17 +160,16 @@ public:
         genesis.hashPrevBlock.SetNull();
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion 		 = 4;
-        genesis.nTime    		 = 1511385339;  //date +%s
+     	genesis.nTime    		 = 1511385339;  //date +%s
         genesis.nBits    		 = 0x21000FFF;  //0x21000FFF
-	genesis.nNonce 			 = 0xffff0000;  //0xffff0000
-        genesis.nStartLocation 		 = 0;
-        genesis.nFinalCalculation 	 = 0;
+	genesis.nNonce 			 = 4294901760;  //0xffff0000
+        genesis.nStartLocation 		 = 259177;
+        genesis.nFinalCalculation 	 = 3482034946;
 	consensus.nPowAdjustmentInterval = 20 * 60;   	//Twenty minutes
 	consensus.nPowMidasBlockStart 	 = 1;		//Block Start MIDAS
 	consensus.nPowMidasTimeStart  	 = 1511385339;	//date +%s
 
-
-	
+/*	
 if(genesis.GetHash() != uint256S("008872e5582924544e5c707ee4b839bb82c28a9e94e917c94b40538d5658c04b") ){
             arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
             uint256 thash;
@@ -199,13 +198,13 @@ if(genesis.GetHash() != uint256S("008872e5582924544e5c707ee4b839bb82c28a9e94e917
             LogPrintf("block.nFinalCalculation = %u \n", genesis.nFinalCalculation);
 
         }
-	
+*/	
 	consensus.hashGenesisBlock = genesis.GetHash();
 	assert(consensus.hashGenesisBlock == genesis.GetHash());
 
-        
-	//assert(consensus.hashGenesisBlock == uint256S("0x003852bfe1d708c4dfac4d48f5d678031c12f07fe478916c40351a84ab85747d"));
-        //assert(genesis.hashMerkleRoot == uint256S("0xfd143730e1e498a3d76d09557044cfbacef449cb5513c94bef489a82b17e14be"));
+	assert(consensus.hashGenesisBlock == uint256S("0x005566d40af96f9f09b5bd8b499f769e571ab11dea9390b4e81135f8770c63a4"));
+        assert(genesis.hashMerkleRoot == uint256S("0x92feaffad16699d7f7acb5bb53e6fab02d3eb5751cc32a4f787b1cced8e24016"));
+
 
 	vSeeds.push_back(CDNSSeedData("TestNet.roi-coin.com", "TestNet.roi-coin.com"));  //TestNet - Toronto VPS
 
