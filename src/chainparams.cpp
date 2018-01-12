@@ -221,7 +221,7 @@ if(genesis.GetHash() != uint256S("008872e5582924544e5c707ee4b839bb82c28a9e94e917
         fMiningRequiresPeers 		= false;
         fDefaultConsistencyChecks 	= false;
         fRequireStandard 		= false;
-        fMineBlocksOnDemand 		= true;
+        fMineBlocksOnDemand 		= false;
         fTestnetToBeDeprecatedFieldRPC 	= true;
 
 
@@ -311,7 +311,7 @@ if(genesis.GetHash() != uint256S("008872e5582924544e5c707ee4b839bb82c28a9e94e917
         fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = true;
         fRequireStandard = false;
-        fMineBlocksOnDemand = true;
+        fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = false;
 
         checkpointData = (Checkpoints::CCheckpointData){
