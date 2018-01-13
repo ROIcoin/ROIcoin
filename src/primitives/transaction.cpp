@@ -180,11 +180,12 @@ static uint64_t bonusTable[720*365+1];
  */
 CAmount validateCoins(CAmount theAmount){
     // Never return a negative amount
-    if(theAmount < 0) { return CAmount(0); }
+    //if(theAmount < 0) { return CAmount(0); }
 
     // Never return a value larger than MAX_MONEY
-    if(!MoneyRange(theAmount)) { return MAX_MONEY-1; }
+    //if(!MoneyRange(theAmount)) { return MAX_MONEY-1; }
 
+    // Turning off validation since this was never necessary before
     return theAmount;
 }
 
