@@ -230,7 +230,7 @@ namespace patternsearch
 		delete sha512Threads;
 
 		clock_t t2 = clock();
-		LogPrintf("create sha512 data %d\n", ((double)t2 - (double)t1) / CLOCKS_PER_SEC);
+		//LogPrintf("create sha512 data %d\n", ((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 
 		if (*minerStopFlag == 0) {
 			boost::mutex mtx;
@@ -246,7 +246,7 @@ namespace patternsearch
 			delete aesThreads;
 
 			clock_t t3 = clock();
-			LogPrintf("aes search %d\n", ((double)t3 - (double)t2) / CLOCKS_PER_SEC);
+			//LogPrintf("aes search %d\n", ((double)t3 - (double)t2) / CLOCKS_PER_SEC);
 		}
 
     boost::this_thread::restore_interruption ri(di);
