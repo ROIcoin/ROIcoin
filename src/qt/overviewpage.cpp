@@ -205,22 +205,19 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
         int blocksRemaining=releaseBlock-curHeight;
         CAmount withInterest=termDeposit.GetValueWithInterest(lockHeight,(curHeight<releaseBlock?curHeight:releaseBlock));
         CAmount matureValue=termDeposit.GetValueWithInterest(lockHeight,releaseBlock);
-        int blocksSoFar=curHeight-lockHeight;
-
-        double interestRatePerBlock=pow(((0.0+matureValue)/termDeposit.nValue),1.0/term);
-        double interestRate=(pow(interestRatePerBlock,365*720)-1)*100;
+        CAmount interestValue = withInterest-termDeposit.nValue;
         
         if(curHeight>=releaseBlock){
             ui->ROITable->setItem(i, 0, new QTableWidgetItem(QString("Matured (Warning: this amount is no longer earning interest of any kind)")));
             totalMatured += matureValue;
         }else{
             ui->ROITable->setItem(i, 0, new QTableWidgetItem(QString("Earned")));
-            totalAccrued += (withInterest-termDeposit.nValue);
+            totalAccrued += interestValue;
 	    totalLocked  += termDeposit.nValue;
         }
 
         ui->ROITable->setItem(i, 1, new QTableWidgetItem(ROIcoinUnits::format(nDisplayUnit, termDeposit.nValue)));
-        ui->ROITable->setItem(i, 2, new QTableWidgetItem(ROIcoinUnits::format(nDisplayUnit, withInterest-termDeposit.nValue)));
+        ui->ROITable->setItem(i, 2, new QTableWidgetItem(ROIcoinUnits::format(nDisplayUnit, interestValue)));
         ui->ROITable->setItem(i, 3, new QTableWidgetItem(ROIcoinUnits::format(nDisplayUnit, withInterest)));
         ui->ROITable->setItem(i, 4, new QTableWidgetItem(ROIcoinUnits::format(nDisplayUnit, matureValue)));
         ui->ROITable->setItem(i, 5, new QTableWidgetItem(QString::number((term)/720)));

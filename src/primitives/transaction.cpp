@@ -210,6 +210,8 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
 
 CAmount getPostRateForAmount(int periods, CAmount theAmount){
 
+    if ( periods <= 0 ) { return CAmount(0) ; } // this is needed or we get negative rate
+
     double result = 0.0;
     double multiplier = 0.0000005975;
     for ( int i = 1; i < periods; i++)
@@ -249,13 +251,16 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
 {
 
     //These conditions generally should not occur
-    if(maturationBlock >= 500000000 || outputBlockHeight<0 || valuationHeight<0 || 	valuationHeight<outputBlockHeight)
+    if(maturationBlock >= 500000000 || outputBlockHeight<0 || valuationHeight<0 || valuationHeight<outputBlockHeight)
     {
         return nValue;
     }
 
     //Regular deposits can have a maximum of 30 days interest
     int blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
+
+    // dont allow negative blocks
+    blocks=std::max(blocks,0);
 
     //Term deposits may have up to 1 year of interest
     if(maturationBlock>0)
