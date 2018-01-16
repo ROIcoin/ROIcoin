@@ -9,7 +9,7 @@
 
 using namespace std;
 
-// TO COMPILE DO: g++ -o testfix -I .. testfix.cpp  -lcrypto -std=c++11
+// TO COMPILE DO: g++ -o testfix2 -I .. testfix2.cpp  -lcrypto -std=c++11
 
 typedef int64_t CAmount;
 
@@ -116,6 +116,10 @@ int main(int argc, char* argv[])
   CAmount outputblock = atoi(argv[2]);
   CAmount blockheight = atoi(argv[3]);
   CAmount termblocks = blockheight-outputblock;
+  int pos = atoi(argv[4]);
+  if (pos == 1) {
+    termblocks = -1;
+  }
 
   chainHeight = blockheight;
   initRateTable();
@@ -126,6 +130,7 @@ int main(int argc, char* argv[])
   
   CAmount interest = GetInterest(principal, outputblock , blockheight , termblocks );
   CAmount interestOnly = interest - principal;
+  
   double interestRateForTime=(0.0+interestOnly)/(principal);
   double fractionOfaYear=262800.0/termblocks;
   double interestRatePerBlock=pow(1+interestRateForTime,1.0/termblocks)-1;
