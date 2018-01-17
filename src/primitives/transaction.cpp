@@ -214,12 +214,11 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         return nValue;
     }
 
-    //Regular deposits can have a maximum of 30 days interest
-    // TODO REVIEW THIS SHOULD PROBABLY BE REMOVED
-    //int blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
+    // Calculate Blocks
+    int blocks=valuationHeight-outputBlockHeight;
 
     // dont allow negative blocks
-    int blocks=std::max(blocks,0);
+    blocks=std::max(blocks,0);
 
     //Term deposits may have up to 1 year of interest
     if(maturationBlock>0)
@@ -246,7 +245,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         }
     }
 #ifndef WIN32
-    //printf("GetInterest: chainHeight: %d lockHeight: %d principal: %d interest: %li pos: %li deposit: %li matureblock: %d\n", chainHeight, outputBlockHeight, nValue, interestAmount, standardInterest, termDepositAmount,maturationBlock);
+   // printf("GetInterest: chainHeight: %d lockHeight: %d principal: %d interest: %li deposit: %li matureblock: %d\n", chainHeight, outputBlockHeight, nValue, standardInterest, termDepositAmount,maturationBlock);
 #endif
     return nValue+standardInterest+termDepositAmount;
   }
