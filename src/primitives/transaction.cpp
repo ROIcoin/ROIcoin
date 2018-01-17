@@ -219,7 +219,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     //int blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
 
     // dont allow negative blocks
-    blocks=std::max(blocks,0);
+    int blocks=std::max(blocks,0);
 
     //Term deposits may have up to 1 year of interest
     if(maturationBlock>0)
