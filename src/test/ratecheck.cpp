@@ -35,7 +35,7 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
     CBigNum rate256(rateTable[periods]);
     CBigNum rate0256(rateTable[0]);
     CBigNum result=(amount256*rate256)/rate0256;
-    printf(" getRateForAmount(): %" PRId64 " \n", result.getuint64());
+    //printf(" getRateForAmount(): %" PRId64 " \n", result.getuint64());
     return  result.getuint64()-theAmount;
 }
 
