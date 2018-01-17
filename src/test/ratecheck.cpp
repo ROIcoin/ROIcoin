@@ -46,7 +46,7 @@ void initRateTable(){
 
     for(int i=1;i<ONEYEARPLUS1;i++)
     {
-        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>18)+(rateTable[i-1]>>19);  
+        rateTable[i]=rateTable[i-1]+(rateTable[i-1]>>19)+(rateTable[i-1]>>18);  
     }
 }
 
@@ -116,14 +116,16 @@ int main(int argc, char* argv[])
   double interestRateForTime=(0.0+interestOnly)/(principal);
   double fractionOfaYear=262800.0/termblocks;
   double interestRatePerBlock=pow(1+interestRateForTime,1.0/termblocks)-1;
-
+  CAmount result = interest/COIN;
+  CAmount remainder = interest%COIN;
+  
   std::ostringstream ss;
   
   if ( termblocks != -1 ){ 
     ss << "\nResult for TD principal of " << (0.0+principal)/COIN <<" ROI ";
     ss << "for " << termblocks << " blocks.\n";
     ss << "This is approximately " << (0.0+termblocks)/(720) << " days.\n";
-    ss << "Maturation amount: " << (0.0+interest)/COIN << " ROI.\n";
+    ss << "Maturation amount: " << result << "." << remainder << " ROI.\n";
     ss << " IRPB = " << interestRatePerBlock;
     ss << "\n IRFT = " << interestRateForTime*100 << "%";
     ss << "\n APR = " << (pow(1+interestRateForTime,fractionOfaYear)-1)*100 <<"%\n";
@@ -132,11 +134,9 @@ int main(int argc, char* argv[])
     ss << "\nResult for POS principal of " << (0.0+principal)/COIN <<" ROI ";
     ss << "for " << (blockheight-outputblock) << " blocks.\n";
     ss << "This is approximately " << (0.0+(blockheight-outputblock))/(720) << " days.\n";
-    ss << "Maturation amount: " << (0.0+interest)/COIN << " ROI.\n";
+    ss << "Maturation amount: " << result << "." << remainder << " ROI.\n";
     ss << "\n IRFT = " << interestRateForTime*100 << "% \n";
     cout << ss.str();
   }
-
- 
 }
 
