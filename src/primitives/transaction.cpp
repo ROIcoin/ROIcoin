@@ -234,7 +234,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     {
         int term=std::min(ONEYEAR,maturationBlock-outputBlockHeight);
 
-        if(term>720*2)
+        if(term>5)
 	{
             CBigNum am(standardInterest);
             CBigNum fac(TWOYEARS-term);
