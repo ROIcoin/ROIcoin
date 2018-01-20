@@ -239,7 +239,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
             CBigNum am(standardInterest);
             CBigNum fac(TWOYEARS-term);
             CBigNum div(TWOYEARS);
-            CBigNum result= am - ((am*fac*fac*fac*fac*fac*fac)/(div*div*div*div*div*div));
+            CBigNum result= am - ((am*fac*fac*fac*fac*fac*fac)/(div*div*div*div*div*div)/4);
             termDepositAmount=result.getuint64();
 	    //LogPrintf("Post_Fork: chainHeight: %d lockHeight: %d principal: %d termDepositAmount: %li\n", chainHeight, outputBlockHeight, nValue, termDepositAmount);
         }
