@@ -358,7 +358,7 @@ public:
 
     //! filter decides which addresses will count towards the debit
     CAmount GetDebit(const isminefilter& filter) const;
-    CAmount GetCredit(const isminefilter& filter) const;
+    CAmount GetCredit(const isminefilter& filter, bool interest = true) const;
     CAmount GetImmatureCredit(bool fUseCache=true) const;
     CAmount GetImmatureTermDepositCredit() const;
     CAmount GetAvailableCredit(bool fUseCache=true) const;
@@ -656,14 +656,14 @@ public:
     isminetype IsMine(const CTxIn& txin) const;
     CAmount GetDebit(const CTxIn& txin, const isminefilter& filter) const;
     isminetype IsMine(const CTxOut& txout) const;
-    CAmount GetCredit(const CTxOut& txout, const isminefilter& filter, const int& nDepth) const;
+    CAmount GetCredit(const CTxOut& txout, const isminefilter& filter, const int& nDepth, bool interest = true) const;
     bool IsChange(const CTxOut& txout) const;
     CAmount GetChange(const CTxOut& txout) const;
     bool IsMine(const CTransaction& tx) const;
     /** should probably be renamed to IsRelevantToMe */
     bool IsFromMe(const CTransaction& tx) const;
     CAmount GetDebit(const CTransaction& tx, const isminefilter& filter) const;
-    CAmount GetCredit(const CTransaction& tx, const isminefilter& filter, const int& nDepth) const;
+    CAmount GetCredit(const CTransaction& tx, const isminefilter& filter, const int& nDepth, bool interest = true) const;
     CAmount GetChange(const CTransaction& tx) const;
     void SetBestChain(const CBlockLocator& loc);
 
