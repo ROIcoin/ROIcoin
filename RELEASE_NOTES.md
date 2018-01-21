@@ -1,6 +1,6 @@
-# ROIcoin Release Notes for v1.1.4.0
+# ROIcoin Release Notes for v1.2.0.0
 
-Changes in 1.1.4.0
+Changes in 1.2.0.0
 
 - issue #15 a new flag -autoban (default is off) was introduced to automaticaly ban peers for 24hrs if they returned "Connection Refused" or "Host unreachable". This will reduce the cpu load when handling peers.
 - issue #16 a new flag -banobsoleteversion (default is off) was introduced to automaticaly ban peers for 24hrs who have obsolete old wallet version ( < v1.1.3 ).
@@ -8,7 +8,7 @@ Changes in 1.1.4.0
 - issue #22 the sending addressbook will now contain the send and receive addresses combined , this will facilitate sending matured coins or combining inputs to yourself.
 - windows 64 cross-build instructions were added to the doc folder.
 
-ROIcoin core v1.1.4.0 is now available at:
+ROIcoin core v1.2.0.0 is now available at:
 https://github.com/ROIcoin/ROIcoin/releases/
 
 Please report bugs using the issue tracker at github:
