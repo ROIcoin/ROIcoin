@@ -13,6 +13,7 @@
 #include "openuridialog.h"
 #include "optionsdialog.h"
 #include "optionsmodel.h"
+#include "platformstyle.h"
 #include "rpcconsole.h"
 #include "scicon.h"
 #include "utilitydialog.h"
@@ -103,6 +104,7 @@ ROIcoinGUI::ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     rpcConsole(0),
     prevBlocks(0),
     spinnerFrame(0),
+    platformStyle(platformStyle)
     miningOffAction(0),
     miningOnAction(0)
 {
@@ -137,12 +139,12 @@ ROIcoinGUI::ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     setUnifiedTitleAndToolBarOnMac(true);
 #endif
 
-    rpcConsole = new RPCConsole(0);
+    rpcConsole = new RPCConsole(platformStyle, 0);
 #ifdef ENABLE_WALLET
     if(enableWallet)
     {
         /** Create wallet frame and make it the central widget */
-        walletFrame = new WalletFrame(this);
+        walletFrame = new WalletFrame(platformStyle, this);
         setCentralWidget(walletFrame);
     } else
 #endif // ENABLE_WALLET
@@ -152,7 +154,7 @@ ROIcoinGUI::ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
          */
         setCentralWidget(rpcConsole);
     }
-
+	    
     // Accept D&D of URIs
     setAcceptDrops(true);
 
@@ -430,6 +432,7 @@ void ROIcoinGUI::createMenuBar()
         file->addAction(openAction);
         file->addAction(backupWalletAction);
 	file->addAction(paperWalletAction);
+	file->addSeparator();
         file->addAction(signMessageAction);
         file->addAction(verifyMessageAction);
         file->addSeparator();
