@@ -1,3 +1,19 @@
+Add: QT Paper Wallet
+
+Paper wallet support has been developed by AndyMeows (IRC username) originally for DogeCoin, and 
+can be accessed via the "File" menu. It's intended for two purposes; to generate
+small value paper wallets to hand out, and more permanent deposit paper wallets
+for keeping balances offline.
+
+IMPORTANT: If you are producing offline paper wallets, you should do so on a
+computer that's disconnected from the Internet. While the wallet generator
+does not save the keys it generates, this ensures there is no risk of a virus
+or similar capturing the key from memory or interfering with its generation.
+
+
+
+
+
 # ROIcoin Release Notes for v1.1.4.0
 
 Changes in 1.1.4.0
