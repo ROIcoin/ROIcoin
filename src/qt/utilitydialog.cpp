@@ -394,9 +394,9 @@ void PaperWalletDialog::on_printButton_clicked()
 
         WalletModel::SendCoinsReturn prepareStatus;
         if (this->model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
-            prepareStatus = model->prepareTransaction(*tx, CoinControlDialog::coinControl);
+            prepareStatus = model->prepareTransaction(currentTransaction, CoinControlDialog::coinControl);
         else
-            prepareStatus = model->prepareTransaction(*tx);
+            prepareStatus = model->prepareTransaction(currentTransaction);
 
         if (prepareStatus.status == WalletModel::InvalidAddress) {
             QMessageBox::critical(this, tr("Send Coins"), tr("The recipient address is not valid, please recheck."), QMessageBox::Ok, QMessageBox::Ok);
@@ -413,50 +413,62 @@ void PaperWalletDialog::on_printButton_clicked()
         } else if (prepareStatus.status == WalletModel::OK) {
             break;
         } else {
-            delete tx;
+            delete currentTransaction;
             return;
         }
     }
 
     // Stolen from sendcoinsdialog.cpp
-    qint64 txFee = tx->getTransactionFee();
+    CAmount txFee = currentTransaction.getTransactionFee();
     QString questionString = tr("Are you sure you want to send?");
     questionString.append("<br /><br />%1");
 
-    if (txFee > 0) {
+if(txFee > 0)
+    {
         // append fee string if a fee is required
         questionString.append("<hr /><span style='color:#aa0000;'>");
-        questionString.append(ROIcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), txFee));
+        questionString.append(ROIcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), txFee));
         questionString.append("</span> ");
         questionString.append(tr("added as transaction fee"));
+
+        // append transaction size
+        questionString.append(" (" + QString::number((double)currentTransaction.getTransactionSize() / 1000) + " kB)");
     }
 
     // add total amount in all subdivision units
     questionString.append("<hr />");
-    qint64 totalAmount = tx->getTotalTransactionAmount() + txFee;
+    CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
     QStringList alternativeUnits;
-    Q_FOREACH  (ROIcoinUnits::Unit u, ROIcoinUnits::availableUnits()) {
-        if (u != model->getOptionsModel()->getDisplayUnit())
-            alternativeUnits.append(ROIcoinUnits::formatWithUnit(u, totalAmount));
+    Q_FOREACH(ROIcoinUnits::Unit u, ROIcoinUnits::availableUnits())
+    {
+        if(u != model->getOptionsModel()->getDisplayUnit())
+            alternativeUnits.append(ROIcoinUnits::formatHtmlWithUnit(u, totalAmount));
     }
+    questionString.append(tr("Total Amount %1<span style='font-size:10pt;font-weight:normal;'><br />(=%2)</span>")
+        .arg(ROIcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount))
+        .arg(alternativeUnits.join(" " + tr("or") + "<br />")));
 
-    questionString.append(tr("Total Amount %1 (= %2)")
-                              .arg(ROIcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount))
-                              .arg(alternativeUnits.join(" " + tr("or") + " ")));
+    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm send coins"),
+        questionString.arg(formatted.join("<br />")),
+        QMessageBox::Yes | QMessageBox::Cancel,
+        QMessageBox::Cancel);
 
-    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm send coins"), questionString.arg(formatted.join("<br />")), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
-
-    if (retval != QMessageBox::Yes) {
-        delete tx;
+    if(retval != QMessageBox::Yes)
+    {
+        fNewRecipientAllowed = true;
         return;
     }
 
-    WalletModel::SendCoinsReturn sendStatus = this->model->sendCoins(*tx);
+    // now send the prepared transaction
+    WalletModel::SendCoinsReturn sendStatus = model->sendCoins(currentTransaction);
+    // process sendStatus and on error generate message shown to user
+    processSendCoinsReturn(sendStatus);
+
 
     if (sendStatus.status == WalletModel::TransactionCommitFailed) {
         QMessageBox::critical(this, tr("Send Coins"), tr("The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here."), QMessageBox::Ok, QMessageBox::Ok);
     }
-    delete tx;
+    delete currentTransaction;
 #endif
     return;
 }
