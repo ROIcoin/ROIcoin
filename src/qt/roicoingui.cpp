@@ -13,7 +13,6 @@
 #include "openuridialog.h"
 #include "optionsdialog.h"
 #include "optionsmodel.h"
-#include "platformstyle.h"
 #include "rpcconsole.h"
 #include "scicon.h"
 #include "utilitydialog.h"
@@ -64,7 +63,7 @@
 
 const QString ROIcoinGUI::DEFAULT_WALLET = "~Default";
 
-ROIcoinGUI::ROIcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent) :
+ROIcoinGUI::ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     QMainWindow(parent),
     clientModel(0),
     walletFrame(0),
