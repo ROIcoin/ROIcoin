@@ -370,7 +370,7 @@ void PaperWalletDialog::on_printButton_clicked()
     while (true) {
         bool ok;
 
-        // Ask for an amount to send to each paper wallet. It might be better to try to use the BitcoinAmountField, but this works fine.
+        // Ask for an amount to send to each paper wallet. It might be better to try to use the ROIcoinAmountField, but this works fine.
         double amountInput = QInputDialog::getDouble(this, tr("Load Paper Wallets"), tr("The paper wallet printing process has begun.<br/>Please wait for the wallets to print completely and verify that everything printed correctly.<br/>Check for misalignments, ink bleeding, smears, or anything else that could make the private keys unreadable.<br/>Now, enter the number of DOGE you wish to send to each wallet:"), 0, 0, 2147483647, 8, &ok);
 
         if (!ok) {
@@ -394,9 +394,9 @@ void PaperWalletDialog::on_printButton_clicked()
 
         WalletModel::SendCoinsReturn prepareStatus;
         if (this->model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
-            prepareStatus = model->prepareTransaction(currentTransaction, CoinControlDialog::coinControl);
+            prepareStatus = model->prepareTransaction(*tx, CoinControlDialog::coinControl);
         else
-            prepareStatus = model->prepareTransaction(currentTransaction);
+            prepareStatus = model->prepareTransaction(*tx);
 
         if (prepareStatus.status == WalletModel::InvalidAddress) {
             QMessageBox::critical(this, tr("Send Coins"), tr("The recipient address is not valid, please recheck."), QMessageBox::Ok, QMessageBox::Ok);
