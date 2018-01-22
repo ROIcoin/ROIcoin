@@ -33,7 +33,7 @@ private:
     static const int PAPER_WALLET_READJUST_LIMIT = 20;
     static const int PAPER_WALLET_PAGE_MARGIN = 50;
 
-private slots:
+private Q_SLOTS:
     void on_getNewAddress_clicked();
     void on_printButton_clicked();
 };
