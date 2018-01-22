@@ -104,7 +104,6 @@ ROIcoinGUI::ROIcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     rpcConsole(0),
     prevBlocks(0),
     spinnerFrame(0),
-    platformStyle(platformStyle),
     miningOffAction(0),
     miningOnAction(0)
 {
@@ -139,12 +138,12 @@ ROIcoinGUI::ROIcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     setUnifiedTitleAndToolBarOnMac(true);
 #endif
 
-    rpcConsole = new RPCConsole(platformStyle, 0);
+     rpcConsole = new RPCConsole(0);
 #ifdef ENABLE_WALLET
     if(enableWallet)
     {
         /** Create wallet frame and make it the central widget */
-        walletFrame = new WalletFrame(platformStyle, this);
+        walletFrame = new WalletFrame(this);
         setCentralWidget(walletFrame);
     } else
 #endif // ENABLE_WALLET
@@ -153,7 +152,7 @@ ROIcoinGUI::ROIcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
          * the central widget is the rpc console.
          */
         setCentralWidget(rpcConsole);
-    }
+}
 	    
     // Accept D&D of URIs
     setAcceptDrops(true);
