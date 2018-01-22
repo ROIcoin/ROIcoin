@@ -39,19 +39,19 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
 #endif
 
     // define text to place
-    QString titleText       = tr("ROI Coin - Core");
+    QString titleText       = tr("ROI coin - Core");
     QString versionText     = QString("Version %1").arg(QString::fromStdString(FormatFullVersion()));
     QString copyrightText  = QChar(0xA9)+QString("2017-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The ROI coin developers"));
     QString copyrightText2   = QChar(0xA9)+QString("2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin developers"));
 
 
     const char *inspirationals[] = {
-        "ROI Coin is Return on Investment"
+        "ROI coin is Return on Investment"
     };
 
     srand(time(NULL)+clock());
     QString inspirationalText  = QString(inspirationals[rand() % 1]);
-    QString authorText = QString("https://ROI-Coin.com");
+    QString authorText = QString("www.roi-coin.com");
 
     QString titleAddText    = networkStyle->getTitleAddText();
 
