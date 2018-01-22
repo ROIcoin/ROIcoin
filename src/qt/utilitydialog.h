@@ -7,6 +7,7 @@
 
 #include <QDialog>
 #include <QObject>
+#include "walletmodel.h"
 
 class ROIcoinGUI;
 class ClientModel;
