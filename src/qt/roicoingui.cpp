@@ -64,7 +64,7 @@
 
 const QString ROIcoinGUI::DEFAULT_WALLET = "~Default";
 
-ROIcoinGUI::ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
+ROIcoinGUI::ROIcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent) :
     QMainWindow(parent),
     clientModel(0),
     walletFrame(0),
@@ -111,7 +111,7 @@ ROIcoinGUI::ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     GUIUtil::restoreWindowGeometry("nWindow", QSize(1200, 700), this);
 	qApp->setStyleSheet("QMainWindow { background-image:url(:icons/roi);border:none;font-family:'Open Sans,sans-serif'; }");
 
-    QString windowTitle = tr("ROIcoin Core") + " - ";
+    QString windowTitle = tr("ROI coin Core") + " - ";
 #ifdef ENABLE_WALLET
     /* if compiled with wallet support, -disablewallet can still disable the wallet */
     enableWallet = !GetBoolArg("-disablewallet", false);
@@ -371,7 +371,7 @@ void ROIcoinGUI::createActions()
     signMessageAction->setStatusTip(tr("Sign messages with your ROIcoin addresses to prove you own them"));
     verifyMessageAction = new QAction(TextColorIcon(":/icons/verify"), tr("Verify message..."), this);
     verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified ROIcoin addresses"));
-    paperWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/print"), tr("Print paper wallets"), this);
+    paperWalletAction = new QAction(TextColorIcon(":/icons/print"), tr("Print paper wallets"), this);
     paperWalletAction->setStatusTip(tr("Print paper wallets"));
 
     openRPCConsoleAction = new QAction(TextColorIcon(":/icons/debugwindow"), tr("Debug window"), this);
