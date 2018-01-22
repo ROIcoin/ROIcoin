@@ -22,7 +22,6 @@ class ClientModel;
 class NetworkStyle;
 class Notificator;
 class OptionsModel;
-class PlatformStyle;
 class RPCConsole;
 class SendCoinsRecipient;
 class UnitDisplayStatusBarControl;
@@ -48,7 +47,7 @@ class ROIcoinGUI : public QMainWindow
 public:
     static const QString DEFAULT_WALLET;
 
-    explicit ROIcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
+    explicit ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent = 0);
     ~ROIcoinGUI();
 
     /** Set the client model.
@@ -123,8 +122,6 @@ private:
     int prevBlocks;
     int spinnerFrame;
     
-    const PlatformStyle *platformStyle;
-
     /** Create the main UI actions. */
     void createActions();
     /** Create the menu bar and sub-menus. */
