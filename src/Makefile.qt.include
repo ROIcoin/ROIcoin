@@ -85,6 +85,7 @@ QT_FORMS_UI = \
   qt/forms/openuridialog.ui \
   qt/forms/optionsdialog.ui \
   qt/forms/overviewpage.ui \
+  qt/forms/paperwalletdialog.ui \
   qt/forms/receivecoinsdialog.ui \
   qt/forms/receiverequestdialog.ui \
   qt/forms/rpcconsole.ui \
@@ -247,6 +248,8 @@ RES_ICONS = \
   qt/res/icons/lock_open.png \
   qt/res/icons/open.png \
   qt/res/icons/overview.png \
+  qt/res/icons/paper_wallet.png \
+  qt/res/icons/print.png \
   qt/res/icons/quit.png \
   qt/res/icons/receive.png \
   qt/res/icons/remove.png \
