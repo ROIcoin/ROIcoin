@@ -385,7 +385,7 @@ void PaperWalletDialog::on_printButton_clicked()
 
         QList<SendCoinsRecipient> recipients;
         quint64 amount = (quint64)(amountInput * COIN);
-        foreach (const QString& dest, recipientPubKeyHashes) {
+        Q_FOREACH  (const QString& dest, recipientPubKeyHashes) {
             recipients.append(SendCoinsRecipient(dest, tr("Paper wallet %1").arg(dest), amount, ""));
             formatted.append(tr("<b>%1</b> to Paper Wallet <span style='font-family: monospace;'>%2</span>").arg(QString::number(amountInput, 'f', 8), GUIUtil::HtmlEscape(dest)));
         }
@@ -435,7 +435,7 @@ void PaperWalletDialog::on_printButton_clicked()
     questionString.append("<hr />");
     qint64 totalAmount = tx->getTotalTransactionAmount() + txFee;
     QStringList alternativeUnits;
-    foreach (ROIcoinUnits::Unit u, ROIcoinUnits::availableUnits()) {
+    Q_FOREACH  (ROIcoinUnits::Unit u, ROIcoinUnits::availableUnits()) {
         if (u != model->getOptionsModel()->getDisplayUnit())
             alternativeUnits.append(ROIcoinUnits::formatWithUnit(u, totalAmount));
     }
