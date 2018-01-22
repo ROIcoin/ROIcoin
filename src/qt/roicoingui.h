@@ -48,7 +48,7 @@ class ROIcoinGUI : public QMainWindow
 public:
     static const QString DEFAULT_WALLET;
 
-    explicit ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent = 0);
+    explicit ROIcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
     ~ROIcoinGUI();
 
     /** Set the client model.
@@ -122,6 +122,8 @@ private:
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
     int spinnerFrame;
+    
+    const PlatformStyle *platformStyle;
 
     /** Create the main UI actions. */
     void createActions();
