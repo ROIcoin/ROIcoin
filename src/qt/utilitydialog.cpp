@@ -17,7 +17,7 @@
 #endif
 
 #include "optionsmodel.h"
-#include "bitcoingui.h"
+#include "roicoingui.h"
 #include "clientmodel.h"
 #include "guiutil.h"
 
@@ -62,7 +62,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
 {
     ui->setupUi(this);
 
-    QString version = tr("ROIcoin Core") + " " + tr("version") + " " + QString::fromStdString(FormatFullVersion());
+    QString version = tr("ROI coin Core") + " " + tr("version") + " " + QString::fromStdString(FormatFullVersion());
     /* On x86 add a bit specifier to the version so that users can distinguish between
      * 32 and 64 bit builds. On other architectures, 32/64 bit may be more ambigious.
      */
@@ -74,7 +74,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
 
     if (about)
     {
-        setWindowTitle(tr("About ROIcoin Core"));
+        setWindowTitle(tr("About ROI coin Core"));
 
         /// HTML-format the license message from the core
         QString licenseInfo = QString::fromStdString(LicenseInfo());
@@ -426,7 +426,7 @@ void PaperWalletDialog::on_printButton_clicked()
     if (txFee > 0) {
         // append fee string if a fee is required
         questionString.append("<hr /><span style='color:#aa0000;'>");
-        questionString.append(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), txFee));
+        questionString.append(ROIcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), txFee));
         questionString.append("</span> ");
         questionString.append(tr("added as transaction fee"));
     }
@@ -435,13 +435,13 @@ void PaperWalletDialog::on_printButton_clicked()
     questionString.append("<hr />");
     qint64 totalAmount = tx->getTotalTransactionAmount() + txFee;
     QStringList alternativeUnits;
-    foreach (BitcoinUnits::Unit u, BitcoinUnits::availableUnits()) {
+    foreach (ROIcoinUnits::Unit u, ROIcoinUnits::availableUnits()) {
         if (u != model->getOptionsModel()->getDisplayUnit())
-            alternativeUnits.append(BitcoinUnits::formatWithUnit(u, totalAmount));
+            alternativeUnits.append(ROIcoinUnits::formatWithUnit(u, totalAmount));
     }
 
     questionString.append(tr("Total Amount %1 (= %2)")
-                              .arg(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount))
+                              .arg(ROIcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount))
                               .arg(alternativeUnits.join(" " + tr("or") + " ")));
 
     QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm send coins"), questionString.arg(formatted.join("<br />")), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
