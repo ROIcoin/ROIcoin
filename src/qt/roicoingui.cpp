@@ -104,7 +104,7 @@ ROIcoinGUI::ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     rpcConsole(0),
     prevBlocks(0),
     spinnerFrame(0),
-    platformStyle(platformStyle)
+    platformStyle(platformStyle),
     miningOffAction(0),
     miningOnAction(0)
 {
