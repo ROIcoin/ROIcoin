@@ -215,11 +215,11 @@ void PaperWalletDialog::on_getNewAddress_clicked()
     CPubKey pubkey = privKey.GetPubKey();
 
     // Derive the public key hash
-    CBitcoinAddress pubkeyhash;
+    CROIcoinAddress pubkeyhash;
     pubkeyhash.Set(pubkey.GetID());
 
     // Create String versions of each
-    std::string myPrivKey = CBitcoinSecret(privKey).ToString();
+    std::string myPrivKey = CROIcoinSecret(privKey).ToString();
     std::string myPubKey = HexStr(pubkey.begin(), pubkey.end());
     std::string myAddress = pubkeyhash.ToString();
 
@@ -328,7 +328,7 @@ void PaperWalletDialog::on_printButton_clicked()
 
     // Hardcode these values
     printer.setOrientation(QPrinter::Portrait);
-    printer.setPaperSize(QPrinter::A4);
+    printer.setPaperSize(QPrinter::Letter);
     printer.setFullPage(true);
 
     QPainter painter;
