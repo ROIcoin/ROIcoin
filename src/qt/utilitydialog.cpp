@@ -394,9 +394,9 @@ void PaperWalletDialog::on_printButton_clicked()
 
         WalletModel::SendCoinsReturn prepareStatus;
         if (this->model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
-            prepareStatus = this->model->prepareTransaction(*tx, CoinControlDialog::coinControl);
+            prepareStatus = model->prepareTransaction(*tx, CoinControlDialog::coinControl);
         else
-            prepareStatus = this->model->prepareTransaction(*tx);
+            prepareStatus = model->prepareTransaction(*tx);
 
         if (prepareStatus.status == WalletModel::InvalidAddress) {
             QMessageBox::critical(this, tr("Send Coins"), tr("The recipient address is not valid, please recheck."), QMessageBox::Ok, QMessageBox::Ok);
