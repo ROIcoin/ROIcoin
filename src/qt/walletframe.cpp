@@ -182,6 +182,13 @@ void WalletFrame::unlockWallet()
         walletView->unlockWallet();
 }
 
+void WalletFrame::printPaperWallets()
+{
+    WalletView *walletView = currentWalletView();
+    if (walletView)
+        walletView->printPaperWallets();
+}
+
 void WalletFrame::usedSendingAddresses()
 {
     WalletView *walletView = currentWalletView();
