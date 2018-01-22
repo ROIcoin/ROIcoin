@@ -413,7 +413,7 @@ void PaperWalletDialog::on_printButton_clicked()
         } else if (prepareStatus.status == WalletModel::OK) {
             break;
         } else {
-            delete currentTransaction;
+            delete tx;
             return;
         }
     }
@@ -455,20 +455,18 @@ if(txFee > 0)
 
     if(retval != QMessageBox::Yes)
     {
-        fNewRecipientAllowed = true;
+        delete tx;
         return;
     }
 
     // now send the prepared transaction
-    WalletModel::SendCoinsReturn sendStatus = model->sendCoins(currentTransaction);
-    // process sendStatus and on error generate message shown to user
-    processSendCoinsReturn(sendStatus);
-
-
-    if (sendStatus.status == WalletModel::TransactionCommitFailed) {
+    WalletModel::SendCoinsReturn sendStatus = model->sendCoins(*tx);
+    
+    if (sendStatus.status == WalletModel::TransactionCommitFailed)
+    {
         QMessageBox::critical(this, tr("Send Coins"), tr("The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here."), QMessageBox::Ok, QMessageBox::Ok);
     }
-    delete currentTransaction;
+    delete tx;
 #endif
     return;
 }
