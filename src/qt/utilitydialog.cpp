@@ -419,7 +419,7 @@ void PaperWalletDialog::on_printButton_clicked()
     }
 
     // Stolen from sendcoinsdialog.cpp
-    CAmount txFee = currentTransaction.getTransactionFee();
+    qint64 txFee = tx->getTransactionFee();
     QString questionString = tr("Are you sure you want to send?");
     questionString.append("<br /><br />%1");
 
