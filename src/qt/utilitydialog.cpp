@@ -437,7 +437,7 @@ if(txFee > 0)
 
     // add total amount in all subdivision units
     questionString.append("<hr />");
-    CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
+    qint64 totalAmount = tx->getTotalTransactionAmount() + txFee;
     QStringList alternativeUnits;
     Q_FOREACH(ROIcoinUnits::Unit u, ROIcoinUnits::availableUnits())
     {
