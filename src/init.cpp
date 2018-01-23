@@ -1262,6 +1262,10 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
        
         // Block Index loaded , lets tell transaction.cpp about it
         setNumBlock(chainActive.Height());
+        // Need to adjust rate table if > FORK3HEIGHT
+        if ( chainActive.Height() >= FORK3HEIGHT ) {
+           initNewRateTable();
+        } 
     }
 
     // As LoadBlockIndex can take several minutes, it's possible the user

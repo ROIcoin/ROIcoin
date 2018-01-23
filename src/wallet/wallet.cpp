@@ -2837,7 +2837,12 @@ int CMerkleTx::GetBlocksToMaturity() const
 {
     if (!IsCoinBase())
         return 0;
-    return max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain());
+   
+    if (GetDepthInMainChain() < FORK3HEIGHT) {
+        return max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain());
+    } else {
+        return max(0, (COINBASE_MATURITY_FORK3+1) - GetDepthInMainChain());
+    }
 }
 
 
