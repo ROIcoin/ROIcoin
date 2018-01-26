@@ -160,17 +160,17 @@ public:
         genesis.hashPrevBlock.SetNull();
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion 		 = 4;
-     	genesis.nTime    		 = 1515953759;  //date +%s
+     	genesis.nTime    		 = 1516976430;  //date +%s
         genesis.nBits    		 = 0x21000FFF;  //0x21000FFF
 	genesis.nNonce 			 = 4294901760;  //0xffff0000
-        genesis.nStartLocation 		 = 187376;
-        genesis.nFinalCalculation 	 = 2495613843;
+        genesis.nStartLocation 		 = 194570;
+        genesis.nFinalCalculation 	 = 3226523567;
 	consensus.nPowAdjustmentInterval = 20 * 60;   	//Twenty minutes
 	consensus.nPowMidasBlockStart 	 = 1;		//Block Start MIDAS
-	consensus.nPowMidasTimeStart  	 = 1515953759;	//date +%s
+	consensus.nPowMidasTimeStart  	 = 1516976430;	//date +%s
 
 /*	
-if(genesis.GetHash() != uint256S("008872e5582924544e5c707ee4b839bb82c28a9e94e917c94b40538d5658c04b") ){
+if(genesis.GetHash() != uint256S("00") ){
             arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
             uint256 thash;
             char *scratchpad;
@@ -202,7 +202,7 @@ if(genesis.GetHash() != uint256S("008872e5582924544e5c707ee4b839bb82c28a9e94e917
 	consensus.hashGenesisBlock = genesis.GetHash();
 	assert(consensus.hashGenesisBlock == genesis.GetHash());
 
-	assert(consensus.hashGenesisBlock == uint256S("0x001d9814ad6ff3215353f740f3adff55b3f19c0b893c1c15fa69b1177364e62b"));
+	assert(consensus.hashGenesisBlock == uint256S("0x000ae480ce66c3029468ddc39c0219f494940463a06a0e45fc482424a669d738"));
         assert(genesis.hashMerkleRoot == uint256S("0x92feaffad16699d7f7acb5bb53e6fab02d3eb5751cc32a4f787b1cced8e24016"));
 
 
@@ -230,9 +230,9 @@ if(genesis.GetHash() != uint256S("008872e5582924544e5c707ee4b839bb82c28a9e94e917
 	{
             
 	boost::assign::map_list_of
-            ( 0, uint256S("0x001d9814ad6ff3215353f740f3adff55b3f19c0b893c1c15fa69b1177364e62b")),
+            ( 0, uint256S("0x000ae480ce66c3029468ddc39c0219f494940463a06a0e45fc482424a669d738")),
 
-            1515953759, // * UNIX timestamp of last checkpoint block
+            1516976430, // * UNIX timestamp of last checkpoint block
             1,   	// * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             500.0     	// * estimated number of transactions per day after checkpoint
