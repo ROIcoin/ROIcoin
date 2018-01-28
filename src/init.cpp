@@ -1265,6 +1265,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         // Need to adjust rate table if > FORK3HEIGHT
         if ( chainActive.Height() >= FORK3HEIGHT ) {
            initNewRateTable();
+           LogPrintf("FORK3: New Rate table generated.");
         } 
     }
 

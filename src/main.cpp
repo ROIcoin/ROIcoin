@@ -2168,9 +2168,10 @@ void static UpdateTip(CBlockIndex *pindexNew) {
 
     // Tell transaction we expanded block chain
     setNumBlock(chainActive.Height());
-    // Need to adjust rate table if > FORK3HEIGHT
-    if ( chainActive.Height() >= FORK3HEIGHT ) {
+    // Need to adjust rate table if == FORK3HEIGHT
+    if ( chainActive.Height() == FORK3HEIGHT ) {
         initNewRateTable();
+        LogPrintf("FORK3: new rate table generated.");
     }
 
     // Tell wallet we forked, note this should not change the maturation value of already locked coins
