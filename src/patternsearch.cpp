@@ -217,7 +217,6 @@ namespace patternsearch
 #endif
         LogPrintf("Optiminer Flags and CPU support: AES-NI = %b, AVX2 = %b\n", aes_ni_supported, avx2_supported);
 
-        clock_t t1 = clock();
 		boost::thread_group* sha512Threads = new boost::thread_group();
 		for (int i = 0; i < totalThreads; i++) {
 			if (avx2_supported) {
@@ -229,8 +228,6 @@ namespace patternsearch
 		sha512Threads->join_all();
 		delete sha512Threads;
 
-		clock_t t2 = clock();
-		LogPrintf("create sha512 data %d\n", ((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 
 		if (*minerStopFlag == 0) {
 			boost::mutex mtx;
@@ -245,8 +242,6 @@ namespace patternsearch
 			aesThreads->join_all();
 			delete aesThreads;
 
-			clock_t t3 = clock();
-			LogPrintf("aes search %d\n", ((double)t3 - (double)t2) / CLOCKS_PER_SEC);
 		}
 
     boost::this_thread::restore_interruption ri(di);
@@ -258,7 +253,6 @@ namespace patternsearch
   bool pattern_verify( uint256 midHash, uint32_t a, uint32_t b ){
 		//return false;
 
-		//clock_t t1 = clock();
 
 		//Basic check
         if( a >= comparisonSize ) return false;
@@ -340,9 +334,6 @@ namespace patternsearch
 		//free memory
 		delete [] cacheMemoryOperatingData;
 		delete [] cacheMemoryOperatingData2;
-
-        //clock_t t2 = clock();
-        //LogPrintf("verify %d\n",((double)t2-(double)t1)/CLOCKS_PER_SEC);
 
         if(solution<1000 && proofOfCalculation==b){
 			return true;
