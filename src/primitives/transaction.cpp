@@ -253,8 +253,10 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         return nValue;
     }
 
-    //Regular deposits can have a maximum of 30 days interest
-    int blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
+    // Removed 30 day limit on POS 
+    int blocks=valuationHeight-outputBlockHeight;
+    // dont allow negative blocks
+    blocks=std::max(blocks,0);
 
     //Term deposits may have up to 1 year of interest
     if(maturationBlock>0)
