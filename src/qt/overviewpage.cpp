@@ -211,7 +211,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
         double interestRate=(pow(interestRatePerBlock,365*720)-1)*100;
         
         if(curHeight>=releaseBlock){
-            ui->ROITable->setItem(i, 0, new QTableWidgetItem(QString("Matured (Warning: this amount is no longer earning interest of any kind)")));
+            ui->ROITable->setItem(i, 0, new QTableWidgetItem(QString("Matured")));
             totalMatured += matureValue;
         }else{
             ui->ROITable->setItem(i, 0, new QTableWidgetItem(QString("Earned")));
