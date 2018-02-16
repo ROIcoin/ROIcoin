@@ -10,6 +10,7 @@ Changes in 1.1.4.0
 - NEW - issue #22 the sending addressbook will now contain the send and receive addresses combined , this will facilitate sending matured coins or combining inputs to yourself.
 - FIX - Matured message no longer shows a warning, we removed the 30 day limitation on earning interest.
 - FIX - rpc gettransaction call will now show credit value without interest ( requested by elbandi )
+- FIX - issue #42 estimated date is now based on 120s blocktime ( previously 154s which was incorrect ).
 
 The biggest new feature is the faster block loading times. The first time you start the new wallet it will still take as long as before, because 
 it is building up a new hash index database (You will see a new sub folder called cache in the blocks folder) . *You must let the loading process complete* 
