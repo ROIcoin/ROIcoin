@@ -304,6 +304,8 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-addnode=<ip>", _("Add a node to connect to and attempt to keep the connection open"));
     strUsage += HelpMessageOpt("-banscore=<n>", strprintf(_("Threshold for disconnecting misbehaving peers (default: %u)"), 100));
     strUsage += HelpMessageOpt("-bantime=<n>", strprintf(_("Number of seconds to keep misbehaving peers from reconnecting (default: %u)"), 86400));
+    strUsage += HelpMessageOpt("-banobsoleteversion", strprintf(_("Auto ban peers with obsolete version (default: %u)"), 0));
+    strUsage += HelpMessageOpt("-autoban", strprintf(_("Auto ban peers with network issues (default: %u)"), 0));
     strUsage += HelpMessageOpt("-bind=<addr>", _("Bind to given address and always listen on it. Use [host]:port notation for IPv6"));
     strUsage += HelpMessageOpt("-connect=<ip>", _("Connect only to the specified node(s)"));
     strUsage += HelpMessageOpt("-discover", _("Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)"));
@@ -416,7 +418,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-rpcbind=<addr>", _("Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)"));
     strUsage += HelpMessageOpt("-rpcuser=<user>", _("Username for JSON-RPC connections"));
     strUsage += HelpMessageOpt("-rpcpassword=<pw>", _("Password for JSON-RPC connections"));
-    strUsage += HelpMessageOpt("-rpcport=<port>", strprintf(_("Listen for JSON-RPC connections on <port> (default: %u or testnet: %u)"), 3377, 33770));
+    strUsage += HelpMessageOpt("-rpcport=<port>", strprintf(_("Listen for JSON-RPC connections on <port> (default: %u or testnet: %u)"), 3376, 33760));
     strUsage += HelpMessageOpt("-rpcallowip=<ip>", _("Allow JSON-RPC connections from specified source. Valid for <ip> are a single IP (e.g. 1.2.3.4), a network/netmask (e.g. 1.2.3.4/255.255.255.0) or a network/CIDR (e.g. 1.2.3.4/24). This option can be specified multiple times"));
     strUsage += HelpMessageOpt("-rpcthreads=<n>", strprintf(_("Set the number of threads to service RPC calls (default: %d)"), 4));
     strUsage += HelpMessageOpt("-rpckeepalive", strprintf(_("RPC support for HTTP persistent connections (default: %d)"), 1));
@@ -445,7 +447,9 @@ std::string HelpMessage(HelpMessageMode mode)
 
 std::string LicenseInfo()
 {
-    return FormatParagraph(strprintf(_("Copyright (C) 2009-%i The Bitcoin Core Developers"), COPYRIGHT_YEAR)) + "\n" +
+    return FormatParagraph(_("Download latest wallet: <https://roi-coin.com/roi-coin-downloads/>")) + "\n" +
+           "\n" +
+           FormatParagraph(strprintf(_("Copyright (C) 2009-%i The Bitcoin Core Developers"), COPYRIGHT_YEAR)) + "\n" +
            "\n" +
            FormatParagraph(strprintf(_("Copyright (C) 2017-%i The ROIcoin Developers"), COPYRIGHT_YEAR)) + "\n" +
            "\n" +
@@ -454,7 +458,8 @@ std::string LicenseInfo()
            FormatParagraph(_("Distributed under the MIT software license, see the accompanying file COPYING or <http://www.opensource.org/licenses/mit-license.php>.")) + "\n" +
            "\n" +
            FormatParagraph(_("This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit <https://www.openssl.org/> and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.")) +
-           "\n";
+           "\n" + "\n" + "\n" +"\n"+
+           FormatParagraph(_("For more information please visit and join us at <https://roi-coin.com/>")) + "\n" + "\n";
 }
 
 static void BlockNotifyCallback(const uint256& hashNewTip)
@@ -1257,6 +1262,11 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
        
         // Block Index loaded , lets tell transaction.cpp about it
         setNumBlock(chainActive.Height());
+        // Need to adjust rate table if > FORK3HEIGHT
+        if ( chainActive.Height() >= FORK3HEIGHT ) {
+           initNewRateTable();
+           LogPrintf("FORK3: New Rate table generated.");
+        } 
     }
 
     // As LoadBlockIndex can take several minutes, it's possible the user

@@ -1249,8 +1249,8 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex)
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
 
-    if(nHeight < 50)			{ return 77 * COIN;}
-    if(nHeight < 100 && nHeight > 50)	{ return 777 * COIN;}
+    if(nHeight < 50)			{ return 500000 * COIN;}  //77
+    if(nHeight < 100 && nHeight > 50)	{ return 500000 * COIN;} //777
     if(nHeight < 201 && nHeight > 100)	{ return 600000 * COIN;}  //6% Investor Payout.
     if(nHeight < 7884000 && nHeight > 201){ return 120 * COIN;}
 
@@ -1481,10 +1481,17 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 
             // If prev is coinbase, check that it's matured
             if (coins->IsCoinBase()) {
-                if (nSpendHeight - coins->nHeight < COINBASE_MATURITY)
-                    return state.Invalid(
-                        error("CheckInputs(): tried to spend coinbase at depth %d", nSpendHeight - coins->nHeight),
-                        REJECT_INVALID, "bad-txns-premature-spend-of-coinbase");
+                if ( coins->nHeight < FORK3HEIGHT ) {
+                    if (nSpendHeight - coins->nHeight < COINBASE_MATURITY)
+                        return state.Invalid(
+                            error("CheckInputs(): tried to spend coinbase at depth %d", nSpendHeight - coins->nHeight),
+                            REJECT_INVALID, "bad-txns-premature-spend-of-coinbase");
+                } else { 
+                    if (nSpendHeight - coins->nHeight < COINBASE_MATURITY_FORK3)
+                        return state.Invalid(
+                            error("CheckInputs(): tried to spend coinbase at depth %d", nSpendHeight - coins->nHeight),
+                            REJECT_INVALID, "bad-txns-premature-spend-of-coinbase");
+                }
             }
 
             // Check for negative or overflow input values
@@ -2161,6 +2168,12 @@ void static UpdateTip(CBlockIndex *pindexNew) {
 
     // Tell transaction we expanded block chain
     setNumBlock(chainActive.Height());
+    // Need to adjust rate table if == FORK3HEIGHT
+    if ( chainActive.Height() == FORK3HEIGHT ) {
+        initNewRateTable();
+        LogPrintf("FORK3: new rate table generated.");
+    }
+
     // Tell wallet we forked, note this should not change the maturation value of already locked coins
     cvBlockChange.notify_all();
 
@@ -4054,13 +4067,20 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         CAddress addrFrom;
         uint64_t nNonce = 1;
         vRecv >> pfrom->nVersion >> pfrom->nServices >> nTime >> addrMe;
-        if (pfrom->nVersion < (chainActive.Height() < FORK2HEIGHT ? MIN_PEER_PROTO_FORK1_VERSION : MIN_PEER_PROTO_FORK2_VERSION))
+        if (pfrom->nVersion < (chainActive.Height() < FORK3HEIGHT ? MIN_PEER_PROTO_FORK2_VERSION : MIN_PEER_PROTO_FORK3_VERSION))
         {
             // disconnect from peers older than this proto version
             LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
             pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE,
-                               strprintf("Version must be %d or greater", MIN_PEER_PROTO_FORK2_VERSION));
+                               strprintf("Version must be %d or greater", MIN_PEER_PROTO_FORK3_VERSION));
             pfrom->fDisconnect = true;
+            if (GetBoolArg("-banobsoleteversion", false )) {
+                CNetAddr netAddr(pfrom->addr);
+		if (!CNode::IsBanned(netAddr)) {
+                    CNode::Ban(netAddr, BanReasonObsoleteVersion);
+                    LogPrintf("%s banned because of obsolete wallet version\n",netAddr.ToString());
+                }
+            }
             return false;
         }
         if (pfrom->nVersion == 10300)
