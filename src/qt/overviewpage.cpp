@@ -108,33 +108,33 @@ public:
 };
 
 DepositSortFilterProxyModel::DepositSortFilterProxyModel(QObject *parent)
-	: QSortFilterProxyModel(parent) {
+: QSortFilterProxyModel(parent) {
 	this->setSortRole( DepositTableModel::SortRole );
 }
 
 #include "overviewpage.moc"
 
 OverviewPage::OverviewPage(QWidget *parent) :
-    		QWidget(parent),
-			ui(new Ui::OverviewPage),
-			clientModel(0),
-			walletModel(0),
-			currentBalance(-1),
-			currentUnconfirmedBalance(-1),
-			currentImmatureBalance(-1),
-			currentWatchOnlyBalance(-1),
-			currentWatchUnconfBalance(-1),
-			currentWatchImmatureBalance(-1),
-			txdelegate(new TxViewDelegate()),
-			filter(0)
+    				QWidget(parent),
+					ui(new Ui::OverviewPage),
+					clientModel(0),
+					walletModel(0),
+					currentBalance(-1),
+					currentUnconfirmedBalance(-1),
+					currentImmatureBalance(-1),
+					currentWatchOnlyBalance(-1),
+					currentWatchUnconfBalance(-1),
+					currentWatchImmatureBalance(-1),
+					txdelegate(new TxViewDelegate()),
+					filter(0)
 {
 	ui->setupUi(this);
 
 	ui->ROITable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        ui->ROITable->setAlternatingRowColors(true);
-        ui->ROITable->setSelectionBehavior(QAbstractItemView::SelectRows);
-        ui->ROITable->setSelectionMode(QAbstractItemView::ExtendedSelection);
-        ui->ROITable->verticalHeader()->show(); // index column
+	ui->ROITable->setAlternatingRowColors(true);
+	ui->ROITable->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui->ROITable->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	ui->ROITable->verticalHeader()->show(); // index column
 	ui->ROITable->verticalHeader()->setDefaultAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 	// ui->ROITable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
@@ -147,9 +147,7 @@ OverviewPage::OverviewPage(QWidget *parent) :
 	bool sortflag = GetArg("-sortearnings", true);
 	LogPrintf("sort earnings flag = %b\n", sortflag);
 
-        ui->ROITable->setSortingEnabled(sortflag);
-        // transactionView->sortByColumn(TransactionTableModel::Status, Qt::DescendingOrder);
-        // ui->ROITable->setModel(transactionProxyModel);
+	ui->ROITable->setSortingEnabled(sortflag);
 
 	// use a SingleColorIcon for the "out of sync warning" icon
 	QIcon icon = QIcon(":/icons/warning");
@@ -225,42 +223,53 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 
 	if (sortflag && sortSection >= 0) {
 		// restore sort order and direction
-    ui->ROITable->sortByColumn(sortSection, sortOrder ? Qt::AscendingOrder : Qt::DescendingOrder);
+		ui->ROITable->sortByColumn(sortSection, sortOrder ? Qt::AscendingOrder : Qt::DescendingOrder);
 	}
 
 	// calculation of sums
-    	uint64_t totalLocked  = 0;
-    	uint64_t totalAccrued = 0;
-    	uint64_t totalMatured = 0;
+	uint64_t totalLocked  = 0;
+	uint64_t totalAccrued = 0;
+	uint64_t totalMatured = 0;
 
+	int maturedNowCount = 0;
+	CAmount maturedNowAmount = 0;
 
-    	for(int i=0;i<termDepositInfo.size();i++){
-        	COutput ctermDeposit = termDepositInfo[i];
-        	CTxOut termDeposit = ctermDeposit.tx->vout[ctermDeposit.i];
-        	int curHeight = this->clientModel->getNumBlocks();
-        	int lockHeight = curHeight - ctermDeposit.nDepth;
-        	int releaseBlock = termDeposit.scriptPubKey.GetTermDepositReleaseBlock();
-        	int term = releaseBlock - lockHeight;
-        	int blocksRemaining = releaseBlock - curHeight;
-        	CAmount withInterest = termDeposit.GetValueWithInterest(lockHeight,(curHeight<releaseBlock?curHeight:releaseBlock));
-        	CAmount matureValue = termDeposit.GetValueWithInterest(lockHeight,releaseBlock);
-        	int blocksSoFar = curHeight-lockHeight;
+	for(int i=0;i<termDepositInfo.size();i++){
+		COutput ctermDeposit = termDepositInfo[i];
+		CTxOut termDeposit = ctermDeposit.tx->vout[ctermDeposit.i];
+		int curHeight = this->clientModel->getNumBlocks();
+		int lockHeight = curHeight - ctermDeposit.nDepth;
+		int releaseBlock = termDeposit.scriptPubKey.GetTermDepositReleaseBlock();
+		int term = releaseBlock - lockHeight;
+		int blocksRemaining = releaseBlock - curHeight;
+		CAmount withInterest = termDeposit.GetValueWithInterest(lockHeight,(curHeight<releaseBlock?curHeight:releaseBlock));
+		CAmount matureValue = termDeposit.GetValueWithInterest(lockHeight,releaseBlock);
+		int blocksSoFar = curHeight-lockHeight;
 
-        	double interestRatePerBlock = pow(((0.0+matureValue)/termDeposit.nValue),1.0/term);
-        	double interestRate = (pow(interestRatePerBlock,365*720)-1)*100;
+		double interestRatePerBlock = pow(((0.0+matureValue)/termDeposit.nValue),1.0/term);
+		double interestRate = (pow(interestRatePerBlock,365*720)-1)*100;
 
-        	if (curHeight >= releaseBlock) {
-            		totalMatured += matureValue;
-        	} else {
-            		totalAccrued += (withInterest - termDeposit.nValue);
-	    		totalLocked  += termDeposit.nValue;
-        	}
+		if (curHeight == releaseBlock) {
+			maturedNowCount++;
+			maturedNowAmount += matureValue;
+		}
 
-     	}
+		if (curHeight >= releaseBlock) {
+			totalMatured += matureValue;
+		} else {
+			totalAccrued += (withInterest - termDeposit.nValue);
+			totalLocked  += termDeposit.nValue;
+		}
 
-    	ui->labellocked->setText(ROIcoinUnits::formatWithUnit(unit, totalLocked, false, ROIcoinUnits::separatorAlways));
-    	ui->labelaccrued->setText(ROIcoinUnits::formatWithUnit(unit, totalAccrued, false, ROIcoinUnits::separatorAlways));
-    	ui->labelMatured->setText(ROIcoinUnits::formatWithUnit(unit, totalMatured, false, ROIcoinUnits::separatorAlways));
+	}
+
+	ui->labellocked->setText(ROIcoinUnits::formatWithUnit(unit, totalLocked, false, ROIcoinUnits::separatorAlways));
+	ui->labelaccrued->setText(ROIcoinUnits::formatWithUnit(unit, totalAccrued, false, ROIcoinUnits::separatorAlways));
+	ui->labelMatured->setText(ROIcoinUnits::formatWithUnit(unit, totalMatured, false, ROIcoinUnits::separatorAlways));
+
+	if (maturedNowCount > 0) {
+		Q_EMIT maturedCoinsNotification(maturedNowCount, unit, maturedNowAmount);
+	}
 
 }
 

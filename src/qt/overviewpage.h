@@ -60,7 +60,10 @@ public Q_SLOTS:
 #endif // ENABLE_WALLET
 
 Q_SIGNALS:
-    void transactionClicked(const QModelIndex &index);
+	/** When transaction is clicked */
+	void transactionClicked(const QModelIndex &index);
+	/** Notify that matured coins appeared */
+    void maturedCoinsNotification(int count, int unit, CAmount& amount);
 
 private:
     Ui::OverviewPage *ui;
