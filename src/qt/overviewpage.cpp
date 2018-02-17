@@ -225,7 +225,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 
 	if (sortflag && sortSection >= 0) {
 		// restore sort order and direction
-        	ui->ROITable->sortByColumn(sortSection, sortOrder ? Qt::AscendingOrder : Qt::DescendingOrder);
+    ui->ROITable->sortByColumn(sortSection, sortOrder ? Qt::AscendingOrder : Qt::DescendingOrder);
 	}
 
 	// calculation of sums

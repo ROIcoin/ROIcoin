@@ -286,7 +286,10 @@ struct CMutableTransaction
 
 CAmount getRateForAmount(int periods, CAmount theAmount);
 std::string initRateTable();
+std::string initNewRateTable();
 int setNumBlock(int currentHeight);
 CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock);
+CAmount getNewInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock);
+CAmount getOldInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, int maturationBlock);
 
 #endif // ROICOIN_PRIMITIVES_TRANSACTION_H
