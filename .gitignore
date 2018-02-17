@@ -1,5 +1,7 @@
 *.tar.gz
 
+Build.My
+
 *.exe
 src/roicoin
 src/roicoind
@@ -112,4 +114,11 @@ qa/pull-tester/test.*/*
 
 /doc/doxygen/
 
-libbitcoinconsensus.pc
+libroicoinconsensus.pc
+src/ROIcoin-cli
+src/ROIcoin-tx
+src/ROIcoind
+src/config/roicoin-config.h
+src/config/roicoin-config.h.in
+src/qt/test/test_ROIcoin-qt
+src/test/test_ROIcoin
