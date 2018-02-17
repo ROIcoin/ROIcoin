@@ -44,18 +44,18 @@ DepositTableModel::DepositTableModel(ClientModel *clientModel, QObject *parent)
 	this->clientModel = clientModel;
 
 	this->columns << tr("Status") << tr("Principal") << tr("Accrued Interest") << tr("Accrued Value")
-		<< tr("On Maturation") << tr("Term (Days)") << tr("Deposit Block") << tr("Maturation Block")
-		<< tr("Estimated Date");
+						<< tr("On Maturation") << tr("Term (Days)") << tr("Deposit Block") << tr("Maturation Block")
+						<< tr("Estimated Date");
 
 }
 
-static bool compareByDepth(COutput& a, COutput& b) 
-{
-    return b.nDepth < a.nDepth;
+static bool compareByDepth(COutput& a, COutput& b) {
+	return b.nDepth < a.nDepth;
 }
 
 int DepositTableModel::update(std::vector<COutput>& termDepositInfo)
 {
+
 	this->beginResetModel();
 	this->termDepositInfoData = termDepositInfo;
 	qSort(this->termDepositInfoData.begin(), this->termDepositInfoData.end(), compareByDepth);
@@ -93,10 +93,10 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 	int nDisplayUnit = ROIcoinUnits::ROI;
 
 	if (role == Qt::TextAlignmentRole)
-        {
-            return column_alignments[index.column()];
-        }
-	else if (role == Qt::DisplayRole || role == SortRole)
+	{
+		return column_alignments[index.column()];
+	}
+	else if (role == Qt::DisplayRole || role == SortRole || role == Qt::ToolTipRole)
 	{
 		COutput ctermDeposit = termDepositInfoData.at(index.row());
 
@@ -106,74 +106,78 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 		int releaseBlock = termDeposit.scriptPubKey.GetTermDepositReleaseBlock();
 		int term  = releaseBlock - lockHeight;
 		int blocksRemaining = releaseBlock - curHeight;
-		CAmount withInterest = termDeposit.GetValueWithInterest(lockHeight, (curHeight<releaseBlock?curHeight:releaseBlock));
-		CAmount matureValue = termDeposit.GetValueWithInterest(lockHeight, releaseBlock);
+		CAmount withInterest = termDeposit.GetValueWithInterest(lockHeight,(curHeight<releaseBlock?curHeight:releaseBlock));
+		CAmount matureValue = termDeposit.GetValueWithInterest(lockHeight,releaseBlock);
 		int blocksSoFar = curHeight-lockHeight;
 
 		double interestRatePerBlock = pow(((0.0+matureValue)/termDeposit.nValue),1.0/term);
 		double interestRate = (pow(interestRatePerBlock,365*720)-1)*100;
 
 		switch(index.column()) {
-			case Status:
-				if (curHeight >= releaseBlock) {
-					return tr("Matured (Warning: this amount is no longer earning interest of any kind)");
-				} else {
+		case Status:
+			if (curHeight >= releaseBlock) {
+				if (role == Qt::ToolTipRole)
+					return tr("Warning: this amount is no longer earning interest of any kind");
+				else
+					return tr("Matured");
+
+			} else {
+				if (role == Qt::DisplayRole || role == SortRole)
 					return tr("Earned");
-				}
-				break;
-			case Principal:
-				if (role == SortRole)
-					return qint64(termDeposit.nValue);
-				else
-					return ROIcoinUnits::format(nDisplayUnit, termDeposit.nValue);
-			case AccruedInterest:
-				if (role == SortRole)
-					return qint64(withInterest-termDeposit.nValue);
-				else
-					return ROIcoinUnits::format(nDisplayUnit, withInterest-termDeposit.nValue);
-			case AccruedValue:
-				if (role == SortRole)
-					return qint64(withInterest);
-				else
-					return ROIcoinUnits::format(nDisplayUnit, withInterest);
-			case OnMaturation:
-				if (role == SortRole)
-					return qint64(matureValue);
-				else
-					return ROIcoinUnits::format(nDisplayUnit, matureValue);
-			case TermDays:
-				if (role == SortRole)
-					return (term)/720;
-				else
-					return QString::number((term)/720);
-			case DepositBlock:
-				if (role == SortRole)
-					return lockHeight;
-				else
-					return QString::number(lockHeight); // .rightJustified(7,'0');
-			case MaturationBlock:
-				if (role == SortRole)
-					return releaseBlock;
-				else
-					return QString::number(releaseBlock); // .rightJustified(7,'0');
-			case EstimatedDate:
+			}
+			break;
+		case Principal:
+			if (role == SortRole)
+				return qint64(termDeposit.nValue);
+			else if (role == Qt::DisplayRole)
+				return ROIcoinUnits::format(nDisplayUnit, termDeposit.nValue);
+		case AccruedInterest:
+			if (role == SortRole)
+				return qint64(withInterest-termDeposit.nValue);
+			else if (role == Qt::DisplayRole)
+				return ROIcoinUnits::format(nDisplayUnit, withInterest-termDeposit.nValue);
+		case AccruedValue:
+			if (role == SortRole)
+				return qint64(withInterest);
+			else if (role == Qt::DisplayRole)
+				return ROIcoinUnits::format(nDisplayUnit, withInterest);
+		case OnMaturation:
+			if (role == SortRole)
+				return qint64(matureValue);
+			else if (role == Qt::DisplayRole)
+				return ROIcoinUnits::format(nDisplayUnit, matureValue);
+		case TermDays:
+			if (role == SortRole)
+				return (term)/720;
+			else if (role == Qt::DisplayRole)
+				return QString::number((term)/720);
+		case DepositBlock:
+			if (role == SortRole)
+				return lockHeight;
+			else if (role == Qt::DisplayRole)
+				return QString::number(lockHeight); // .rightJustified(7,'0');
+		case MaturationBlock:
+			if (role == SortRole)
+				return releaseBlock;
+			else if (role == Qt::DisplayRole)
+				return QString::number(releaseBlock); // .rightJustified(7,'0');
+		case EstimatedDate:
 
-				time_t rawtime;
-				char buffer[16];
-				time(&rawtime);
-				rawtime += blocksRemaining * 120;
-				struct tm *timeinfo = localtime(&rawtime);
-				strftime(buffer, 16, "%Y/%m/%d", timeinfo);
-				std::string str(buffer);
+			time_t rawtime;
+			char buffer[16];
+			time(&rawtime);
+			rawtime += blocksRemaining * 120;
+			struct tm *timeinfo = localtime(&rawtime);
+			strftime(buffer, 16, "%Y/%m/%d", timeinfo);
+			std::string str(buffer);
 
-				if (role == SortRole) {
-					return qint64(mktime(timeinfo));
-				} else {
-					return QString(buffer);
-				}
+			if (role == SortRole)
+				return qint64(mktime(timeinfo));
+			else if (role == Qt::DisplayRole)
+				return QString(buffer);
+
 		}
 	}
-
 
 	return QVariant();
 }
@@ -195,23 +199,23 @@ QVariant DepositTableModel::headerData(int section, Qt::Orientation orientation,
 			switch(section)
 			{
 
-				case Status:
+			case 0:
 				return tr("Deposit Status");
-				case Principal:
+			case 1:
 				return tr("Principal");
-				case AccruedInterest:
+			case 2:
 				return tr("Accrued Interest");
-				case AccruedValue:
+			case 3:
 				return tr("Accrued Value");
-				case OnMaturation:
+			case 4:
 				return tr("Value On Maturation");
-				case TermDays:
+			case 5:
 				return tr("Term (Days)");
-				case DepositBlock:
+			case 6:
 				return tr("Deposit Block");
-				case MaturationBlock:
+			case 7:
 				return tr("Maturation Block");
-				case EstimatedDate:
+			case 8:
 				return tr("Estimated Date");
 			}
 		}
@@ -220,3 +224,4 @@ QVariant DepositTableModel::headerData(int section, Qt::Orientation orientation,
 	// return QVariant();
 	return QAbstractTableModel::headerData(section, orientation, role);
 }
+
