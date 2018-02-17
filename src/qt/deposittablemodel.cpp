@@ -131,36 +131,43 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 				return qint64(termDeposit.nValue);
 			else if (role == Qt::DisplayRole)
 				return ROIcoinUnits::format(nDisplayUnit, termDeposit.nValue);
+			break;
 		case AccruedInterest:
 			if (role == SortRole)
 				return qint64(withInterest-termDeposit.nValue);
 			else if (role == Qt::DisplayRole)
 				return ROIcoinUnits::format(nDisplayUnit, withInterest-termDeposit.nValue);
+			break;
 		case AccruedValue:
 			if (role == SortRole)
 				return qint64(withInterest);
 			else if (role == Qt::DisplayRole)
 				return ROIcoinUnits::format(nDisplayUnit, withInterest);
+			break;
 		case OnMaturation:
 			if (role == SortRole)
 				return qint64(matureValue);
 			else if (role == Qt::DisplayRole)
 				return ROIcoinUnits::format(nDisplayUnit, matureValue);
+			break;
 		case TermDays:
 			if (role == SortRole)
 				return (term)/720;
 			else if (role == Qt::DisplayRole)
 				return QString::number((term)/720);
+			break;
 		case DepositBlock:
 			if (role == SortRole)
 				return lockHeight;
 			else if (role == Qt::DisplayRole)
 				return QString::number(lockHeight); // .rightJustified(7,'0');
+			break;
 		case MaturationBlock:
 			if (role == SortRole)
 				return releaseBlock;
 			else if (role == Qt::DisplayRole)
 				return QString::number(releaseBlock); // .rightJustified(7,'0');
+			break;
 		case EstimatedDate:
 
 			time_t rawtime;
@@ -169,13 +176,13 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 			rawtime += blocksRemaining * 120;
 			struct tm *timeinfo = localtime(&rawtime);
 			strftime(buffer, 16, "%Y/%m/%d", timeinfo);
-			std::string str(buffer);
 
 			if (role == SortRole)
 				return qint64(mktime(timeinfo));
 			else if (role == Qt::DisplayRole)
 				return QString(buffer);
 
+			break;
 		}
 	}
 
