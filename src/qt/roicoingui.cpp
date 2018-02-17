@@ -976,7 +976,7 @@ void ROIcoinGUI::incomingTransaction(const QString& date, int unit, const CAmoun
 
 void ROIcoinGUI::maturedCoinsNotification(int count, int unit, CAmount& amount)
 {
-	LogPrintf("got maturedCoinsNotification for %d/%d\n", count, ROIcoinUnits::formatWithUnit(ROIcoinUnits::ROI, amount, true).data() );
+	LogPrintf("got maturedCoinsNotification for %d/%s\n", count, ROIcoinUnits::formatWithUnit(ROIcoinUnits::ROI, amount, true).data() );
 
     // On matured coins, make an info balloon
     QString msg = tr("Count: %1\n").arg(count) +
