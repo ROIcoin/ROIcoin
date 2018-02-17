@@ -49,15 +49,16 @@ DepositTableModel::DepositTableModel(ClientModel *clientModel, QObject *parent)
 
 }
 
+static bool compareByDepth(COutput& a, COutput& b) 
+{
+    return b.nDepth < a.nDepth;
+}
+
 int DepositTableModel::update(std::vector<COutput>& termDepositInfo)
 {
-
-	QVector<int> roles;
-	roles << Qt::DisplayRole << SortRole;
-
 	this->beginResetModel();
 	this->termDepositInfoData = termDepositInfo;
-	// Q_EMIT dataChanged(index(0,0), index(termDepositInfo.size(), columns.length()), roles);
+	qSort(this->termDepositInfoData.begin(), this->termDepositInfoData.end(), compareByDepth);
 	this->endResetModel();
 	LogPrintf("list of deposits updated, count=%d\n",termDepositInfo.size());
 
