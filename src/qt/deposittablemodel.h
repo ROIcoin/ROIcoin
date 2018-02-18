@@ -12,52 +12,68 @@
 #include <QAbstractTableModel>
 #include <QStringList>
 
-/** UI model for the transaction table of a wallet.
+typedef struct {
+	CAmount nValue;
+	int curHeight;
+	int lockHeight;
+	int releaseBlock;
+	int term;
+	int blocksRemaining;
+	CAmount withInterest;
+	CAmount matureValue;
+	//int blocksSoFar;
+	//double interestRatePerBlock;
+	//double interestRate;
+	struct tm timeinfo;
+} CacheRecord;
+
+/** UI model for the deposit table of a wallet.
  */
 class DepositTableModel : public QAbstractTableModel
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
 
-    explicit DepositTableModel(ClientModel *clientModel, QObject *parent=0);
-    ~DepositTableModel();
+	explicit DepositTableModel(ClientModel *clientModel, QObject *parent=0);
+	// explicit DepositTableModel(ClientModel *clientModel, std::vector<COutput>& termDepositInfo, QObject *parent=0);
+	~DepositTableModel();
 
-    enum ColumnIndex {
-        Status = 0,
-        Principal = 1,
-        AccruedInterest = 2,
-        AccruedValue = 3,
-        OnMaturation = 4,
-        TermDays = 5,
-	DepositBlock = 6,
-	MaturationBlock = 7,
-	EstimatedDate = 8,
-    };
+	enum ColumnIndex {
+		Status = 0,
+		Principal = 1,
+		AccruedInterest = 2,
+		AccruedValue = 3,
+		OnMaturation = 4,
+		TermDays = 5,
+		DepositBlock = 6,
+		MaturationBlock = 7,
+		EstimatedDate = 8,
+	};
 
-    /** Roles to get specific information from a row.
+	/** Roles to get specific information from a row.
         These are independent of column.
-    */
-    enum RoleIndex {
-        /** sorting */
-        SortRole = Qt::UserRole,
-    };
+	 */
+	enum RoleIndex {
+		/** sorting */
+		SortRole = Qt::UserRole,
+	};
 
-    int rowCount(const QModelIndex &parent) const;
-    int columnCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+	int rowCount(const QModelIndex &parent) const;
+	int columnCount(const QModelIndex &parent) const;
+	QVariant data(const QModelIndex &index, int role) const;
+	QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-    int update(std::vector<COutput>& termDepositInfo);
+	int update(std::vector<COutput>& termDepositInfo);
 
 private:
-    std::vector<COutput> termDepositInfoData;
-    QStringList columns;
+	std::vector<CacheRecord> tdiCache;
+	QStringList columns;
 
-    ClientModel *clientModel;
+	ClientModel *clientModel;
 
-public Q_SLOTS:
-	// reserved for more features
+	public Q_SLOTS:
+	/* New transaction, or transaction changed status */
 };
 
 #endif // ROICOIN_QT_DEPOSITTABLEMODEL_H

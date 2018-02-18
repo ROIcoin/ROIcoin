@@ -44,8 +44,8 @@ DepositTableModel::DepositTableModel(ClientModel *clientModel, QObject *parent)
 	this->clientModel = clientModel;
 
 	this->columns << tr("Status") << tr("Principal") << tr("Accrued Interest") << tr("Accrued Value")
-						<< tr("On Maturation") << tr("Term (Days)") << tr("Deposit Block") << tr("Maturation Block")
-						<< tr("Estimated Date");
+								<< tr("On Maturation") << tr("Term (Days)") << tr("Deposit Block") << tr("Maturation Block")
+								<< tr("Estimated Date");
 
 }
 
@@ -56,13 +56,57 @@ static bool compareByDepth(COutput& a, COutput& b) {
 int DepositTableModel::update(std::vector<COutput>& termDepositInfo)
 {
 
-	this->beginResetModel();
-	this->termDepositInfoData = termDepositInfo;
-	qSort(this->termDepositInfoData.begin(), this->termDepositInfoData.end(), compareByDepth);
-	this->endResetModel();
-	LogPrintf("list of deposits updated, count=%d\n",termDepositInfo.size());
+	clock_t t1 = clock();
 
-	return termDepositInfo.size();
+	this->beginResetModel();
+	clock_t t2 = clock();
+
+	qSort(termDepositInfo.begin(), termDepositInfo.end(), compareByDepth);
+	clock_t t3 = clock();
+
+	this->tdiCache.clear();
+	this->tdiCache.reserve(termDepositInfo.size());
+	for (int i=0, ii=termDepositInfo.size(); i<ii; i++) {
+
+		COutput ctermDeposit = termDepositInfo.at(i);
+		CTxOut termDeposit = ctermDeposit.tx->vout[ctermDeposit.i];
+
+		// create new record with empty constructor
+		tdiCache.push_back(CacheRecord());
+
+		tdiCache[i].nValue = termDeposit.nValue;
+		tdiCache[i].curHeight = this->clientModel->getNumBlocks();
+		tdiCache[i].lockHeight = tdiCache[i].curHeight-ctermDeposit.nDepth;
+		tdiCache[i].releaseBlock = termDeposit.scriptPubKey.GetTermDepositReleaseBlock();
+		tdiCache[i].term = tdiCache[i].releaseBlock - tdiCache[i].lockHeight;
+		tdiCache[i].blocksRemaining = tdiCache[i].releaseBlock - tdiCache[i].curHeight;
+		tdiCache[i].withInterest = termDeposit.GetValueWithInterest(tdiCache[i].lockHeight,
+				(tdiCache[i].curHeight<tdiCache[i].releaseBlock?tdiCache[i].curHeight:tdiCache[i].releaseBlock));
+		tdiCache[i].matureValue = termDeposit.GetValueWithInterest(tdiCache[i].lockHeight,tdiCache[i].releaseBlock);
+		//tdiCache[i].blocksSoFar = tdiCache[i].curHeight - tdiCache[i].lockHeight;
+		//termDepositInfoCache[i].interestRatePerBlock = pow(((0.0+termDepositInfoCache[i].matureValue)/termDepositInfoCache[i].nValue),1.0/termDepositInfoCache[i].term);
+		//termDepositInfoCache[i].interestRate = (pow(termDepositInfoCache[i].interestRatePerBlock,365*720)-1)*100;
+
+		time_t rawtime;
+		time(&rawtime);
+		rawtime += tdiCache[i].blocksRemaining * 120;
+		memcpy(&tdiCache[i].timeinfo,localtime(&rawtime),sizeof(struct tm));
+
+	}
+	clock_t t4 = clock();
+
+	this->endResetModel();
+	clock_t t5 = clock();
+
+	LogPrintf("list of deposits updated, count=%d beginReset=%f qSort=%f cache=%f endReset=%f\n",
+			tdiCache.size(),
+			((double)t2 - (double)t1) / CLOCKS_PER_SEC,
+			((double)t3 - (double)t2) / CLOCKS_PER_SEC,
+			((double)t4 - (double)t3) / CLOCKS_PER_SEC,
+			((double)t5 - (double)t4) / CLOCKS_PER_SEC
+	);
+
+	return tdiCache.size();
 }
 
 DepositTableModel::~DepositTableModel()
@@ -72,7 +116,7 @@ DepositTableModel::~DepositTableModel()
 int DepositTableModel::rowCount(const QModelIndex &parent) const
 {
 	Q_UNUSED(parent);
-	return termDepositInfoData.size();
+	return tdiCache.size();
 }
 
 int DepositTableModel::columnCount(const QModelIndex &parent) const
@@ -86,7 +130,7 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 	if (!index.isValid())
 		return QVariant();
 
-	if (index.row() >= termDepositInfoData.size() || index.row() < 0)
+	if (index.row() >= tdiCache.size() || index.row() < 0)
 		return QVariant();
 
 	// TODO: allow to change units
@@ -98,29 +142,13 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 	}
 	else if (role == Qt::DisplayRole || role == SortRole || role == Qt::ToolTipRole)
 	{
-		COutput ctermDeposit = termDepositInfoData.at(index.row());
-
-		CTxOut termDeposit = ctermDeposit.tx->vout[ctermDeposit.i];
-		int curHeight = this->clientModel->getNumBlocks();
-		int lockHeight = curHeight-ctermDeposit.nDepth;
-		int releaseBlock = termDeposit.scriptPubKey.GetTermDepositReleaseBlock();
-		int term  = releaseBlock - lockHeight;
-		int blocksRemaining = releaseBlock - curHeight;
-		CAmount withInterest = termDeposit.GetValueWithInterest(lockHeight,(curHeight<releaseBlock?curHeight:releaseBlock));
-		CAmount matureValue = termDeposit.GetValueWithInterest(lockHeight,releaseBlock);
-		int blocksSoFar = curHeight-lockHeight;
-
-		double interestRatePerBlock = pow(((0.0+matureValue)/termDeposit.nValue),1.0/term);
-		double interestRate = (pow(interestRatePerBlock,365*720)-1)*100;
+		CacheRecord cache = tdiCache.at(index.row());
 
 		switch(index.column()) {
 		case Status:
-			if (curHeight >= releaseBlock) {
-				if (role == Qt::ToolTipRole)
-					return tr("Warning: this amount is no longer earning interest of any kind");
-				else
+			if (cache.curHeight >= cache.releaseBlock) {
+				if (role == Qt::DisplayRole || role == SortRole)
 					return tr("Matured");
-
 			} else {
 				if (role == Qt::DisplayRole || role == SortRole)
 					return tr("Earned");
@@ -128,62 +156,58 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 			break;
 		case Principal:
 			if (role == SortRole)
-				return qint64(termDeposit.nValue);
+				return qint64(cache.nValue);
 			else if (role == Qt::DisplayRole)
-				return ROIcoinUnits::format(nDisplayUnit, termDeposit.nValue);
+				return ROIcoinUnits::format(nDisplayUnit, cache.nValue);
 			break;
 		case AccruedInterest:
 			if (role == SortRole)
-				return qint64(withInterest-termDeposit.nValue);
+				return qint64(cache.withInterest-cache.nValue);
 			else if (role == Qt::DisplayRole)
-				return ROIcoinUnits::format(nDisplayUnit, withInterest-termDeposit.nValue);
+				return ROIcoinUnits::format(nDisplayUnit, cache.withInterest-cache.nValue);
 			break;
 		case AccruedValue:
 			if (role == SortRole)
-				return qint64(withInterest);
+				return qint64(cache.withInterest);
 			else if (role == Qt::DisplayRole)
-				return ROIcoinUnits::format(nDisplayUnit, withInterest);
+				return ROIcoinUnits::format(nDisplayUnit, cache.withInterest);
 			break;
 		case OnMaturation:
 			if (role == SortRole)
-				return qint64(matureValue);
+				return qint64(cache.matureValue);
 			else if (role == Qt::DisplayRole)
-				return ROIcoinUnits::format(nDisplayUnit, matureValue);
+				return ROIcoinUnits::format(nDisplayUnit, cache.matureValue);
 			break;
 		case TermDays:
 			if (role == SortRole)
-				return (term)/720;
+				return (cache.term)/720;
 			else if (role == Qt::DisplayRole)
-				return QString::number((term)/720);
+				return QString::number((cache.term)/720);
 			break;
 		case DepositBlock:
 			if (role == SortRole)
-				return lockHeight;
+				return cache.lockHeight;
 			else if (role == Qt::DisplayRole)
-				return QString::number(lockHeight); // .rightJustified(7,'0');
+				return QString::number(cache.lockHeight); // .rightJustified(7,'0');
 			break;
 		case MaturationBlock:
 			if (role == SortRole)
-				return releaseBlock;
+				return cache.releaseBlock;
 			else if (role == Qt::DisplayRole)
-				return QString::number(releaseBlock); // .rightJustified(7,'0');
+				return QString::number(cache.releaseBlock); // .rightJustified(7,'0');
 			break;
 		case EstimatedDate:
 
-			time_t rawtime;
 			char buffer[16];
-			time(&rawtime);
-			rawtime += blocksRemaining * 120;
-			struct tm *timeinfo = localtime(&rawtime);
-			strftime(buffer, 16, "%Y/%m/%d", timeinfo);
+			strftime(buffer, 16, "%Y/%m/%d", &cache.timeinfo);
 
 			if (role == SortRole)
-				return qint64(mktime(timeinfo));
+				return qint64(mktime(&cache.timeinfo));
 			else if (role == Qt::DisplayRole)
 				return QString(buffer);
 			else if (role == Qt::ToolTipRole) {
-				if (curHeight >= releaseBlock) {
-					int days = (int)((curHeight - releaseBlock)/720);
+				if (cache.curHeight >= cache.releaseBlock) {
+					int days = (int)(-cache.blocksRemaining/720);
 					switch (days) {
 					case 0:
 						return tr("Matured today");
@@ -193,7 +217,7 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 						return tr("Matured %1 days ago").arg(days);
 					}
 				} else {
-					int days = (int)(releaseBlock - curHeight)/720;
+					int days = (int)(cache.blocksRemaining/720);
 					switch (days) {
 					case 0:
 						return tr("Matures today");
