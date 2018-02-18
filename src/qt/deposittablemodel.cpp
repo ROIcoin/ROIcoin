@@ -181,6 +181,29 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 				return qint64(mktime(timeinfo));
 			else if (role == Qt::DisplayRole)
 				return QString(buffer);
+                        else if (role == Qt::ToolTipRole) {
+				if (curHeight >= releaseBlock) {
+					int days = (int)((curHeight - releaseBlock)/720);
+					switch (days) {
+					case 0:
+						return tr("Matured today");
+					case 1:
+						return tr("Matured yesterday");
+					default:
+						return tr("Matured %1 days ago").arg(days);
+					}
+				} else {
+					int days = (int)(releaseBlock - curHeight)/720;
+					switch (days) {
+					case 0:
+						return tr("Matures today");
+					case 1:
+						return tr("Matures tomorrow");
+					default:
+						return tr("%1 days to go").arg(days);
+					}
+				}
+			}
 
 			break;
 		}
