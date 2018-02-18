@@ -56,11 +56,15 @@ static bool compareByDepth(COutput& a, COutput& b) {
 int DepositTableModel::update(std::vector<COutput>& termDepositInfo)
 {
 
+	clock_t t1 = clock();
 	this->beginResetModel();
+	clock_t t2 = clock();
 	this->termDepositInfoData = termDepositInfo;
 	qSort(this->termDepositInfoData.begin(), this->termDepositInfoData.end(), compareByDepth);
+	clock_t t3 = clock();
 	this->endResetModel();
-	LogPrintf("list of deposits updated, count=%d\n",termDepositInfo.size());
+	clock_t t4 = clock();
+	LogPrintf("list of deposits updated, count=%d beginReset=%" PRId64 " qSort=%" PRId64 " endReset=%" PRId64 " \n",termDepositInfo.size(), ((double)t2 - (double)t1) / CLOCKS_PER_SEC, ((double)t3 - (double)t2) / CLOCKS_PER_SEC, ((double)t4 - (double)t3) / CLOCKS_PER_SEC);
 
 	return termDepositInfo.size();
 }
