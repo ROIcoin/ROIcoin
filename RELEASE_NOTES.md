@@ -5,6 +5,8 @@ Changes in 1.1.4.0
 - NEW - issue #15 a new flag -autoban (default is off) was introduced to automaticaly ban peers for 24hrs if they returned "Connection Refused" or "Host unreachable". 
         This will reduce the cpu load when handling peers.
 - NEW - issue #16 a new flag -banobsoleteversion (default is off) was introduced to automaticaly ban peers for 24hrs who have obsolete old wallet version ( < v1.1.2 ).
+- NEW - issue #40 matured coins will now show an alert bubble ( just like when you find a new block )
+- FIX - issue #39 TheTDD has rebuild the term deposit table from scratch and fixed the sorting issue ( should also be faster to sort and update ).
 - BUG - issue #19 the wallet rpcport was wrongly configured and conflicted with the p2p port, this explains a lot of slow syncing and low peer counts we have been experiencing. 
         The rpcport is now set to 3376
 - NEW - issue #22 the sending addressbook will now contain the send and receive addresses combined , this will facilitate sending matured coins or combining inputs to yourself.
