@@ -113,3 +113,10 @@ qa/pull-tester/test.*/*
 /doc/doxygen/
 
 libbitcoinconsensus.pc
+src/ROIcoin-cli
+src/ROIcoin-tx
+src/ROIcoind
+src/config/roicoin-config.h
+src/config/roicoin-config.h.in
+src/qt/test/test_ROIcoin-qt
+src/test/test_ROIcoin
