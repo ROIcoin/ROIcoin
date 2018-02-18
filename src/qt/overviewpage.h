@@ -7,12 +7,14 @@
 
 #include "amount.h"
 #include "primitives/transaction.h"
+#include "deposittablemodel.h"
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h" // for COutput
 #endif // ENABLE_WALLET
 
 #include <QWidget>
+#include <QSortFilterProxyModel>
 
 class ClientModel;
 class TransactionFilterProxy;
@@ -26,6 +28,17 @@ namespace Ui {
 QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
+
+class DepositSortFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+public:
+    explicit DepositSortFilterProxyModel(QObject *parent = 0);
+
+protected:
+    // bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+};
 
 /** Overview ("home") page widget */
 class OverviewPage : public QWidget
@@ -47,7 +60,10 @@ public Q_SLOTS:
 #endif // ENABLE_WALLET
 
 Q_SIGNALS:
-    void transactionClicked(const QModelIndex &index);
+	/** When transaction is clicked */
+	void transactionClicked(const QModelIndex &index);
+	/** Notify that matured coins appeared */
+    void maturedCoinsNotification(int count, int unit, CAmount& amount);
 
 private:
     Ui::OverviewPage *ui;
@@ -63,11 +79,16 @@ private:
     TxViewDelegate *txdelegate;
     TransactionFilterProxy *filter;
 
+    DepositSortFilterProxyModel *depositProxyModel;
+    DepositTableModel *depositModel;
+
 private Q_SLOTS:
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex &index);
     void updateAlerts(const QString &warnings);
     void updateWatchOnlyLabels(bool showWatchOnly);
 };
+
+
 
 #endif // ROICOIN_QT_OVERVIEWPAGE_H

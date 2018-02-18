@@ -973,6 +973,18 @@ void ROIcoinGUI::incomingTransaction(const QString& date, int unit, const CAmoun
     message((amount)<0 ? tr("Sent transaction") : tr("Incoming transaction"),
              msg, CClientUIInterface::MSG_INFORMATION);
 }
+
+void ROIcoinGUI::maturedCoinsNotification(int count, int unit, CAmount& amount)
+{
+	LogPrintf("got maturedCoinsNotification for %d/%s\n", count, ROIcoinUnits::formatWithUnit(ROIcoinUnits::ROI, amount, true).data() );
+
+    // On matured coins, make an info balloon
+    QString msg = tr("Count: %1\n").arg(count) +
+                  tr("Amount: %1\n").arg(ROIcoinUnits::formatWithUnit(unit, amount, true));
+    message(tr("Matured coins"),
+             msg, CClientUIInterface::MSG_INFORMATION);
+}
+
 #endif // ENABLE_WALLET
 
 void ROIcoinGUI::dragEnterEvent(QDragEnterEvent *event)
