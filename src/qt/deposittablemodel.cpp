@@ -53,8 +53,9 @@ static bool compareByDepth(COutput& a, COutput& b) {
 	return b.nDepth < a.nDepth;
 }
 
-int DepositTableModel::update(std::vector<COutput>& termDepositInfo)
+int DepositTableModel::update(int unit, std::vector<COutput>& termDepositInfo)
 {
+        this->unit = unit;
 
 	clock_t t1 = clock();
 
@@ -134,7 +135,7 @@ QVariant DepositTableModel::data(const QModelIndex &index, int role) const
 		return QVariant();
 
 	// TODO: allow to change units
-	int nDisplayUnit = ROIcoinUnits::ROI;
+        int nDisplayUnit = this->unit;
 
 	if (role == Qt::TextAlignmentRole)
 	{

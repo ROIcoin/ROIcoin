@@ -18,6 +18,8 @@
 #include "util.h"
 #include "deposittablemodel.h"
 
+#include <boost/thread.hpp>
+
 #include <QAbstractItemDelegate>
 #include <QPainter>
 
@@ -112,21 +114,34 @@ DepositSortFilterProxyModel::DepositSortFilterProxyModel(QObject *parent)
 	this->setSortRole( DepositTableModel::SortRole );
 }
 
+void DelayedDepositTableLoadingThread::run() {
+
+	QThread::setTerminationEnabled(true);
+	QThread::sleep(delay);
+	QThread::setTerminationEnabled(false);
+
+	Q_EMIT waitingIsOver();
+}
+
 #include "overviewpage.moc"
 
 OverviewPage::OverviewPage(QWidget *parent) :
-    				QWidget(parent),
-					ui(new Ui::OverviewPage),
-					clientModel(0),
-					walletModel(0),
-					currentBalance(-1),
-					currentUnconfirmedBalance(-1),
-					currentImmatureBalance(-1),
-					currentWatchOnlyBalance(-1),
-					currentWatchUnconfBalance(-1),
-					currentWatchImmatureBalance(-1),
-					txdelegate(new TxViewDelegate()),
-					filter(0)
+    						QWidget(parent),
+							ui(new Ui::OverviewPage),
+							clientModel(0),
+							walletModel(0),
+							currentBalance(-1),
+							currentUnconfirmedBalance(-1),
+							currentImmatureBalance(-1),
+							currentWatchOnlyBalance(-1),
+							currentWatchUnconfBalance(-1),
+							currentWatchImmatureBalance(-1),
+							txdelegate(new TxViewDelegate()),
+							filter(0),
+							depositUpdateThread(NULL),
+							updateRequest(0),
+							delayedDepositTableLoading(GetBoolArg("-delayeddeposittableloading",true)),
+							depositTableLoadingDelay(GetArg("-deposittableloadingdelay",5))
 {
 	ui->setupUi(this);
 
@@ -179,6 +194,12 @@ OverviewPage::~OverviewPage()
 
 	delete depositProxyModel;
 	delete depositModel;
+
+	if (depositUpdateThread != NULL && depositUpdateThread->isRunning()) {
+			depositUpdateThread->terminate();
+			depositUpdateThread->wait(1000); // wait 1 sec
+			delete depositUpdateThread;
+	}
 }
 
 void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, std::vector<COutput> termDepositInfo)
@@ -210,6 +231,42 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 	ui->labelImmatureText->setVisible(showImmature || showWatchOnlyImmature);
 	ui->labelWatchImmature->setVisible(showWatchOnlyImmature); // show watch-only immature balance
 
+	if (delayedDepositTableLoading) {
+
+		if (depositUpdateThread != NULL && depositUpdateThread->isRunning()) {
+			depositUpdateThread->terminate();
+			depositUpdateThread->wait(1000); // wait 1 sec
+			delete depositUpdateThread;
+			LogPrintf("Drop update request %d\n",updateRequest);
+		}
+
+		// save for future sue
+		this->termDepositInfo = termDepositInfo;
+		depositUpdateThread = new DelayedDepositTableLoadingThread(depositTableLoadingDelay);
+
+		// Connect our signal and slot
+		connect(depositUpdateThread, SIGNAL(waitingIsOver(void)), this, SLOT(onWaitingIsOver(void)));
+
+		depositUpdateThread->start();
+
+	} else {
+		setTermDeposit(termDepositInfo);
+	}
+
+	updateRequest++;
+
+}
+
+void OverviewPage::onWaitingIsOver() {
+	setTermDeposit(this->termDepositInfo);
+}
+
+void OverviewPage::setTermDeposit(std::vector<COutput>& termDepositInfo) {
+
+	LogPrintf("Process update request %d\n",updateRequest);
+
+	int unit = walletModel->getOptionsModel()->getDisplayUnit();
+
 	bool sortflag = GetArg("-sortearnings", true);
 	bool sortOrder = true;
 	int sortSection = -1;
@@ -219,7 +276,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 		sortSection = ui->ROITable->horizontalHeader()->sortIndicatorSection();
 	}
 
-	depositModel->update(termDepositInfo);
+	depositModel->update(unit, termDepositInfo);
 
 	if (sortflag && sortSection >= 0) {
 		// restore sort order and direction
@@ -240,14 +297,14 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 		int curHeight = this->clientModel->getNumBlocks();
 		int lockHeight = curHeight - ctermDeposit.nDepth;
 		int releaseBlock = termDeposit.scriptPubKey.GetTermDepositReleaseBlock();
-		int term = releaseBlock - lockHeight;
-		int blocksRemaining = releaseBlock - curHeight;
+		// int term = releaseBlock - lockHeight;
+		// int blocksRemaining = releaseBlock - curHeight;
 		CAmount withInterest = termDeposit.GetValueWithInterest(lockHeight,(curHeight<releaseBlock?curHeight:releaseBlock));
 		CAmount matureValue = termDeposit.GetValueWithInterest(lockHeight,releaseBlock);
-		int blocksSoFar = curHeight-lockHeight;
+		// int blocksSoFar = curHeight-lockHeight;
 
-		double interestRatePerBlock = pow(((0.0+matureValue)/termDeposit.nValue),1.0/term);
-		double interestRate = (pow(interestRatePerBlock,365*720)-1)*100;
+		//double interestRatePerBlock = pow(((0.0+matureValue)/termDeposit.nValue),1.0/term);
+		//double interestRate = (pow(interestRatePerBlock,365*720)-1)*100;
 
 		if (curHeight == releaseBlock) {
 			maturedNowCount++;

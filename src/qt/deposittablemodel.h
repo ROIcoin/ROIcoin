@@ -64,13 +64,14 @@ public:
 	QVariant data(const QModelIndex &index, int role) const;
 	QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-	int update(std::vector<COutput>& termDepositInfo);
+        int update(int unit, std::vector<COutput>& termDepositInfo);
 
 private:
 	std::vector<CacheRecord> tdiCache;
 	QStringList columns;
 
 	ClientModel *clientModel;
+        int unit;
 
 	public Q_SLOTS:
 	/* New transaction, or transaction changed status */
