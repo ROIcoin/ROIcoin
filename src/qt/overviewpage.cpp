@@ -17,7 +17,7 @@
 #include "wallet/wallet.h"
 #include "util.h"
 #include "deposittablemodel.h"
-
+#include "init.h"
 #include <boost/thread.hpp>
 
 #include <QAbstractItemDelegate>
@@ -120,7 +120,8 @@ void DelayedDepositTableLoadingThread::run() {
 	QThread::sleep(delay);
 	QThread::setTerminationEnabled(false);
 
-	Q_EMIT waitingIsOver();
+	 if (!ShutdownRequested()) Q_EMIT waitingIsOver();
+
 }
 
 #include "overviewpage.moc"
