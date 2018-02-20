@@ -1,29 +1,37 @@
 # ROIcoin Release Notes for v1.1.4.0
 
+Important Notice:
+
+We still see many users using old obsolete wallets, for this reason combined with the removal of the 30 day limit for earning interest on matured coins
+there will be a hard fork at block 75000.
+
 Changes in 1.1.4.0
 
 - NEW - issue #15 a new flag -autoban (default is off) was introduced to automaticaly ban peers for 24hrs if they returned "Connection Refused" or "Host unreachable". 
-        This will reduce the cpu load when handling peers.
-- NEW - issue #16 a new flag -banobsoleteversion (default is off) was introduced to automaticaly ban peers for 24hrs who have obsolete old wallet version ( < v1.1.2 ).
+        This will reduce the cpu load when handling peers. ( recommended for 24/7 servers and VPS )
+- NEW - issue #16 a new flag -banobsoleteversion (default is off) was introduced to automaticaly ban peers for 24hrs who have obsolete old wallet version ( < v1.1.4 )
 - NEW - issue #40 matured coins will now show an alert bubble ( just like when you find a new block )
-- FIX - issue #39 TheTDD has rebuild the term deposit table from scratch and fixed the sorting issue ( should also be faster to sort and update ).
-- NEW - issue #47 TheTDD has implemented a deposit table delay mechanism to slow down UI updates during block sync at startup, it can take up to 5s before you see your term deposits, but it will speed up block syncing.
-- BUG - issue #19 the wallet rpcport was wrongly configured and conflicted with the p2p port, this explains a lot of slow syncing and low peer counts we have been experiencing. 
-        The rpcport is now set to 3376
+- FIX - issue #39 TheTDD has rebuild the term deposit table from scratch and fixed the sorting issues ( should also be faster to sort and update ).
+- NEW - issue #47 TheTDD has implemented a deposit table delay mechanism to slow down UI updates during block sync at startup.
+        Note: It can take up to 5s before you see your term deposits, but it will speed up block syncing.
+- BUG - issue #19 the wallet rpcport was wrongly configured and conflicted with the p2p port, this was the reason for the slow syncing and low peer counts issues in the past. 
+        The rpcport is now by default set to 3376
 - NEW - issue #22 the sending addressbook will now contain the send and receive addresses combined , this will facilitate sending matured coins or combining inputs to yourself.
-- FIX - Matured message no longer shows a warning, we removed the 30 day limitation on earning interest.
-- FIX - rpc gettransaction call will now show credit value without interest ( requested by elbandi )
-- FIX - issue #42 estimated date is now based on 120s blocktime ( previously 154s which was incorrect ).
-- FIX - issue #44 setban rpc command can now accept a custom bantime
+- FIX - Matured coins message will no longer show a warning, We removed the 30 day limitation on earning interest, 
+        this change applies retroactively to existing inputs, IF you have unlocked coins in your wallet and you were not regularly sending them to yourself every 30 days to benefit 
+        from the bonus, they will now activate. You will see a higher wallet balance as a result after the Hard Fork.
+- FIX - rpc gettransaction call will now show credit value without interest ( requested by elbandi, to help pool operators )
+- FIX - issue #42 estimated date is now based on 120s blocktime , this should provide a more accurate Estimated Date value.
+- FIX - issue #44 setban rpc command can now accept a custom bantime ( larger than 24hrs )
 
 The biggest new feature is the faster block loading times. The first time you start the new wallet it will still take as long as before, because 
-it is building up a new hash index database (You will see a new sub folder called cache in the blocks folder) . *You must let the loading process complete* 
+it is building up a new hash index database ( You will see a new sub folder called "cache" in the blocks folder ). *You must let the loading process complete* 
 The second time you restart the new wallet you will see a significantly faster loading time. This new cache only requires about 30 Mb extra disk space.
 
 ROIcoin core v1.1.4.0 is now available at:
 https://github.com/ROIcoin/ROIcoin/releases/
 
-Please report bugs using the issue tracker at github:
+Please report bugs using the issue tracker at github, we will not use bitcointalk forum for handling bug reports.
 https://github.com/ROIcoin/ROIcoin/issues
 
 ## Upgrading and downgrading
@@ -32,10 +40,9 @@ https://github.com/ROIcoin/ROIcoin/issues
 If you are running an older version, shut it down. Wait until it has completely
 shut down (which might take a few minutes for older versions).
 Backup your wallet.dat file ( which you should always do regardless of an upgrade event )
-then run the installer (on Windows) or just copy over ROIcoin-qt (on Linux).
+then copy over ROIcoin-qt.exe (on Windows) or just copy over ROIcoin-qt (on Linux).
 
 Credits:
-- PlainKoin
 - TheTDD
 - Elbandi
 - ghobson2013
