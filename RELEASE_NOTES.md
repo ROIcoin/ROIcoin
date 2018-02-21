@@ -2,8 +2,8 @@
 
 Important Notice:
 
-We still see many users using old obsolete wallets, for this reason combined with the removal of the 30 day limit for earning interest on matured coins
-there will be a hard fork at block 75000.
+We still see many users using old obsolete wallets, for this reason there will be a hard fork at block 75000.
+IF you are on the wrong chain ( not the same height as the block explorer ) , you will need to resync, this will be faster with v1.1.4.
 
 Changes in 1.1.4.0
 
@@ -17,9 +17,6 @@ Changes in 1.1.4.0
 - BUG - issue #19 the wallet rpcport was wrongly configured and conflicted with the p2p port, this was the reason for the slow syncing and low peer counts issues in the past. 
         The rpcport is now by default set to 3376
 - NEW - issue #22 the sending addressbook will now contain the send and receive addresses combined , this will facilitate sending matured coins or combining inputs to yourself.
-- FIX - Matured coins message will no longer show a warning, We removed the 30 day limitation on earning interest, 
-        this change applies retroactively to existing inputs, IF you have unlocked coins in your wallet and you were not regularly sending them to yourself every 30 days to benefit 
-        from the bonus, they will now activate. You will see a higher wallet balance as a result after the Hard Fork.
 - FIX - rpc gettransaction call will now show credit value without interest ( requested by elbandi, to help pool operators )
 - FIX - issue #42 estimated date is now based on 120s blocktime , this should provide a more accurate Estimated Date value.
 - FIX - issue #44 setban rpc command can now accept a custom bantime ( larger than 24hrs )

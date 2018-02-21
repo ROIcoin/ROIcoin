@@ -253,16 +253,8 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         return nValue;
     }
 
-    int blocks = 0;
-    // Removed 30 day limit on POS 
-    if(chainHeight < FORK3HEIGHT)
-    {
-        blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
-    }
-    else
-    {
-       blocks=valuationHeight-outputBlockHeight;
-    }
+    // Matured coins only earn up to 30 days of interest
+    int blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
 
     // dont allow negative blocks
     blocks=std::max(blocks,0);
