@@ -14,6 +14,7 @@
 
 static const unsigned int FORK1HEIGHT = 25000;
 static const unsigned int FORK2HEIGHT = 31000;
+static const unsigned int FORK3HEIGHT = 75000;
 
 const uint32_t BIP_009_MASK = 0x20000000;
 const uint32_t BASE_VERSION = 0x20000000;  // Will accept 2MB blocks
@@ -21,7 +22,7 @@ const uint32_t FORK_BIT_2MB = 0x10000000;  // Vote for 2MB fork
 // HFP0 removed Classic DEFAULT_2MB_VOTE
 
 // HFP0 FRK begin
-const uint32_t FULL_FORK_VERSION_MIN = FORK2HEIGHT; // HFP0 starting version
+const uint32_t FULL_FORK_VERSION_MIN = FORK3HEIGHT; // HFP0 starting version
 const uint32_t FULL_FORK_VERSION_MAX = FULL_FORK_VERSION_MIN + 15; // HFP0 end of version range, so that others can fork safely
 const uint32_t FULL_FORK_VERSION_CUR = FULL_FORK_VERSION_MIN;
 
@@ -85,6 +86,7 @@ public:
     }
 
     uint256 GetHash() const;
+    uint256 GetHashNoCache() const;
     uint256 GetMidHash() const;
     uint256 FindBestPatternHash(int& collisions,char *scratchpad,int nThreads,int* minerStopFlag);
 

@@ -827,9 +827,9 @@ isminetype CWallet::IsMine(const CTxOut& txout) const
     return ::IsMine(*this, txout.scriptPubKey);
 }
 
-CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter, const int& depthInMainChain) const
+CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter, const int& depthInMainChain, bool interest) const
 {
-    CAmount afterInterest=txout.GetValueWithInterest((chainActive.Height()+1)-depthInMainChain,chainActive.Height()+1);
+    CAmount afterInterest=interest ? txout.GetValueWithInterest((chainActive.Height()+1)-depthInMainChain,chainActive.Height()+1) : txout.nValue;
     if (!MoneyRange(afterInterest))
         throw std::runtime_error("CWallet::GetCredit(): value out of range");
     return ((IsMine(txout) & filter) ? afterInterest : 0);
@@ -889,12 +889,12 @@ CAmount CWallet::GetDebit(const CTransaction& tx, const isminefilter& filter) co
     return nDebit;
 }
 
-CAmount CWallet::GetCredit(const CTransaction& tx, const isminefilter& filter, const int& nDepth) const
+CAmount CWallet::GetCredit(const CTransaction& tx, const isminefilter& filter, const int& nDepth, bool interest) const
 {
     CAmount nCredit = 0;
     BOOST_FOREACH(const CTxOut& txout, tx.vout)
     {
-        nCredit += GetCredit(txout, filter, nDepth);
+        nCredit += GetCredit(txout, filter, nDepth, interest);
         if (!MoneyRange(nCredit))
             throw std::runtime_error("CWallet::GetCredit(): value out of range");
     }
@@ -1189,7 +1189,7 @@ CAmount CWalletTx::GetDebit(const isminefilter& filter) const
     return debit;
 }
 
-CAmount CWalletTx::GetCredit(const isminefilter& filter) const
+CAmount CWalletTx::GetCredit(const isminefilter& filter, bool interest) const
 {
     // Must wait until coinbase is safely deep enough in the chain before valuing it
     if (IsCoinBase() && GetBlocksToMaturity() > 0)
@@ -1203,7 +1203,7 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter) const
             credit += nCreditCached;
         else
         {
-            nCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE, GetDepthInMainChain());
+            nCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE, GetDepthInMainChain(), interest);
             fCreditCached = true;
             credit += nCreditCached;
         }
@@ -1214,7 +1214,7 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter) const
             credit += nWatchCreditCached;
         else
         {
-            nWatchCreditCached = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY, GetDepthInMainChain());
+            nWatchCreditCached = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY, GetDepthInMainChain(), interest);
             fWatchCreditCached = true;
             credit += nWatchCreditCached;
         }

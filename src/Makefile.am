@@ -14,7 +14,7 @@ $(LIBLEVELDB): $(LIBMEMENV)
 $(LIBLEVELDB) $(LIBMEMENV):
 	@echo "Building LevelDB ..." && $(MAKE) -C $(@D) $(@F) CXX="$(CXX)" \
 	  CC="$(CC)" PLATFORM=$(TARGET_OS) AR="$(AR)" $(LEVELDB_TARGET_FLAGS) \
-          OPT="$(CXXFLAGS) $(CPPFLAGS) -D__STDC_LIMIT_MACROS"
+          OPT="$(CXXFLAGS) $(CPPFLAGS) -D__STDC_LIMIT_MACROS -std=c++11"
 endif
 
 ROICOIN_CONFIG_INCLUDES=-I$(builddir)/config
@@ -159,7 +159,8 @@ ROICOIN_CORE_H = \
   wallet/db.h \
   wallet/wallet.h \
   wallet/wallet_ismine.h \
-  wallet/walletdb.h
+  wallet/walletdb.h \
+  aescache.h
 
 JSON_H = \
   json/json_spirit.h \
@@ -187,7 +188,6 @@ libroicoin_server_a_SOURCES = \
   chain.cpp \
   checkpoints.cpp \
   init.cpp \
-  leveldbwrapper.cpp \
   main.cpp \
   merkleblock.cpp \
   miner.cpp \
@@ -205,7 +205,6 @@ libroicoin_server_a_SOURCES = \
   rpcserver.cpp \
   script/sigcache.cpp \
   timedata.cpp \
-  txdb.cpp \
   txmempool.cpp \
   validationinterface.cpp \
   $(JSON_H) \
@@ -261,6 +260,9 @@ libroicoin_common_a_SOURCES = \
   arith_uint256.cpp \
   base58.cpp \
   chainparams.cpp \
+  txdb.cpp \
+  leveldbwrapper.cpp \
+  aescache.cpp \
   coins.cpp \
   compressor.cpp \
   core_read.cpp \
@@ -359,7 +361,7 @@ ROIcoin_cli_LDADD = \
   $(LIBROICOIN_CLI) \
   $(LIBROICOIN_UTIL)
 
-ROIcoin_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS)
+ROIcoin_cli_LDADD += $(LIBLEVELDB) $(LIBMEMENV) $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS)
 #
 
 # ROIcoin-tx binary #
@@ -379,7 +381,7 @@ ROIcoin_tx_LDADD = \
   $(LIBROICOIN_CRYPTO_X86) \
   $(LIBSECP256K1)
 
-ROIcoin_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+ROIcoin_tx_LDADD += $(LIBLEVELDB) $(LIBMEMENV) $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # roicoinconsensus library #

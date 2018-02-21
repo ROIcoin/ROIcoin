@@ -25,7 +25,7 @@
 #include "tinyformat.h"
 #include "txmempool.h"
 #include "uint256.h"
-
+#include "aescache.h"
 #include <algorithm>
 #include <exception>
 #include <map>
@@ -495,5 +495,7 @@ extern CCoinsViewCache *pcoinsTip;
 extern CBlockTreeDB *pblocktree;
 
 extern int minerStopFlag;
+
+extern CBlockAesCache *aesCache;
 
 #endif // ROICOIN_MAIN_H

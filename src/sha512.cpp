@@ -1,6 +1,6 @@
 #include "sha512.h"
 
-#if (__x86_64__) && !(__APPLE__)
+#if (__x86_64__)
 
 #include <string.h>
 #include <stdlib.h>
@@ -9,6 +9,7 @@
 #include "tmmintrin.h"
 #include "smmintrin.h"
 #include "immintrin.h"
+#include "util.h"
 
 //SHA-512 auxiliary functions
 #define Ch(x, y, z) (((x) & (y)) | (~(x) & (z)))
@@ -19,7 +20,7 @@
 #define SIGMA4(x) (ROR64(x, 19) ^ ROR64(x, 61) ^ SHR64(x, 6))
 
 //Rotate right operation
-#define ROR64(a, n) _mm256_or_si256(_mm256_srli_epi64(a, n), _mm256_slli_epi64(a, sizeof(long)*8 - n))
+#define ROR64(a, n) _mm256_or_si256(_mm256_srli_epi64(a, n), _mm256_slli_epi64(a, 64 - n))
 
 //Shift right operation
 #define SHR64(a, n) _mm256_srli_epi64(a, n)
@@ -75,6 +76,13 @@ static const uint64_t k[80] =
    0x4CC5D4BECB3E42B6, 0x597F299CFC657E2A, 0x5FCB6FAB3AD6FAEC, 0x6C44198C4A475817
 };
 
+//SHA-512 seed
+static const uint64_t init[8] =
+{
+    0x6A09E667F3BCC908, 0xBB67AE8584CAA73B, 0x3C6EF372FE94F82B, 0xA54FF53A5F1D36F1,
+    0x510E527FADE682D1, 0x9B05688C2B3E6C1F, 0x1F83D9ABFB41BD6B, 0x5BE0CD19137E2179
+};
+
 typedef struct
 {
    __m256i h[8];
@@ -99,8 +107,8 @@ void transpose64bit4x4(__m256i& I0, __m256i& I1, __m256i& I2, __m256i& I3) {
                             SIGMA4(block[n][i - 2]) + block[n][i - 7])
 
 #define ROUND512(a,b,c,d,e,f,g,h)   \
-    T0 += (h[0]) + SIGMA2(e[0]) + Ch((e[0]), (f[0]), (g[0])) + k[i]; \
-    T1 += (h[1]) + SIGMA2(e[1]) + Ch((e[1]), (f[1]), (g[1])) + k[i]; \
+    T0 += (h[0]) + SIGMA2(e[0]) + Ch((e[0]), (f[0]), (g[0])) + _mm256_set1_epi64x(k[i]); \
+    T1 += (h[1]) + SIGMA2(e[1]) + Ch((e[1]), (f[1]), (g[1])) + _mm256_set1_epi64x(k[i]); \
     (d[0]) += T0; \
     (d[1]) += T1; \
     (h[0]) = T0 + SIGMA1(a[0]) + Maj((a[0]), (b[0]), (c[0])); \
@@ -183,51 +191,44 @@ void sha512ProcessBlock(Sha512Context context[2])
     context[1].h[7] += h[1];
 }
 
+static pthread_once_t once_init = PTHREAD_ONCE_INIT;
+
+static inline void initialize() {
+    LogPrintf("AVX2 engine initialized\n");
+}
 
 void sha512Compute32b_parallel(uint64_t *data[SHA512_PARALLEL_N], uint64_t *digest[SHA512_PARALLEL_N]) {
+
     Sha512Context context[2];
-    context[0].h[0] = _mm256_set1_epi64x(0x6A09E667F3BCC908);
-    context[0].h[1] = _mm256_set1_epi64x(0xBB67AE8584CAA73B);
-    context[0].h[2] = _mm256_set1_epi64x(0x3C6EF372FE94F82B);
-    context[0].h[3] = _mm256_set1_epi64x(0xA54FF53A5F1D36F1);
-    context[0].h[4] = _mm256_set1_epi64x(0x510E527FADE682D1);
-    context[0].h[5] = _mm256_set1_epi64x(0x9B05688C2B3E6C1F);
-    context[0].h[6] = _mm256_set1_epi64x(0x1F83D9ABFB41BD6B);
-    context[0].h[7] = _mm256_set1_epi64x(0x5BE0CD19137E2179);
-
-    context[1].h[0] = _mm256_set1_epi64x(0x6A09E667F3BCC908);
-    context[1].h[1] = _mm256_set1_epi64x(0xBB67AE8584CAA73B);
-    context[1].h[2] = _mm256_set1_epi64x(0x3C6EF372FE94F82B);
-    context[1].h[3] = _mm256_set1_epi64x(0xA54FF53A5F1D36F1);
-    context[1].h[4] = _mm256_set1_epi64x(0x510E527FADE682D1);
-    context[1].h[5] = _mm256_set1_epi64x(0x9B05688C2B3E6C1F);
-    context[1].h[6] = _mm256_set1_epi64x(0x1F83D9ABFB41BD6B);
-    context[1].h[7] = _mm256_set1_epi64x(0x5BE0CD19137E2179);
-
-    for(int i=0; i<4; ++i) {
-        context[0].w[i] = _mm256_set_epi64x ( data[3][i], data[2][i], data[1][i], data[0][i] );
-        context[1].w[i] = _mm256_set_epi64x ( data[7][i], data[6][i], data[5][i], data[4][i]  );
+    int i;
+    
+    pthread_once(&once_init, initialize);
+    
+    for (i=0; i<8; i++) {
+	context[0].h[i] = context[1].h[i] = _mm256_set1_epi64x(init[i]);
     }
-    for(int i=0; i<10; ++i) {
-        context[0].w[i+4] = _mm256_set1_epi64x( ((uint64_t*)padding)[i] );
-        context[1].w[i+4] = _mm256_set1_epi64x( ((uint64_t*)padding)[i] );
+    
+    for (i=0; i<4; ++i) {
+        context[0].w[i] = _mm256_set_epi64x ( data[3][i], data[2][i], data[1][i], data[0][i] );
+        context[1].w[i] = _mm256_set_epi64x ( data[7][i], data[6][i], data[5][i], data[4][i] );
+    }
+
+    for (i=0; i<10; ++i) {
+        context[0].w[i+4] = context[1].w[i+4] = _mm256_set1_epi64x(padding[i] );
     }
 
     //Length of the original message (before padding)
     uint64_t totalSize = 32 * 8;
 
     //Append the length of the original message
-    context[0].w[14] = _mm256_set1_epi64x(0);
-    context[0].w[15] = _mm256_set1_epi64x(htobe64(totalSize));
-
-    context[1].w[14] = _mm256_set1_epi64x(0);
-    context[1].w[15] = _mm256_set1_epi64x(htobe64(totalSize));
+    context[0].w[14] = context[1].w[14] =_mm256_set1_epi64x(0);
+    context[0].w[15] = context[1].w[15] =_mm256_set1_epi64x(htobe64(totalSize));
 
     //Calculate the message digest
     sha512ProcessBlock(context);
 
     //Convert from host byte order to big-endian byte order
-    for (int i = 0; i < 8; i++) {
+    for (i = 0; i < 8; i++) {
         context[0].h[i] = mm256_htobe_epi64(context[0].h[i]);
         context[1].h[i] = mm256_htobe_epi64(context[1].h[i]);
     }
@@ -288,7 +289,9 @@ void sha512Compute32b_parallel(uint64_t *data[SHA512_PARALLEL_N], uint64_t *dige
 void sha512Compute32b_parallel(
         uint64_t *data[SHA512_PARALLEL_N],
         uint64_t *digest[SHA512_PARALLEL_N]) {
+	LogPrintf("AVX2 mining not supported on this platform, exiting\n");
 	exit(1);
 }
 
 #endif  // __AVX2__
+

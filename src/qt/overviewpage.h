@@ -7,12 +7,15 @@
 
 #include "amount.h"
 #include "primitives/transaction.h"
+#include "deposittablemodel.h"
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h" // for COutput
 #endif // ENABLE_WALLET
 
+#include <QThread>
 #include <QWidget>
+#include <QSortFilterProxyModel>
 
 class ClientModel;
 class TransactionFilterProxy;
@@ -26,6 +29,31 @@ namespace Ui {
 QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
+
+class DepositSortFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+public:
+    explicit DepositSortFilterProxyModel(QObject *parent = 0);
+
+protected:
+    // bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+};
+
+class DelayedDepositTableLoadingThread : public QThread {
+
+	Q_OBJECT
+public:
+	DelayedDepositTableLoadingThread(int delay) : delay(delay) {}
+    void run();
+Q_SIGNALS:
+	void waitingIsOver();
+
+private:
+	int delay;
+
+};
 
 /** Overview ("home") page widget */
 class OverviewPage : public QWidget
@@ -44,10 +72,18 @@ public Q_SLOTS:
 #ifdef ENABLE_WALLET
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
                     const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, std::vector<COutput> termDepositInfo);
+
+    void onWaitingIsOver();
+
+    void setTermDeposit(std::vector<COutput>& tdi);
+
 #endif // ENABLE_WALLET
 
 Q_SIGNALS:
-    void transactionClicked(const QModelIndex &index);
+	/** When transaction is clicked */
+	void transactionClicked(const QModelIndex &index);
+	/** Notify that matured coins appeared */
+    void maturedCoinsNotification(int count, int unit, CAmount& amount);
 
 private:
     Ui::OverviewPage *ui;
@@ -63,6 +99,16 @@ private:
     TxViewDelegate *txdelegate;
     TransactionFilterProxy *filter;
 
+    DepositSortFilterProxyModel *depositProxyModel;
+    DepositTableModel *depositModel;
+
+    DelayedDepositTableLoadingThread *depositUpdateThread;
+    int updateRequest;
+    std::vector<COutput> termDepositInfo;
+
+    bool delayedDepositTableLoading;
+    int depositTableLoadingDelay;
+
 private Q_SLOTS:
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex &index);
@@ -70,4 +116,7 @@ private Q_SLOTS:
     void updateWatchOnlyLabels(bool showWatchOnly);
 };
 
+
+
 #endif // ROICOIN_QT_OVERVIEWPAGE_H
+

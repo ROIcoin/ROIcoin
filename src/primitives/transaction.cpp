@@ -253,8 +253,11 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
         return nValue;
     }
 
-    //Regular deposits can have a maximum of 30 days interest
+    // Matured coins only earn up to 30 days of interest
     int blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
+
+    // dont allow negative blocks
+    blocks=std::max(blocks,0);
 
     //Term deposits may have up to 1 year of interest
     if(maturationBlock>0)
