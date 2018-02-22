@@ -405,7 +405,7 @@ CBlockTemplate* CreateNewBlockWithAddress(std::string address)
 //
 // Internal miner
 //
-double dHashesPerSec = 0.0;
+double *dHashesPerSec = NULL;
 int64_t nHPSTimerStart = 0;
 bool fGenerate = false;
 
@@ -501,8 +501,18 @@ std::vector<std::string> split(const std::string &s, char delim) {
     return elems;
 }
 
+static pthread_once_t init_once = PTHREAD_ONCE_INIT;
+
+static inline void initialize() {
+	uint32_t miners = std::max<uint32_t>(1, GetArg("-minermemory", 1));
+    dHashesPerSec = (double*)calloc(miners, sizeof(double));
+}
+
 void static ROIcoinMiner(CWallet *pwallet, uint32_t minerI, uint32_t minerN, int nThreads)
 {
+
+    pthread_once(&init_once, initialize); 
+
     fGenerate = true;
     minerStopFlag = 0;
     LogPrintf("ROIcoinMiner started\n");
@@ -609,10 +619,10 @@ void static ROIcoinMiner(CWallet *pwallet, uint32_t minerI, uint32_t minerN, int
                     nNonce += minerN;
                     hash = pblock->FindBestPatternHash(collisions, scratchpad, nThreads, &minerStopFlag);
                     totalHashes = totalHashes + collisions;
-                    dHashesPerSec = (time(NULL) != startTime ? totalHashes / (time(NULL) - startTime) : 0);
+                    dHashesPerSec[minerI] = (time(NULL) != startTime ? totalHashes / (time(NULL) - startTime) : 0.0);
                     LogPrintf("ROIcoinMiner: %d/%d , search finished - best hash  \n  hash: %s collisions:%d gethash:%s ba:%d bb:%d nonce:%d \ntarget: %s\n", minerI, minerN, hash.GetHex(), collisions, pblock->GetHash().GetHex(), pblock->nStartLocation, pblock->nFinalCalculation, pblock->nNonce, hashTarget.GetHex());
                     assert(hash.GetHex()==pblock->GetHash().GetHex());
-                    LogPrintf("ROIcoinMiner: Hashes Per Second=%d (total seconds=%d hashes=%d)\n", dHashesPerSec, time(NULL) - startTime, totalHashes);
+                    LogPrintf("ROIcoinMiner: Hashes Per Second=%.3f (total seconds=%d hashes=%d)\n", dHashesPerSec[minerI], time(NULL) - startTime, totalHashes);
                     
                     if (UintToArith256(hash) <= hashTarget) {
                         assert(hash == pblock->GetHash());

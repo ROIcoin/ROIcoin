@@ -37,7 +37,7 @@ void UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, 
 /** Check the validity of user provided address */
 bool validateAddress(std::string address);
 
-extern double dHashesPerSec;
+extern double *dHashesPerSec;
 extern int64_t nHPSTimerStart;
 extern bool fGenerate;
 

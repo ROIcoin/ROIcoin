@@ -763,3 +763,15 @@ void SetThreadPriority(int nPriority)
 #endif // PRIO_THREAD
 #endif // WIN32
 }
+
+// array should be aligned                                                                                                                                                                                                               
+double sumArray(double *data, uint32_t n) {                                                                                                                                                                                              
+
+	double sum = 0.0;
+	uint_fast32_t i = 0;
+
+	for(; i < n; i++) {                                                                                                                                                                                                              
+		sum += data[i];
+	}
+	return sum;
+}
