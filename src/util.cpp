@@ -140,7 +140,8 @@ public:
         // which attempt to load the config file, possibly resulting in an exit() or crash if it is missing
         // or corrupt. Explicitly tell OpenSSL not to try to load the file. The result for our libs will be
         // that the config appears to have been loaded and there are no modules/engines available.
-        OPENSSL_no_config();
+        // OPENSSL_no_config();
+	OPENSSL_init_crypto(OPENSSL_INIT_LOAD_CONFIG|OPENSSL_INIT_ADD_ALL_DIGESTS, NULL);
 
 #ifdef WIN32
         // Seed OpenSSL PRNG with current contents of the screen

@@ -7,19 +7,21 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <openssl/sha.h>
+#include <openssl/evp.h>
 
 /** A hasher class for SHA1. */
 class CSHA1
 {
 private:
-    uint32_t s[5];
-    unsigned char buf[64];
-    size_t bytes;
+    EVP_MD_CTX *context;
+    void initContext();
 
 public:
-    static const size_t OUTPUT_SIZE = 20;
+    static const size_t OUTPUT_SIZE = SHA_DIGEST_LENGTH;
 
     CSHA1();
+    ~CSHA1();
     CSHA1& Write(const unsigned char* data, size_t len);
     void Finalize(unsigned char hash[OUTPUT_SIZE]);
     CSHA1& Reset();

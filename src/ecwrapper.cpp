@@ -62,7 +62,13 @@ int ECDSA_SIG_recover_key_GFp(EC_KEY *eckey, ECDSA_SIG *ecsig, const unsigned ch
     int n = 0;
     int i = recid / 2;
 
+	const BIGNUM *r1 = NULL;
+	const BIGNUM *s1 = NULL;
+
     const EC_GROUP *group = EC_KEY_get0_group(eckey);
+
+	ECDSA_SIG_get0(ecsig, &r1, &s1);
+
     if ((ctx = BN_CTX_new()) == NULL) { ret = -1; goto err; }
     BN_CTX_start(ctx);
     order = BN_CTX_get(ctx);
@@ -70,7 +76,7 @@ int ECDSA_SIG_recover_key_GFp(EC_KEY *eckey, ECDSA_SIG *ecsig, const unsigned ch
     x = BN_CTX_get(ctx);
     if (!BN_copy(x, order)) { ret=-1; goto err; }
     if (!BN_mul_word(x, i)) { ret=-1; goto err; }
-    if (!BN_add(x, x, ecsig->r)) { ret=-1; goto err; }
+    if (!BN_add(x, x, r1)) { ret=-1; goto err; }
     field = BN_CTX_get(ctx);
     if (!EC_GROUP_get_curve_GFp(group, field, NULL, NULL, ctx)) { ret=-2; goto err; }
     if (BN_cmp(x, field) >= 0) { ret=0; goto err; }
@@ -91,9 +97,9 @@ int ECDSA_SIG_recover_key_GFp(EC_KEY *eckey, ECDSA_SIG *ecsig, const unsigned ch
     if (!BN_zero(zero)) { ret=-1; goto err; }
     if (!BN_mod_sub(e, zero, e, order, ctx)) { ret=-1; goto err; }
     rr = BN_CTX_get(ctx);
-    if (!BN_mod_inverse(rr, ecsig->r, order, ctx)) { ret=-1; goto err; }
+    if (!BN_mod_inverse(rr, r1, order, ctx)) { ret=-1; goto err; }
     sor = BN_CTX_get(ctx);
-    if (!BN_mod_mul(sor, ecsig->s, rr, order, ctx)) { ret=-1; goto err; }
+    if (!BN_mod_mul(sor, s1, rr, order, ctx)) { ret=-1; goto err; }
     eor = BN_CTX_get(ctx);
     if (!BN_mod_mul(eor, e, rr, order, ctx)) { ret=-1; goto err; }
     if (!EC_POINT_mul(group, Q, eor, R, sor, ctx)) { ret=-2; goto err; }
@@ -177,8 +183,13 @@ bool CECKey::Recover(const uint256 &hash, const unsigned char *p64, int rec)
     if (rec<0 || rec>=3)
         return false;
     ECDSA_SIG *sig = ECDSA_SIG_new();
-    BN_bin2bn(&p64[0],  32, sig->r);
-    BN_bin2bn(&p64[32], 32, sig->s);
+	const BIGNUM *r1 = NULL;
+	const BIGNUM *s1 = NULL;
+
+     ECDSA_SIG_get0(sig, &r1, &s1);
+
+    BN_bin2bn(&p64[0],  32, (BIGNUM*)r1);
+    BN_bin2bn(&p64[32], 32, (BIGNUM*)s1);
     bool ret = ECDSA_SIG_recover_key_GFp(pkey, sig, (unsigned char*)&hash, sizeof(hash), rec, 0) == 1;
     ECDSA_SIG_free(sig);
     return ret;
@@ -216,3 +227,4 @@ bool CECKey::SanityCheck()
     // TODO Is there more EC functionality that could be missing?
     return true;
 }
+

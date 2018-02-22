@@ -7,19 +7,21 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <openssl/ripemd.h>
+#include <openssl/evp.h>
 
 /** A hasher class for RIPEMD-160. */
 class CRIPEMD160
 {
 private:
-    uint32_t s[5];
-    unsigned char buf[64];
-    size_t bytes;
+    EVP_MD_CTX *context;
+    void initContext();
 
 public:
-    static const size_t OUTPUT_SIZE = 20;
+    static const size_t OUTPUT_SIZE = RIPEMD160_DIGEST_LENGTH;
 
     CRIPEMD160();
+    ~CRIPEMD160();
     CRIPEMD160& Write(const unsigned char* data, size_t len);
     void Finalize(unsigned char hash[OUTPUT_SIZE]);
     CRIPEMD160& Reset();
