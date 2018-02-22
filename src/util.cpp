@@ -764,7 +764,6 @@ void SetThreadPriority(int nPriority)
 #endif // WIN32
 }
 
-// array should be aligned                                                                                                                                                                                                               
 double sumArray(double *data, uint32_t n) {                                                                                                                                                                                              
 
 	double sum = 0.0;
