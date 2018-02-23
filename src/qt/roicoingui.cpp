@@ -213,7 +213,6 @@ ROIcoinGUI::ROIcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
         connect(timerMiningIcon, SIGNAL(timeout()), this, SLOT(updateMiningIcon()));
         // Set initial values for mining icon
         fGenerate = false;
-        dHashesPerSec = 0;
     } else
 #endif // ENABLE_WALLET
     {
@@ -840,10 +839,16 @@ void ROIcoinGUI::setNumBlocks(int count, const QDateTime& blockDate)
 }
 
 #ifdef ENABLE_WALLET
-void ROIcoinGUI::setMining(bool mining, double hashrate, int miners, int threads)
+void ROIcoinGUI::setMining(bool mining, double *xhashrate, int miners, int threads)
 {
     if (mining)
     {
+
+    	double hashrate = 0.0;
+    	if (xhashrate != NULL) {
+    		hashrate = sumArray(xhashrate, miners);
+    	}
+
         if (hashrate > 0)
         {
             labelMiningIcon->setPixmap(QIcon(":/icons/tx_mined").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));

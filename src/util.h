@@ -233,4 +233,6 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
     }
 }
 
+double sumArray(double *data, uint32_t len);
+
 #endif // ROICOIN_UTIL_H
