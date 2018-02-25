@@ -851,6 +851,63 @@ Value getunconfirmedbalance(const Array &params, bool fHelp)
     return ValueFromAmount(pwalletMain->GetUnconfirmedBalance());
 }
 
+Value listtermdeposits(const Array &params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return Value::null;
+
+    if (fHelp || params.size() > 0)
+        throw runtime_error(
+                "listtermdeposits\n"
+                "Returns current list of term deposits\n");
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+    Array ret;
+    std::vector<COutput> termDepositInfo = pwalletMain->GetTermDepositInfo();
+
+    for(int i=0;i<termDepositInfo.size();i++){
+        COutput ctermDeposit=termDepositInfo[i];
+        CTxOut termDeposit=ctermDeposit.tx->vout[ctermDeposit.i];
+        int curHeight=chainActive.Height();
+        int lockHeight=curHeight-ctermDeposit.nDepth;
+        int releaseBlock=termDeposit.scriptPubKey.GetTermDepositReleaseBlock();
+        int term =releaseBlock-lockHeight;
+        int blocksRemaining=releaseBlock-curHeight;
+        CAmount withInterest=termDeposit.GetValueWithInterest(lockHeight,(curHeight<releaseBlock?curHeight:releaseBlock));
+        CAmount matureValue=termDeposit.GetValueWithInterest(lockHeight,releaseBlock);
+        CAmount interestValue = withInterest-termDeposit.nValue;
+       
+        Object entry;
+        
+        if(curHeight>=releaseBlock){
+            entry.push_back(Pair("status", "Matured"));
+        }else{
+            entry.push_back(Pair("status", "Earning"));
+        }
+
+        entry.push_back(Pair("principal", ValueFromAmount(termDeposit.nValue)));
+        entry.push_back(Pair("accrued interest", ValueFromAmount(interestValue)));
+        entry.push_back(Pair("accrued value", ValueFromAmount(withInterest)));
+        entry.push_back(Pair("on maturation", ValueFromAmount(matureValue)));
+        entry.push_back(Pair("term ", term ));
+        entry.push_back(Pair("deposit block", lockHeight));
+        entry.push_back(Pair("maturation block",releaseBlock));
+        
+        time_t rawtime;
+        struct tm * timeinfo;
+        char buffer[80];
+        time (&rawtime);
+        rawtime+=blocksRemaining*120;
+        timeinfo = localtime(&rawtime);
+        strftime(buffer,80,"%Y/%m/%d",timeinfo);
+        std::string str(buffer);
+        entry.push_back(Pair("estimated date",buffer));
+
+        ret.push_back(entry);
+    }
+
+    return ret;
+}
 
 Value movecmd(const Array& params, bool fHelp)
 {
