@@ -348,19 +348,30 @@ Value getaddressesbyaccount(const Array& params, bool fHelp)
     return ret;
 }
 
-static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtractFeeFromAmount, CWalletTx& wtxNew)
+static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtractFeeFromAmount, CWalletTx& wtxNew, int termDepositLength)
 {
     CAmount curBalance = pwalletMain->GetBalance();
 
     // Check amount
     if (nValue <= 0)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid amount");
+   
+    // Check termDepositLength , 0 means NO TERM DEPOSITS
+    if (termDepositLength < 0)
+       throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid termDepositLength");
 
     if (nValue > curBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient funds");
 
     // Parse ROIcoin address
-    CScript scriptPubKey = GetScriptForDestination(address);
+    
+    CScript scriptPubKey;
+    if (termDepositLength == 0)
+	scriptPubKey = GetScriptForDestination(address);
+    else
+    {
+        scriptPubKey = GetTimeLockScriptForDestination(address, chainActive.Height()+1+termDepositLength);
+    }
 
     // Create and send the transaction
     CReserveKey reservekey(pwalletMain);
@@ -378,6 +389,8 @@ static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtr
     if (!pwalletMain->CommitTransaction(wtxNew, reservekey))
         throw JSONRPCError(RPC_WALLET_ERROR, "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
 }
+
+
 
 Value sendtoaddress(const Array& params, bool fHelp)
 {
@@ -430,7 +443,67 @@ Value sendtoaddress(const Array& params, bool fHelp)
 
     EnsureWalletIsUnlocked();
 
-    SendMoney(address.Get(), nAmount, fSubtractFeeFromAmount, wtx);
+    SendMoney(address.Get(), nAmount, fSubtractFeeFromAmount, wtx, 0);
+
+    return wtx.GetHash().GetHex();
+}
+
+Value deposittoaddress(const Array& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return Value::null;
+
+    if (fHelp || params.size() < 2 || params.size() > 5)
+        throw runtime_error(
+            "deposittoaddress \"roicoinaddress\" amount termdepositlength ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
+            "\nDeposit an amount to a given address for term length (blocks). The amount is a real and is rounded to the nearest 0.00000001\n"
+            + HelpRequiringPassphrase() +
+            "\nArguments:\n"
+            "1. \"roicoinaddress\"  (string, required) The roicoin address to send to.\n"
+            "2. \"amount\"      (numeric, required) The amount in ROI to send. eg 0.1\n"
+            "3. \"termdepositlength\" (numeric, required) The number of blocks to lock the coins.\n"
+            "4. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
+            "                             This is not part of the transaction, just kept in your wallet.\n"
+            "5. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
+            "                             to which you're sending the transaction. This is not part of the \n"
+            "                             transaction, just kept in your wallet.\n"
+            "6. subtractfeefromamount  (boolean, optional, default=false) The fee will be deducted from the amount being sent.\n"
+            "                             The recipient will receive less roicoins than you enter in the amount field.\n"
+            "\nResult:\n"
+            "\"transactionid\"  (string) The transaction id.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("deposittoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 10848")
+            + HelpExampleCli("deposittoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 10848 \"donation\" \"seans outpost\"")
+            + HelpExampleCli("deposittoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 264000 \"\" \"\" true")
+            + HelpExampleRpc("deposittoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, 264000 , \"donation\", \"seans outpost\"")
+        );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    CROIcoinAddress address(params[0].get_str());
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid ROIcoin address");
+
+    // Amount
+    CAmount nAmount = AmountFromValue(params[1]);
+   
+    // Term Deposit 
+    int termDepositLength = params[2].get_int();
+
+    // Wallet comments
+    CWalletTx wtx;
+    if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
+        wtx.mapValue["comment"] = params[3].get_str();
+    if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty())
+        wtx.mapValue["to"]      = params[4].get_str();
+
+    bool fSubtractFeeFromAmount = false;
+    if (params.size() > 5)
+        fSubtractFeeFromAmount = params[5].get_bool();
+
+    EnsureWalletIsUnlocked();
+
+    SendMoney(address.Get(), nAmount, fSubtractFeeFromAmount, wtx, termDepositLength);
 
     return wtx.GetHash().GetHex();
 }
@@ -688,7 +761,6 @@ CAmount GetAccountBalance(const string& strAccount, int nMinDepth, const isminef
     return GetAccountBalance(walletdb, strAccount, nMinDepth, filter);
 }
 
-
 Value getbalance(const Array& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
@@ -907,7 +979,7 @@ Value sendfrom(const Array& params, bool fHelp)
     if (nAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
-    SendMoney(address.Get(), nAmount, false, wtx);
+    SendMoney(address.Get(), nAmount, false, wtx, 0);
 
     return wtx.GetHash().GetHex();
 }
