@@ -1,3 +1,11 @@
+# ROIcoin Release Notes for v1.1.5.0
+
+Changes in 1.1.5.0
+
+- FIX - issue #10 added 2 new RPC calls , deposittoaddress and listtermdeposits
+- BUG - issue #49 TheTDD PR merge to fix hash rate accuracy in solo miner
+
+
 # ROIcoin Release Notes for v1.1.4.0
 
 Important Notice:
