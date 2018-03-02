@@ -453,53 +453,58 @@ Value deposittoaddress(const Array& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return Value::null;
 
-    if (fHelp || params.size() < 2 || params.size() > 5)
+    if (fHelp || params.size() < 3 || params.size() > 6)
         throw runtime_error(
-            "deposittoaddress \"roicoinaddress\" amount termdepositlength ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
+            "deposittoaddress \"fromaccount\" \"roicoinaddress\" amount termdepositlength ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
             "\nDeposit an amount to a given address for term length (blocks). The amount is a real and is rounded to the nearest 0.00000001\n"
+            "\nBy default it will deposit coins from the default account.\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
-            "1. \"roicoinaddress\"  (string, required) The roicoin address to send to.\n"
-            "2. \"amount\"      (numeric, required) The amount in ROI to send. eg 0.1\n"
-            "3. \"termdepositlength\" (numeric, required) The number of blocks to lock the coins.\n"
-            "4. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
+            "1. \"fromaccount\"     (string, required) The name of the account to send funds from. May be the default account using \"\".\n"
+            "2. \"roicoinaddress\"  (string, required) The roicoin address to send to.\n"
+            "3. \"amount\"      (numeric, required) The amount in ROI to send. eg 0.1\n"
+            "4. \"termdepositlength\" (numeric, required) The number of blocks to lock the coins.\n"
+            "5. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
-            "5. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
+            "6. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
             "                             to which you're sending the transaction. This is not part of the \n"
             "                             transaction, just kept in your wallet.\n"
-            "6. subtractfeefromamount  (boolean, optional, default=false) The fee will be deducted from the amount being sent.\n"
+            "7. subtractfeefromamount  (boolean, optional, default=false) The fee will be deducted from the amount being sent.\n"
             "                             The recipient will receive less roicoins than you enter in the amount field.\n"
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
             "\nExamples:\n"
-            + HelpExampleCli("deposittoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 10848")
-            + HelpExampleCli("deposittoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 10848 \"donation\" \"seans outpost\"")
-            + HelpExampleCli("deposittoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 264000 \"\" \"\" true")
-            + HelpExampleRpc("deposittoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, 264000 , \"donation\", \"seans outpost\"")
+            + HelpExampleCli("deposittoaddress", " \"\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 10848")
+            + HelpExampleCli("deposittoaddress", " \"\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 10848 \"donation\" \"seans outpost\"")
+            + HelpExampleCli("deposittoaddress", " \"\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 264000 \"\" \"\" true")
+            + HelpExampleRpc("deposittoaddress", " \"\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, 264000 , \"donation\", \"seans outpost\"")
         );
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
-
-    CROIcoinAddress address(params[0].get_str());
+    string strAccount = AccountFromValue(params[0]);
+    
+    CROIcoinAddress address(params[1].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid ROIcoin address");
 
     // Amount
-    CAmount nAmount = AmountFromValue(params[1]);
+    CAmount nAmount = AmountFromValue(params[2]);
    
     // Term Deposit 
-    int termDepositLength = params[2].get_int();
+    int termDepositLength = params[3].get_int();
 
     // Wallet comments
     CWalletTx wtx;
-    if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
-        wtx.mapValue["comment"] = params[3].get_str();
-    if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty())
-        wtx.mapValue["to"]      = params[4].get_str();
+    wtx.strFromAccount = strAccount;
+
+    if (params.size() > 4 && params[4].type() != null_type && !params[3].get_str().empty())
+        wtx.mapValue["comment"] = params[4].get_str();
+    if (params.size() > 5 && params[5].type() != null_type && !params[5].get_str().empty())
+        wtx.mapValue["to"]      = params[5].get_str();
 
     bool fSubtractFeeFromAmount = false;
-    if (params.size() > 5)
-        fSubtractFeeFromAmount = params[5].get_bool();
+    if (params.size() > 6)
+        fSubtractFeeFromAmount = params[6].get_bool();
 
     EnsureWalletIsUnlocked();
 
@@ -856,14 +861,23 @@ Value listtermdeposits(const Array &params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return Value::null;
 
-    if (fHelp || params.size() > 0)
+    if (fHelp || params.size() != 1)
         throw runtime_error(
-                "listtermdeposits\n"
-                "Returns current list of term deposits\n");
+                "listtermdeposits \"fromaccount\" \n"
+                + HelpRequiringPassphrase() +
+                "\nArguments:\n"
+                "1. \"fromaccount\"       (string, required) The name of the account to list term deposits from. May be the default account using \"\" use \"*\" for all.\n"
+                "Result:\n"
+                "\"term deposits \"  (string array)\n"
+                "\nExamples:\n"
+                + HelpExampleCli("listtermdeposits", " \"*\"")
+                + HelpExampleRpc("listtermdeposits", " \"gary\"") 
+        );
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
     Array ret;
-    std::vector<COutput> termDepositInfo = pwalletMain->GetTermDepositInfo();
+    string strAccount = AccountFromValue(params[0]);
+    std::vector<COutput> termDepositInfo = pwalletMain->GetTermDepositInfo(strAccount);
 
     for(int i=0;i<termDepositInfo.size();i++){
         COutput ctermDeposit=termDepositInfo[i];
