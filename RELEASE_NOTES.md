@@ -4,7 +4,8 @@ Changes in 1.1.5.0
 
 - FIX - issue #10 added 2 new RPC calls , deposittoaddress and listtermdeposits
 - BUG - issue #49 TheTDD PR merge to fix hash rate accuracy in solo miner
-
+- BUG - Optiminer fix to getPostRateInterest() function doing too many math.pow() calls affecting performance on large wallets and slower cpu's.
+- BUG - added missing background bitmaps for setup.exe 
 
 # ROIcoin Release Notes for v1.1.4.0
 
