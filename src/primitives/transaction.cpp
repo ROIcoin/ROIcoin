@@ -209,14 +209,14 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
 
 CAmount getPostRateForAmount(int periods, CAmount theAmount){
 
-  double result = 0.0;
-  double multiplier = 0.0000005975;
-  if ( periods > 0) {
-   result = theAmount * pow(1.0 + multiplier, periods);
-  }
-  CAmount rate = CAmount(result)-theAmount;
-
-  return validateCoins(rate);
+ if (periods <= 0) {
+   return CAmount(0);
+ }  
+ double multiplier = 0.0000005975;
+ double result = theAmount * pow(1.0 + multiplier, periods);
+ CAmount rate = CAmount(result)-theAmount;
+  
+ return validateCoins(rate);
 }
 
 std::string initRateTable()
