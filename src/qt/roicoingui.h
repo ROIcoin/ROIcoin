@@ -172,7 +172,7 @@ public Q_SLOTS:
     void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address, const QString& label);
 
     /** set mining status */
-    void setMining(bool mining, double hashrate, int threads, int cores);
+    void setMining(bool mining, double *hashrate, int threads, int cores);
     
     /** notify mature coins */
     void maturedCoinsNotification(int count, int init, CAmount& amount);

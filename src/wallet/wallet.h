@@ -529,6 +529,7 @@ public:
     }
 
     std::vector<COutput> GetTermDepositInfo();
+    std::vector<COutput> GetTermDepositInfo(const std::string& strAccount);
 
     std::map<uint256, CWalletTx> mapWallet;
 

@@ -1535,6 +1535,35 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
     return nTotal;
 }
 
+std::vector<COutput> CWallet::GetTermDepositInfo(const string& strAccount)
+{
+    vector<COutput> termDeposits;
+    {
+        LOCK2(cs_main, cs_wallet);
+        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        {
+            const uint256& wtxid = it->first;
+            const CWalletTx* pcoin = &(*it).second;
+
+            if( pcoin->strFromAccount == strAccount)
+            {
+              for (unsigned int i = 0; i < pcoin->vout.size(); i++) {
+                if(pcoin->isOutputTermDeposit(i)){
+                    if (!IsSpent(pcoin->GetHash(),i)){
+                        isminetype mine = IsMine(pcoin->vout[i]);
+                        if(mine != ISMINE_NO){
+                            int nDepth = pcoin->GetDepthInMainChain();
+                            termDeposits.push_back(COutput(pcoin, i, nDepth, (mine & ISMINE_SPENDABLE) != ISMINE_NO));
+                        }
+                    }
+                }
+              }
+           }
+        }
+    }
+    return termDeposits;
+}
+
 std::vector<COutput> CWallet::GetTermDepositInfo()
 {
     vector<COutput> termDeposits;

@@ -238,10 +238,13 @@ Value gethashespersec(const Array& params, bool fHelp)
             + HelpExampleCli("gethashespersec", "")
             + HelpExampleRpc("gethashespersec", "")
         );
-    int64_t miners = GetArg("-minermemory", 1);
-    double dTotalHPS;
-    dTotalHPS = dHashesPerSec * miners;
-    return (int64_t)dTotalHPS;
+
+    if (dHashesPerSec == NULL) {
+            return 0;
+    }
+
+    uint32_t miners = std::max<uint32_t>(1,GetArg("-minermemory", 1));
+    return (int64_t)sumArray(dHashesPerSec, miners);
 }
 #endif
 
@@ -260,6 +263,7 @@ Value getmininginfo(const Array& params, bool fHelp)
             "  \"difficulty\": xxx.xxxxx    (numeric) The current difficulty\n"
             "  \"errors\": \"...\"          (string) Current errors\n"
             "  \"generate\": true|false     (boolean) If the generation is on or off (see getgenerate or setgenerate calls)\n"
+        	"  \"minermemory\": n           (numeric) The number of miner instances\n"
             "  \"genproclimit\": n          (numeric) The processor limit for generation. -1 if no generation. (see getgenerate or setgenerate calls)\n"
             "  \"hashespersec\": n          (numeric) The hashes per second of the generation, or 0 if no generation.\n"
             "  \"pooledtx\": n              (numeric) The size of the mem pool\n"
@@ -280,6 +284,7 @@ Value getmininginfo(const Array& params, bool fHelp)
     obj.push_back(Pair("currentblocktx",   (uint64_t)nLastBlockTx));
     obj.push_back(Pair("difficulty",       (double)GetDifficulty()));
     obj.push_back(Pair("errors",           GetWarnings("statusbar")));
+    obj.push_back(Pair("minermemory",	   (int)GetArg("-minermemory",1)));
     obj.push_back(Pair("genproclimit",     (int)GetArg("-genproclimit", -1)));
     obj.push_back(Pair("networkhashps",    getnetworkhashps(params, false)));
     obj.push_back(Pair("pooledtx",         (uint64_t)mempool.size()));

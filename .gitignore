@@ -1,11 +1,6 @@
 *.tar.gz
 
 *.exe
-src/roicoin
-src/roicoind
-src/roicoin-cli
-src/roicoin-tx
-src/test/test_roicoin
 src/qt/test/test_roicoin-qt
 
 # autoreconf
@@ -112,7 +107,7 @@ qa/pull-tester/test.*/*
 
 /doc/doxygen/
 
-libbitcoinconsensus.pc
+libroicoinconsensus.pc
 src/ROIcoin-cli
 src/ROIcoin-tx
 src/ROIcoind
