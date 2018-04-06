@@ -806,7 +806,7 @@ isminetype CWallet::IsMine(const CTxIn &txin) const
     return ISMINE_NO;
 }
 
-CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter) const
+CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter , const int& depthInMainChain) const
 {
     {
         LOCK(cs_wallet);
@@ -815,8 +815,9 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter) const
         {
             const CWalletTx& prev = (*mi).second;
             if (txin.prevout.n < prev.vout.size())
-                if (IsMine(prev.vout[txin.prevout.n]) & filter)
-                    return prev.vout[txin.prevout.n].nValue;
+	        if (IsMine(prev.vout[txin.prevout.n]) & filter){
+                    return prev.vout[txin.prevout.n].GetValueWithInterest(chainActive.Height()-prev.GetDepthInMainChain(),chainActive.Height()-depthInMainChain);
+		}
         }
     }
     return 0;
@@ -874,15 +875,15 @@ bool CWallet::IsMine(const CTransaction& tx) const
 
 bool CWallet::IsFromMe(const CTransaction& tx) const
 {
-    return (GetDebit(tx, ISMINE_ALL) > 0);
+    return (GetDebit(tx, ISMINE_ALL, 0) > 0);
 }
 
-CAmount CWallet::GetDebit(const CTransaction& tx, const isminefilter& filter) const
+CAmount CWallet::GetDebit(const CTransaction& tx, const isminefilter& filter,  const int& nDepth) const
 {
     CAmount nDebit = 0;
     BOOST_FOREACH(const CTxIn& txin, tx.vin)
     {
-        nDebit += GetDebit(txin, filter);
+        nDebit += GetDebit(txin, filter, nDepth);
         if (!MoneyRange(nDebit))
             throw std::runtime_error("CWallet::GetDebit(): value out of range");
     }
@@ -1170,7 +1171,7 @@ CAmount CWalletTx::GetDebit(const isminefilter& filter) const
             debit += nDebitCached;
         else
         {
-            nDebitCached = pwallet->GetDebit(*this, ISMINE_SPENDABLE);
+            nDebitCached = pwallet->GetDebit(*this, ISMINE_SPENDABLE, GetDepthInMainChain());
             fDebitCached = true;
             debit += nDebitCached;
         }
@@ -1181,7 +1182,7 @@ CAmount CWalletTx::GetDebit(const isminefilter& filter) const
             debit += nWatchDebitCached;
         else
         {
-            nWatchDebitCached = pwallet->GetDebit(*this, ISMINE_WATCH_ONLY);
+            nWatchDebitCached = pwallet->GetDebit(*this, ISMINE_WATCH_ONLY, GetDepthInMainChain());
             fWatchDebitCached = true;
             debit += nWatchDebitCached;
         }
@@ -1203,7 +1204,7 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter, bool interest) const
             credit += nCreditCached;
         else
         {
-            nCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE, GetDepthInMainChain(), interest);
+            nCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE, 0, interest);
             fCreditCached = true;
             credit += nCreditCached;
         }
@@ -1214,7 +1215,7 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter, bool interest) const
             credit += nWatchCreditCached;
         else
         {
-            nWatchCreditCached = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY, GetDepthInMainChain(), interest);
+            nWatchCreditCached = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY, 0, interest);
             fWatchCreditCached = true;
             credit += nWatchCreditCached;
         }

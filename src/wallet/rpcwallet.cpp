@@ -1869,6 +1869,10 @@ Value gettransaction(const Array& params, bool fHelp)
     CAmount nNet = nCredit - nDebit;
     CAmount nFee = (wtx.IsFromMe(filter) ? wtx.GetValueOut() - nDebit : 0);
 
+    entry.push_back(Pair("credit", ValueFromAmount(nCredit)));
+    entry.push_back(Pair("debit", ValueFromAmount(nDebit)));
+    entry.push_back(Pair("net", ValueFromAmount(nNet)));
+
     entry.push_back(Pair("amount", ValueFromAmount(nNet - nFee)));
     if (wtx.IsFromMe(filter))
         entry.push_back(Pair("fee", ValueFromAmount(nFee)));
