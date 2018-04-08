@@ -357,7 +357,7 @@ public:
     }
 
     //! filter decides which addresses will count towards the debit
-    CAmount GetDebit(const isminefilter& filter) const;
+    CAmount GetDebit(const isminefilter& filter, bool addInterest=true) const;
     CAmount GetCredit(const isminefilter& filter, bool interest = true) const;
     CAmount GetImmatureCredit(bool fUseCache=true) const;
     CAmount GetImmatureTermDepositCredit() const;

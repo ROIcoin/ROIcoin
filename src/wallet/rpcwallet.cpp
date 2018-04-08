@@ -1866,11 +1866,14 @@ Value gettransaction(const Array& params, bool fHelp)
 
     CAmount nCredit = wtx.GetCredit(filter, false);
     CAmount nDebit = wtx.GetDebit(filter);
+    CAmount nDebitNoInterest = wtx.GetDebit(filter,false);
     CAmount nNet = nCredit - nDebit;
     CAmount nFee = (wtx.IsFromMe(filter) ? wtx.GetValueOut() - nDebit : 0);
 
     entry.push_back(Pair("credit", ValueFromAmount(nCredit)));
     entry.push_back(Pair("debit", ValueFromAmount(nDebit)));
+    entry.push_back(Pair("fromoutputs", ValueFromAmount(nDebitNoInterest)));
+    entry.push_back(Pair("frominterest", ValueFromAmount(nDebit-nDebitNoInterest)));
     entry.push_back(Pair("net", ValueFromAmount(nNet)));
 
     entry.push_back(Pair("amount", ValueFromAmount(nNet - nFee)));
