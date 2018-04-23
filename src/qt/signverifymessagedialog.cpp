@@ -136,10 +136,13 @@ void SignVerifyMessageDialog::on_signMessageButton_SM_clicked()
         return;
     }
 
-    const char *my_str_literal =ui->addressIn_SM->text().toStdString().c_str();
-    char *str = strdup(my_str_literal);  // We own str's memory now.
+    auto temp = ui->addressIn_SM->text().toStdString();
+    char *str = strdup(temp.c_str());
     char *addressInput;
+
     while ((addressInput = strsep(&str, ";"))){
+
+	LogPrintf("checking address for signmessage: [%s]\n", addressInput);
 
         CROIcoinAddress addr(addressInput);
         if (!addr.IsValid())
