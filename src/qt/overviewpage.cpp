@@ -196,9 +196,11 @@ OverviewPage::~OverviewPage()
 	delete depositProxyModel;
 	delete depositModel;
 
+	LogPrintf("checking depositeUpdateThread....\n");
 	if (depositUpdateThread != NULL && depositUpdateThread->isRunning()) {
+		        LogPrintf("calling depositUpdateThread->terminate() \n");
 			depositUpdateThread->terminate();
-			depositUpdateThread->wait(1000); // wait 1 sec
+			//depositUpdateThread->wait(1000); // wait 1 sec
 			delete depositUpdateThread;
 	}
 }
