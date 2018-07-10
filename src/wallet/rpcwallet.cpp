@@ -375,7 +375,7 @@ static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtr
 
     // Create and send the transaction
     CReserveKey reservekey(pwalletMain);
-    CAmount nFeeRequired;
+    CAmount nFeeRequired = 0;
     std::string strError;
     vector<CRecipient> vecSend;
     int nChangePosRet = -1;
@@ -386,6 +386,13 @@ static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtr
             strError = strprintf("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!", FormatMoney(nFeeRequired));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
+	
+    // reject absurdly high fee > 0.1 roicoin
+    if (nFeeRequired > 10000000) {
+       strError = strprintf("Error: The transaction fee is too high (%s)", FormatMoney(nFeeRequired));
+       throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+	
     if (!pwalletMain->CommitTransaction(wtxNew, reservekey))
         throw JSONRPCError(RPC_WALLET_ERROR, "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
 }
@@ -1859,8 +1866,15 @@ Value gettransaction(const Array& params, bool fHelp)
 
     CAmount nCredit = wtx.GetCredit(filter, false);
     CAmount nDebit = wtx.GetDebit(filter);
+    CAmount nDebitNoInterest = wtx.GetDebit(filter,false);
     CAmount nNet = nCredit - nDebit;
     CAmount nFee = (wtx.IsFromMe(filter) ? wtx.GetValueOut() - nDebit : 0);
+
+    entry.push_back(Pair("credit", ValueFromAmount(nCredit)));
+    entry.push_back(Pair("debit", ValueFromAmount(nDebit)));
+    entry.push_back(Pair("fromoutputs", ValueFromAmount(nDebitNoInterest)));
+    entry.push_back(Pair("frominterest", ValueFromAmount(nDebit-nDebitNoInterest)));
+    entry.push_back(Pair("net", ValueFromAmount(nNet)));
 
     entry.push_back(Pair("amount", ValueFromAmount(nNet - nFee)));
     if (wtx.IsFromMe(filter))

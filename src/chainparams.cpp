@@ -81,16 +81,16 @@ public:
 	vSeeds.push_back(CDNSSeedData("seed3.roi-coin.com", "seed3.roi-coin.com"));  //Toronto
 	vSeeds.push_back(CDNSSeedData("seed4.roi-coin.com", "seed4.roi-coin.com"));  //Kansas City
 	vSeeds.push_back(CDNSSeedData("seed5.roi-coin.com", "seed5.roi-coin.com"));  //Europe
-        vSeeds.push_back(CDNSSeedData("seed6.roi-coin.com", "seed6.roi-coin.com"));  
-        vSeeds.push_back(CDNSSeedData("seed7.roi-coin.com", "seed7.roi-coin.com"));  
-	vSeeds.push_back(CDNSSeedData("seed8.roi-coin.com", "seed8.roi-coin.com"));  
-	vSeeds.push_back(CDNSSeedData("seed9.roi-coin.com", "seed9.roi-coin.com"));  
-	vSeeds.push_back(CDNSSeedData("seed10.roi-coin.com", "seed10.roi-coin.com"));  
-        vSeeds.push_back(CDNSSeedData("seed11.roi-coin.com", "seed11.roi-coin.com")); 
-        vSeeds.push_back(CDNSSeedData("seed12.roi-coin.com", "seed12.roi-coin.com"));  
-	vSeeds.push_back(CDNSSeedData("seed13.roi-coin.com", "seed13.roi-coin.com"));  
-	vSeeds.push_back(CDNSSeedData("seed14.roi-coin.com", "seed14.roi-coin.com"));  
-	vSeeds.push_back(CDNSSeedData("seed15.roi-coin.com", "seed15.roi-coin.com"));  
+        //vSeeds.push_back(CDNSSeedData("seed6.roi-coin.com", "seed6.roi-coin.com"));  
+        //vSeeds.push_back(CDNSSeedData("seed7.roi-coin.com", "seed7.roi-coin.com"));  
+	//vSeeds.push_back(CDNSSeedData("seed8.roi-coin.com", "seed8.roi-coin.com"));  
+	//vSeeds.push_back(CDNSSeedData("seed9.roi-coin.com", "seed9.roi-coin.com"));  
+	//vSeeds.push_back(CDNSSeedData("seed10.roi-coin.com", "seed10.roi-coin.com"));  
+        //vSeeds.push_back(CDNSSeedData("seed11.roi-coin.com", "seed11.roi-coin.com")); 
+        //vSeeds.push_back(CDNSSeedData("seed12.roi-coin.com", "seed12.roi-coin.com"));  
+	//vSeeds.push_back(CDNSSeedData("seed13.roi-coin.com", "seed13.roi-coin.com"));  
+	//vSeeds.push_back(CDNSSeedData("seed14.roi-coin.com", "seed14.roi-coin.com"));  
+	//vSeeds.push_back(CDNSSeedData("seed15.roi-coin.com", "seed15.roi-coin.com"));  
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);
 	base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,122);
