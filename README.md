@@ -1,6 +1,6 @@
 # **ROI coin is _"Return on Investment"_** 
 
-ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.1.6.0&x2=0">
+ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.1.7.0&x2=0">
 
 <img src="https://roi-coin.com/img/roi-coin-header2.png?w1720=&h=521" width="1720">
 
