@@ -96,7 +96,7 @@ To Build
 
 ```bash
 ./autogen.sh
-./configure --enable-tests=no
+CPPFLAGS="-std=c++11" ./configure --enable-tests=no
 make
 make install # optional
 ```
