@@ -15,6 +15,14 @@ ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=
 > * __Telegram Group:__ [https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ](https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ)
 > * __Telegram Announcements:__ [http://t.me/ROI_coin](http://t.me/ROI_coin)
 > * __Bitcointalk ANN:__ [https://bitcointalk.org/index.php?topic=2361848.0](https://bitcointalk.org/index.php?topic=2361848.0)
+> * __Blockexplorer 1:__ [https://roi-coin-blockexplorer.roi-coin.com/](https://roi-coin-blockexplorer.roi-coin.com/)
+> * __Blockexplorer 2:__ [https://blockexplorer.roi-coin.com/](https://blockexplorer.roi-coin.com/)
+> * __CryptoHub Exchange:__ [https://cryptohub.online/market/ROI/](https://cryptohub.online/market/ROI/)
+> * __BitexLive Exchange:__ [https://bitexlive.com/](https://bitexlive.com/)
+> * __White Paper:__ [https://roi-coin.com/roi-coin-white-paper/](https://roi-coin.com/roi-coin-white-paper/)
+> * __Roadmap:__ [https://roi-coin.com/roi-coin-road-map/](https://roi-coin.com/roi-coin-road-map/)
+> * __Suprnova Mining Pool:__ [https://roi.suprnova.cc/](https://roi.suprnova.cc/)
+> * __Optiminer Mining Pool:__ [http://roi.optiminer.pl:8081/](http://roi.optiminer.pl:8081/)
 
 ## What is ROI coin?
 
