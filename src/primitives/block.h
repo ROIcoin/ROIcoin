@@ -16,7 +16,6 @@ static const unsigned int FORK1HEIGHT = 25000;
 static const unsigned int FORK2HEIGHT = 31000;
 static const unsigned int FORK3HEIGHT = 75000;
 static const unsigned int FORK4HEIGHT = 75100;
-static const unsigned int FORK5HEIGHT = 200000;
 
 const uint32_t BIP_009_MASK = 0x20000000;
 const uint32_t BASE_VERSION = 0x20000000;  // Will accept 2MB blocks
