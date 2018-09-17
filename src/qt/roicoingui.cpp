@@ -350,6 +350,7 @@ void ROIcoinGUI::createActions()
     telegramgannouncementsAction = new QAction(QIcon(":/icons/telegram"), tr("Telegram Announcements"), this);
     telegramgannouncementsAction->setToolTip(tr("ROI Telegram Announcements"));
     }
+#endif // ENABLE_WALLET
 	
 #ifdef ENABLE_WALLET
     if(enableWallet)
