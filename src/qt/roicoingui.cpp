@@ -36,6 +36,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QDateTime>
+#include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDragEnterEvent>
 #include <QListWidget>
