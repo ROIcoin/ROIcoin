@@ -736,82 +736,82 @@ void ROIcoinGUI::aboutClicked()
 }
 
 /** New clickable menu links */
-void pwrcoinGUI::websiteActionClicked()
+void roicoinGUI::websiteActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://roi-coin.com/"));
 }
 
-void pwrcoinGUI::blockexplorer1ActionClicked()
+void roicoinGUI::blockexplorer1ActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://roi-coin-blockexplorer.roi-coin.com/"));
 }
 
-void pwrcoinGUI::blockexplorer2ActionClicked()
+void roicoinGUI::blockexplorer2ActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://blockexplorer.roi-coin.com/"));
 }
 
-void pwrcoinGUI::paperwalletActionClicked()
+void roicoinGUI::paperwalletActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://roi-paperwallet.roi-coin.com/"));
 }
 
-void pwrcoinGUI::githubsourceActionClicked()
+void roicoinGUI::githubsourceActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://github.com/ROIcoin/ROIcoin"));
 }
 
-void pwrcoinGUI::whitepaperActionClicked()
+void roicoinGUI::whitepaperActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://roi-coin.com/roi-coin-white-paper/"));
 }
 
-void pwrcoinGUI::roadmapActionClicked()
+void roicoinGUI::roadmapActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://roi-coin.com/roi-coin-road-map/"));
 }
 
-void pwrcoinGUI::facebookActionClicked()
+void roicoinGUI::facebookActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://www.facebook.com/roicoin"));
 }
 
-void pwrcoinGUI::facebookgroupActionClicked()
+void roicoinGUI::facebookgroupActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://www.facebook.com/groups/177521572870678/"));
 }
 
-void pwrcoinGUI::twitterActionClicked()
+void roicoinGUI::twitterActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://twitter.com/ROI_Coin"));
 }
 
-void pwrcoinGUI::googleplusActionClicked()
+void roicoinGUI::googleplusActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://plus.google.com/b/109809615316952270396/109809615316952270396"));
 }
 
-void pwrcoinGUI::youtubeActionClicked()
+void roicoinGUI::youtubeActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g"));
 }
 
-void pwrcoinGUI::redditActionClicked()
+void roicoinGUI::redditActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://www.reddit.com/r/Roi_Coin/"));
 }
 
-void pwrcoinGUI::discordActionClicked()
+void roicoinGUI::discordActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://discord.gg/F66Cs6X"));
 }
 
-void pwrcoinGUI::telegramgroupActionClicked()
+void roicoinGUI::telegramgroupActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ"));
 }
 
-void pwrcoinGUI::telegramgannouncementsActionClicked()
+void roicoinGUI::telegramgannouncementsActionClicked()
 {
         QDesktopServices::openUrl(QUrl("http://t.me/ROI_coin"));
 }
