@@ -1,3 +1,13 @@
+# ROIcoin Release Notes for v1.2.0.0
+
+Changes in 1.2.0.0
+
+- NEW - updated splash screen with new tagline
+- NEW - links navigation menu for website, blockexplorer 1, blockexplorer 2, paper wallet, github, white paper and road map
+- NEW - social navigation menu for Facebook, Facebook Group, Twitter, Google Plus, Youtube, Reddit, Telegram Group and Telegram Announcements
+
+This release adds new functionality to the wallet to aid users in quickly finding all our important internet links and social media platforms. v1.2.0.0 is not a mandatory release and is backwards compatible with v1.1.7.0
+
 # ROIcoin Release Notes for v1.1.7.0
 
 Changes in 1.1.7.0
