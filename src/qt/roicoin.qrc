@@ -55,6 +55,7 @@
 	<file alias="github">res/icons/github.png</file>
 	<file alias="googleplus">res/icons/googleplus.png</file>
 	<file alias="paperwallet">res/icons/paperwallet.png</file>
+	<file alias="paperwallet">res/icons/onlinewallet.png</file>
 	<file alias="reddit">res/icons/reddit.png</file>
 	<file alias="roadmap">res/icons/roadmap.png</file>
 	<file alias="telegram">res/icons/telegram.png</file>
