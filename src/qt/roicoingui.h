@@ -115,6 +115,7 @@ private:
     QAction *blockexplorer1Action;
     QAction *blockexplorer2Action;
     QAction *paperwalletAction;
+    QAction *onlinewalletAction;
     QAction *githubsourceAction;
     QAction *whitepaperAction;
     QAction *roadmapAction;
@@ -240,6 +241,7 @@ private Q_SLOTS:
     void blockexplorer1ActionClicked();
     void blockexplorer2ActionClicked();
     void paperwalletActionClicked();
+    void onlinewalletActionClicked();
     void githubsourceActionClicked();
     void whitepaperActionClicked();
     void roadmapActionClicked();
