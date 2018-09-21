@@ -758,6 +758,11 @@ void ROIcoinGUI::paperwalletActionClicked()
         QDesktopServices::openUrl(QUrl("https://roi-paperwallet.roi-coin.com/"));
 }
 
+void ROIcoinGUI::onlinewalletActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://online-wallet.roi-coin.com/"));
+}
+
 void ROIcoinGUI::githubsourceActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://github.com/ROIcoin/ROIcoin"));
