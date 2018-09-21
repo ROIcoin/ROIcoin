@@ -4,7 +4,7 @@ The following instructions are used to build the windows64 wallet.
 # Get yourself Ubuntu 17 server
 
 apt-get install build-essential libtool autotools-dev automake pkg-config bsdmainutils curl make autoconf g++ mingw-w64 git screen
-alternatives --config x86_64-w64-mingw32-g++   ( choose 1 for POSIX )
+update-alternatives --config x86_64-w64-mingw32-g++   ( choose 1 for POSIX )
 
 git clone https://github.com/ROIcoin/ROIcoin.git
 cd ROIcoin/depends

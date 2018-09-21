@@ -36,6 +36,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QDateTime>
+#include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDragEnterEvent>
 #include <QListWidget>
@@ -312,6 +313,45 @@ void ROIcoinGUI::createActions()
     historyAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_4));
     tabGroup->addAction(historyAction);
 
+/** Add new nav menu */
+#ifdef ENABLE_WALLET
+    if(enableWallet)
+    {
+    websiteAction = new QAction(QIcon(":/icons/website"), tr("Website"), this);
+    websiteAction->setToolTip(tr("ROI Website"));
+    blockexplorer1Action = new QAction(QIcon(":/icons/blockexplorer"), tr("Blockexplorer 1"), this);
+    blockexplorer1Action->setToolTip(tr("ROI Blockexplorer 1"));
+    blockexplorer2Action = new QAction(QIcon(":/icons/blockexplorer"), tr("Blockexplorer 2"), this);
+    blockexplorer2Action->setToolTip(tr("ROI Blockexplorer 2"));
+    paperwalletAction = new QAction(QIcon(":/icons/paperwallet"), tr("Paper Wallet"), this);
+    paperwalletAction->setToolTip(tr("ROI Paper Wallet"));
+    githubsourceAction = new QAction(QIcon(":/icons/github"), tr("Github Source"), this);
+    githubsourceAction->setToolTip(tr("ROI Github Source"));
+    whitepaperAction = new QAction(QIcon(":/icons/whitepaper"), tr("White Paper"), this);
+    whitepaperAction->setToolTip(tr("ROI White Paper"));
+    roadmapAction = new QAction(QIcon(":/icons/roadmap"), tr("Road Map"), this);
+    roadmapAction->setToolTip(tr("ROI Road Map"));
+    facebookAction = new QAction(QIcon(":/icons/facebook"), tr("Facebook"), this);
+    facebookAction->setToolTip(tr("ROI Facebook Page"));
+    facebookgroupAction = new QAction(QIcon(":/icons/facebook"), tr("Facebook Group"), this);
+    facebookgroupAction->setToolTip(tr("ROI Facebook Group"));
+    twitterAction = new QAction(QIcon(":/icons/twitter"), tr("Twitter"), this);
+    twitterAction->setToolTip(tr("ROI Twitter"));
+    googleplusAction = new QAction(QIcon(":/icons/googleplus"), tr("Google Plus"), this);
+    googleplusAction->setToolTip(tr("ROI Google Plus"));
+    youtubeAction = new QAction(QIcon(":/icons/youtube"), tr("YouTube"), this);
+    youtubeAction->setToolTip(tr("ROI YouTube"));
+    redditAction = new QAction(QIcon(":/icons/reddit"), tr("Reddit"), this);
+    redditAction->setToolTip(tr("ROI Reddit"));
+    discordAction = new QAction(QIcon(":/icons/discord"), tr("Discord"), this);
+    discordAction->setToolTip(tr("ROI Discord"));
+    telegramgroupAction = new QAction(QIcon(":/icons/telegram"), tr("Telegram Group"), this);
+    telegramgroupAction->setToolTip(tr("ROI Telegram Group"));
+    telegramgannouncementsAction = new QAction(QIcon(":/icons/telegram"), tr("Telegram Announcements"), this);
+    telegramgannouncementsAction->setToolTip(tr("ROI Telegram Announcements"));
+    }
+#endif // ENABLE_WALLET
+	
 #ifdef ENABLE_WALLET
     if(enableWallet)
     {
@@ -407,6 +447,29 @@ void ROIcoinGUI::createActions()
         connect(openAction, SIGNAL(triggered()), this, SLOT(openClicked()));
     }
 #endif // ENABLE_WALLET
+	
+/** Add new nav menu */
+#ifdef ENABLE_WALLET
+    if(walletFrame)
+    {
+	connect(websiteAction, SIGNAL(triggered()), this, SLOT(websiteActionClicked()));
+	connect(blockexplorer1Action, SIGNAL(triggered()), this, SLOT(blockexplorer1ActionClicked()));
+	connect(blockexplorer2Action, SIGNAL(triggered()), this, SLOT(blockexplorer2ActionClicked()));
+	connect(paperwalletAction, SIGNAL(triggered()), this, SLOT(paperwalletActionClicked()));
+	connect(githubsourceAction, SIGNAL(triggered()), this, SLOT(githubsourceActionClicked()));
+	connect(whitepaperAction, SIGNAL(triggered()), this, SLOT(whitepaperActionClicked()));
+	connect(roadmapAction, SIGNAL(triggered()), this, SLOT(roadmapActionClicked()));
+	connect(facebookAction, SIGNAL(triggered()), this, SLOT(facebookActionClicked()));
+	connect(facebookgroupAction, SIGNAL(triggered()), this, SLOT(facebookgroupActionClicked()));
+	connect(twitterAction, SIGNAL(triggered()), this, SLOT(twitterActionClicked()));
+	connect(googleplusAction, SIGNAL(triggered()), this, SLOT(googleplusActionClicked()));
+	connect(youtubeAction, SIGNAL(triggered()), this, SLOT(youtubeActionClicked()));
+	connect(redditAction, SIGNAL(triggered()), this, SLOT(redditActionClicked()));
+	connect(discordAction, SIGNAL(triggered()), this, SLOT(discordActionClicked()));
+	connect(telegramgroupAction, SIGNAL(triggered()), this, SLOT(telegramgroupActionClicked()));
+	connect(telegramgannouncementsAction, SIGNAL(triggered()), this, SLOT(telegramgannouncementsActionClicked()));
+}
+#endif // ENABLE_WALLET    
 }
 
 void ROIcoinGUI::createMenuBar()
@@ -462,6 +525,33 @@ void ROIcoinGUI::createMenuBar()
         mining->addAction(miningOffAction);
     }
 #endif // ENABLE_WALLET
+	
+/** Add new nav menu */
+#ifdef ENABLE_WALLET
+    if(walletFrame)
+    {
+	QMenu *links = appMenuBar->addMenu(tr("Links"));
+	links->addAction(websiteAction);
+	links->addAction(blockexplorer1Action);
+	links->addAction(blockexplorer2Action);
+	links->addAction(paperwalletAction);
+	links->addAction(githubsourceAction);
+	links->addAction(whitepaperAction);
+	links->addAction(roadmapAction);
+	    
+	QMenu *social = appMenuBar->addMenu(tr("Social"));
+	social->addAction(facebookAction);
+	social->addAction(facebookgroupAction);
+	social->addAction(twitterAction);
+	social->addAction(googleplusAction);
+	social->addAction(youtubeAction);
+	social->addAction(redditAction);
+	social->addAction(discordAction);
+	social->addAction(telegramgroupAction);
+	social->addAction(telegramgannouncementsAction);
+    }
+#endif // ENABLE_WALLET
+
 }
 
 void ROIcoinGUI::createToolBars()
@@ -645,6 +735,92 @@ void ROIcoinGUI::aboutClicked()
 
     HelpMessageDialog dlg(this, true);
     dlg.exec();
+}
+
+/** New clickable menu links */
+void ROIcoinGUI::websiteActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://roi-coin.com/"));
+}
+
+void ROIcoinGUI::blockexplorer1ActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://roi-coin-blockexplorer.roi-coin.com/"));
+}
+
+void ROIcoinGUI::blockexplorer2ActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://blockexplorer.roi-coin.com/"));
+}
+
+void ROIcoinGUI::paperwalletActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://roi-paperwallet.roi-coin.com/"));
+}
+
+void ROIcoinGUI::onlinewalletActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://online-wallet.roi-coin.com/"));
+}
+
+void ROIcoinGUI::githubsourceActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://github.com/ROIcoin/ROIcoin"));
+}
+
+void ROIcoinGUI::whitepaperActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://roi-coin.com/roi-coin-white-paper/"));
+}
+
+void ROIcoinGUI::roadmapActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://roi-coin.com/roi-coin-road-map/"));
+}
+
+void ROIcoinGUI::facebookActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://www.facebook.com/roicoin"));
+}
+
+void ROIcoinGUI::facebookgroupActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://www.facebook.com/groups/177521572870678/"));
+}
+
+void ROIcoinGUI::twitterActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://twitter.com/ROI_Coin"));
+}
+
+void ROIcoinGUI::googleplusActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://plus.google.com/b/109809615316952270396/109809615316952270396"));
+}
+
+void ROIcoinGUI::youtubeActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g"));
+}
+
+void ROIcoinGUI::redditActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://www.reddit.com/r/Roi_Coin/"));
+}
+
+void ROIcoinGUI::discordActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://discord.gg/F66Cs6X"));
+}
+
+void ROIcoinGUI::telegramgroupActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ"));
+}
+
+void ROIcoinGUI::telegramgannouncementsActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("http://t.me/ROI_coin"));
 }
 
 void ROIcoinGUI::showDebugWindow()

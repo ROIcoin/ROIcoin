@@ -111,6 +111,23 @@ private:
     QAction *openRPCConsoleAction;
     QAction *openAction;
     QAction *showHelpMessageAction;
+    QAction *websiteAction;
+    QAction *blockexplorer1Action;
+    QAction *blockexplorer2Action;
+    QAction *paperwalletAction;
+    QAction *onlinewalletAction;
+    QAction *githubsourceAction;
+    QAction *whitepaperAction;
+    QAction *roadmapAction;
+    QAction *facebookAction;
+    QAction *facebookgroupAction;
+    QAction *twitterAction;
+    QAction *googleplusAction;
+    QAction *youtubeAction;
+    QAction *redditAction;
+    QAction *discordAction;
+    QAction *telegramgroupAction;
+    QAction *telegramgannouncementsAction;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -218,6 +235,27 @@ private Q_SLOTS:
     /** Handle tray icon clicked */
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 #endif
+
+    /** Links Navigation Menu */
+    void websiteActionClicked();
+    void blockexplorer1ActionClicked();
+    void blockexplorer2ActionClicked();
+    void paperwalletActionClicked();
+    void onlinewalletActionClicked();
+    void githubsourceActionClicked();
+    void whitepaperActionClicked();
+    void roadmapActionClicked();
+    
+     /** Social Navigation Menu */
+    void facebookActionClicked();
+    void facebookgroupActionClicked();
+    void twitterActionClicked();
+    void googleplusActionClicked();
+    void youtubeActionClicked();
+    void redditActionClicked();
+    void discordActionClicked();
+    void telegramgroupActionClicked();
+    void telegramgannouncementsActionClicked();
 
     /** Show window if hidden, unminimize when minimized, rise when obscured or show if hidden and fToggleHidden is true */
     void showNormalIfMinimized(bool fToggleHidden = false);
