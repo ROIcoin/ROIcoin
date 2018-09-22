@@ -46,7 +46,7 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
 
 
     const char *inspirationals[] = {
-        "ROI Coin is Return on Investment"
+        "ROI Coin is Different"
     };
 
     srand(time(NULL)+clock());

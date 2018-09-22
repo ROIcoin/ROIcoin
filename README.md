@@ -1,14 +1,28 @@
-# **ROI coin is _"Return on Investment"_** 
+# **ROI coin is _"Different"_** 
 
-ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.1.7.0&x2=0">
+ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.2.0.0&x2=0">
 
 <img src="https://roi-coin.com/img/roi-coin-header2.png?w1720=&h=521" width="1720">
 
 > * __Website:__ [https://roi-coin.com](https://roi-coin.com)
 > * __Facebook:__ [https://www.facebook.com/roicoin](https://www.facebook.com/roicoin)
+> * __Facebook Group:__ [https://www.facebook.com/groups/177521572870678/](https://www.facebook.com/groups/177521572870678/)
 > * __Twitter:__ [https://twitter.com/ROI_Coin](https://twitter.com/ROI_Coin)
 > * __Google Plus:__ [https://plus.google.com/b/109809615316952270396/109809615316952270396](https://plus.google.com/b/109809615316952270396/109809615316952270396)
 > * __YouTube:__ [https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g](https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g)
+> * __Reddit:__ [https://www.reddit.com/r/Roi_Coin/](https://www.reddit.com/r/Roi_Coin/)
+> * __Discord:__ [https://discord.gg/ruhSp4e](https://discord.gg/ruhSp4e)
+> * __Telegram Group:__ [https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ](https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ)
+> * __Telegram Announcements:__ [http://t.me/ROI_coin](http://t.me/ROI_coin)
+> * __Bitcointalk ANN:__ [https://bitcointalk.org/index.php?topic=2361848.0](https://bitcointalk.org/index.php?topic=2361848.0)
+> * __Blockexplorer 1:__ [https://roi-coin-blockexplorer.roi-coin.com/](https://roi-coin-blockexplorer.roi-coin.com/)
+> * __Blockexplorer 2:__ [https://blockexplorer.roi-coin.com/](https://blockexplorer.roi-coin.com/)
+> * __CryptoHub Exchange:__ [https://cryptohub.online/market/ROI/](https://cryptohub.online/market/ROI/)
+> * __BitexLive Exchange:__ [https://bitexlive.com/](https://bitexlive.com/)
+> * __White Paper:__ [https://roi-coin.com/roi-coin-white-paper/](https://roi-coin.com/roi-coin-white-paper/)
+> * __Roadmap:__ [https://roi-coin.com/roi-coin-road-map/](https://roi-coin.com/roi-coin-road-map/)
+> * __Suprnova Mining Pool:__ [https://roi.suprnova.cc/](https://roi.suprnova.cc/)
+> * __Optiminer Mining Pool:__ [http://roi.optiminer.pl:8081/](http://roi.optiminer.pl:8081/)
 
 ## What is ROI coin?
 
