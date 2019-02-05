@@ -883,9 +883,15 @@ Value listtermdeposits(const Array &params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
     Array ret;
-    string strAccount = AccountFromValue(params[0]);
-    std::vector<COutput> termDepositInfo = pwalletMain->GetTermDepositInfo(strAccount);
+    std::vector<COutput> termDepositInfo;
 
+	if (params[0].get_str() == "*") {
+	   termDepositInfo = pwalletMain->GetTermDepositInfo(); 
+	} else {
+	   string strAccount = AccountFromValue(params[0]);
+	   termDepositInfo = pwalletMain->GetTermDepositInfo(strAccount);
+	}
+	
     for(int i=0;i<termDepositInfo.size();i++){
         COutput ctermDeposit=termDepositInfo[i];
         CTxOut termDeposit=ctermDeposit.tx->vout[ctermDeposit.i];
