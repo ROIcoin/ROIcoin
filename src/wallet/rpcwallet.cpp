@@ -906,6 +906,8 @@ Value listtermdeposits(const Array &params, bool fHelp)
        
         Object entry;
         
+	entry.push_back(Pair("account",ctermDeposit.tx->strFromAccount));
+	    
         if(curHeight>=releaseBlock){
             entry.push_back(Pair("status", "Matured"));
         }else{
@@ -921,15 +923,16 @@ Value listtermdeposits(const Array &params, bool fHelp)
         entry.push_back(Pair("maturation block",releaseBlock));
         
         time_t rawtime;
-        struct tm * timeinfo;
-        char buffer[80];
-        time (&rawtime);
-        rawtime+=blocksRemaining*120;
-        timeinfo = localtime(&rawtime);
-        strftime(buffer,80,"%Y/%m/%d",timeinfo);
-        std::string str(buffer);
+	    
+	char buffer[16];
+	time(&rawtime);
+	rawtime += blocksRemaining * 120;
+	struct tm * timeinfo = localtime(&rawtime);
+        strftime(buffer,15,"%Y/%m/%d",timeinfo);
         entry.push_back(Pair("estimated date",buffer));
-
+	strftime(buffer,15,"%H:%M:%S",timeinfo);
+	entry.push_back(Pair("estimated time",buffer));    
+	    
         ret.push_back(entry);
     }
 
