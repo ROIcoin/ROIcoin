@@ -1,3 +1,37 @@
+# ROIcoin Release Notes for v1.2.0.0
+
+Changes in 1.2.0.0
+
+- NEW - updated splash screen with new tagline
+- NEW - links navigation menu for website, blockexplorer 1, blockexplorer 2, paper wallet, github, white paper and road map
+- NEW - social navigation menu for Facebook, Facebook Group, Twitter, Google Plus, Youtube, Reddit, Telegram Group and Telegram Announcements
+
+This release adds new functionality to the wallet to aid users in quickly finding all our important internet links and social media platforms. v1.2.0.0 is not a mandatory release and is backwards compatible with v1.1.7.0
+
+# ROIcoin Release Notes for v1.1.7.0
+
+Changes in 1.1.7.0
+
+- CRITICAL - Emergency fix for windows wallets stuck on block 143707
+- FIX - issue #58 reported by Cryptohub exchange and fixed by FreeTrade
+- FIX - encrypted wallet are now able to sign messages
+- FIX - seeds list was adjusted
+- NEW - additional logging was added to troubleshoot issue #65 
+
+This release mainly impacts Windows users and so all Windows users are advised to upgrade to v1.1.7 because a bug prevented windows wallets from being able to synchronize pass block 143707
+
+# ROIcoin Release Notes for v1.1.6.0
+
+Changes in 1.1.6.0
+
+## Emergency Release
+
+This release corrects variations in rate calculations to prevent future unexpected forks.
+
+This release is an emergency mandatory upgrade for all users ! it contains a fix that takes immediate effect against the fork type we have seen so far.
+
+This release overwrites all previous release, there will be a hard fork at block 75100 , at which point all older releases <1.1.6 will be rejected and considered as obsolete.
+
 # ROIcoin Release Notes for v1.1.5.0
 
 Changes in 1.1.5.0
