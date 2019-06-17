@@ -58,34 +58,19 @@ CAmount getRateForAmount(int periods, CAmount theAmount){
     return  validateCoins(result.getuint64()-theAmount);
 }
 
-CAmount getPostRateForAmount2(int periods, CAmount theAmount){
-
-    CBigNum  result(0);
-    CBigNum  amount256(theAmount);
-    double   multiplier = 0.0000005975;
-
-    for ( int i = 1; i < periods; i++)
-    {
-        
-        //printf(" pr2:pow: %.12f \n", pow( 1.0 + multiplier, i)); 
-        result = amount256 * pow( 1.0 + multiplier, i);
-    }
-    printf(" getPostRateForAmount2(): %" PRId64 " \n", result.getuint64());
-    return result.getuint64()-theAmount;
-}
-
 CAmount getPostRateForAmount(int periods, CAmount theAmount){
 
-    double result;
-    double multiplier = 0.0000005975;
-    for ( int i = 1; i < periods; i++)
-    {
-	result = theAmount * pow(1.0 + multiplier, i);
-    }
-    printf(" getPostRateForAmount(): %.12f\n", result);
-    return validateCoins(CAmount(result)-theAmount);
-}
+    if (periods <= 0) {
+       return CAmount(0);
+    } 
 
+    double multiplier = 0.0000005975;
+    double result = theAmount * pow(1.0 + multiplier, periods);
+    printf(" getPostRateForAmount(): %.12f\n", result);
+    CAmount rate = CAmount(result)-theAmount;
+  
+    return validateCoins(rate);
+}
 
 void initRateTable(){
 
@@ -109,6 +94,8 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     }
 
     int blocks=std::min(THIRTYDAYS,valuationHeight-outputBlockHeight);
+    blocks=std::max(blocks,0);
+
     if(maturationBlock>0)
     {
         blocks=std::min(ONEYEAR,valuationHeight-outputBlockHeight);
@@ -120,11 +107,8 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
     {
         standardInterest=getRateForAmount(blocks, nValue);
     }
-    else if ( chainHeight == 2000 )
+    else
     {
-        standardInterest=getPostRateForAmount2(blocks, nValue);
-    }
-    else{
         standardInterest=getPostRateForAmount(blocks, nValue);
     }
 
@@ -180,7 +164,7 @@ CAmount GetInterest(CAmount nValue, int outputBlockHeight, int valuationHeight, 
             CBigNum am(interestAmount);
             CBigNum fac(TWOYEARS-term);
             CBigNum div(TWOYEARS);
-            CBigNum result= (((am*fac*fac*fac*fac)/(div*div*div*div)));
+            CBigNum result= ((am*fac*fac*fac*fac)/(div*div*div*div));
             termDepositAmount=result.getuint64();
 	    printf("Post_Fork: principal: %" PRId64 " termDepositAmount: %" PRId64 "\n", nValue, termDepositAmount);
           }
@@ -200,7 +184,7 @@ int main(int argc, char* argv[])
   CAmount principal= std::stoull(argv[1]);
   CAmount outputblock = atoi(argv[2]);
   CAmount blockheight = atoi(argv[3]);
-  CAmount termblocks = blockheight-outputblock;
+  CAmount termblocks = outputblock-blockheight;
 
   chainHeight = blockheight;
   initRateTable();
@@ -209,9 +193,8 @@ int main(int argc, char* argv[])
   CAmount bonus = getBonusForAmount(termblocks, principal);
   CAmount rate  = getRateForAmount(termblocks , principal);
   CAmount postrate = getPostRateForAmount(termblocks, principal);
-  //CAmount postrate2 = getPostRateForAmount2(termblocks, principal);
-  //CAmount interestdep = GetInterest(principal, blockheight , (blockheight+termblocks), (blockheight+termblocks));
-  CAmount interest = GetInterest(principal, outputblock , blockheight , -1 );
-  printf("result for %" PRId64 " RIO at %li blocks BONUS:%" PRId64 " RATE:%" PRId64 " POSTRATE:%" PRId64 " INTEREST:%" PRId64 " \n",principal,termblocks,bonus,rate,postrate,interest);
+  CAmount interest = GetInterest(principal, blockheight , (blockheight+termblocks), (blockheight+termblocks));
+  //CAmount interest = GetInterest(principal, outputblock , blockheight , -1 );
+  printf("result for %" PRId64 " ROI at %li blocks BONUS:%" PRId64 " RATE:%" PRId64 " POSTRATE:%" PRId64 " INTEREST:%" PRId64 "\n",principal,termblocks,bonus,rate,postrate,interest);
 }
 
