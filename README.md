@@ -219,6 +219,22 @@ libqrencode (optional) can be installed with:
 Once these are installed, they will be found by configure and a ROIcoin-qt executable will be
 built by default.
 
+Dependency Build Instructions: Ubuntu 18.04LTS
+----------------------------------------------
+
+You will need to specifically install libssl1.0-dev
+
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:bitcoin/bitcoin
+sudo apt-get update
+sudo apt-get install build-essential make g++
+sudo apt-get install libssl1.0-dev libboost-all-dev libqrencode-dev libminiupnpc-dev software-properties-common libdb4.8-dev libdb4.8++-dev
+
+To build with Qt 5 (recommended) you also need the following:
+
+    sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler
+
+
 Dependency Build Instructions: Fedora
 -------------------------------------
 Build requirements:
