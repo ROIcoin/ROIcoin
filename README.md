@@ -224,11 +224,11 @@ Dependency Build Instructions: Ubuntu 18.04LTS
 
 You will need to specifically install libssl1.0-dev
 
-sudo add-apt-repository universe
-sudo add-apt-repository ppa:bitcoin/bitcoin
-sudo apt-get update
-sudo apt-get install build-essential make g++
-sudo apt-get install libssl1.0-dev libboost-all-dev libqrencode-dev libminiupnpc-dev software-properties-common libdb4.8-dev libdb4.8++-dev
+    sudo add-apt-repository universe
+    sudo add-apt-repository ppa:bitcoin/bitcoin
+    sudo apt-get update
+    sudo apt-get install build-essential make g++
+    sudo apt-get install libssl1.0-dev libboost-all-dev libqrencode-dev libminiupnpc-dev software-properties-common libdb4.8-dev libdb4.8++-dev
 
 To build with Qt 5 (recommended) you also need the following:
 
