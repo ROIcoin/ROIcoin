@@ -1,33 +1,25 @@
-# **ROI coin is _"Different"_** 
+# **ROI Coin is _"Different"_** 
 
-ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=1.2.0.0&x2=0">
-
-<img src="https://roi-coin.com/img/roi-coin-header2.png?w1720=&h=521" width="1720">
+<img src="https://roi-coin.com/wp-content/uploads/2018/04/roi-coin-marketing-graphics-1.jpg?w1500=&h=500" width="1500">
 
 > * __Website:__ [https://roi-coin.com](https://roi-coin.com)
 > * __Facebook:__ [https://www.facebook.com/roicoin](https://www.facebook.com/roicoin)
-> * __Facebook Group:__ [https://www.facebook.com/groups/177521572870678/](https://www.facebook.com/groups/177521572870678/)
 > * __Twitter:__ [https://twitter.com/ROI_Coin](https://twitter.com/ROI_Coin)
-> * __Google Plus:__ [https://plus.google.com/b/109809615316952270396/109809615316952270396](https://plus.google.com/b/109809615316952270396/109809615316952270396)
-> * __YouTube:__ [https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g](https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g)
-> * __Reddit:__ [https://www.reddit.com/r/Roi_Coin/](https://www.reddit.com/r/Roi_Coin/)
 > * __Discord:__ [https://discord.gg/ruhSp4e](https://discord.gg/ruhSp4e)
-> * __Telegram Group:__ [https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ](https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ)
-> * __Telegram Announcements:__ [http://t.me/ROI_coin](http://t.me/ROI_coin)
-> * __Bitcointalk ANN:__ [https://bitcointalk.org/index.php?topic=2361848.0](https://bitcointalk.org/index.php?topic=2361848.0)
-> * __Blockexplorer 1:__ [https://roi-coin-blockexplorer.roi-coin.com/](https://roi-coin-blockexplorer.roi-coin.com/)
-> * __Blockexplorer 2:__ [https://blockexplorer.roi-coin.com/](https://blockexplorer.roi-coin.com/)
-> * __CryptoHub Exchange:__ [https://cryptohub.online/market/ROI/](https://cryptohub.online/market/ROI/)
-> * __BitexLive Exchange:__ [https://bitexlive.com/](https://bitexlive.com/)
-> * __White Paper:__ [https://roi-coin.com/roi-coin-white-paper/](https://roi-coin.com/roi-coin-white-paper/)
-> * __Roadmap:__ [https://roi-coin.com/roi-coin-road-map/](https://roi-coin.com/roi-coin-road-map/)
-> * __Suprnova Mining Pool:__ [https://roi.suprnova.cc/](https://roi.suprnova.cc/)
-> * __Optiminer Mining Pool:__ [http://roi.optiminer.pl:8081/](http://roi.optiminer.pl:8081/)
+> * __Telegram:__ [https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ](https://t.me/joinchat/I0JIzQ72Fz6EWWAMwQURhQ)
+> * __YouTube:__ [https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g](https://www.youtube.com/channel/UCclukUCxqxHk-nrUSj3MM5g)
 
-## What is ROI coin?
+## ROI Coin Resources
+> * __Block Explorer 1:__ [https://roi-coin-blockexplorer.roi-coin.com](https://roi-coin-blockexplorer.roi-coin.com)
+> * __Block Explorer 2:__ [https://blockexplorer.roi-coin.com](https://blockexplorer.roi-coin.com)
+> * __AltMarkets Exchange:__ [https://altmarkets.io/trading/roibtc](https://altmarkets.io/trading/roibtc)
+> * __BitexLive Exchange:__ [https://bitexlive.com/exchange/USDT-ROI](https://bitexlive.com/exchange/USDT-ROI)
+> * __SuprNova Mining Pool:__ [https://roi.suprnova.cc](https://roi.suprnova.cc)
 
-> **ROI coin** is a Cryptocurrency built on the ROI coin core ver. 11.3, incorporating HOdl PoS to reward savers.  
-> It pays interest on every balance as well as higher interest rates for locked term deposits and that is precisely why ROI coin is Return on Investment.
+## What is ROI Coin?
+
+> **ROI Coin** is a Cryptocurrency built on the ROI Coin core ver. 11.3, incorporating HOdl PoS to reward savers.  
+> It pays interest on every balance as well as higher interest rates for locked term deposits and that is precisely why ROI Coin is different.
 
 ### Compound Interest on _all Balances_
 
@@ -47,6 +39,8 @@ ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=
 
 > - Paid on Term Deposits (aka Fixed deposit / time deposit)
 > - Regular deposits can have a maximum of 1 year interest
+> - Term deposits may have up to 2 years of interest
+> - This allows users to lock up funds for a specified amount of time up to two years.
 
 ## Why?
 
@@ -66,23 +60,26 @@ ROIcoin <img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=
 > - 120 second blocks
 > - 120 ROI subsidy per block (no halving)
 > - Total of 1,000,000,000 ROI will be mined over a 30 year period (7,884,000 blocks) or 86,400 coins per day.
-> - Total coinbase potentially 7 Billion +/- coins. Variables depend on behavior of coin owners, term depositing and period of time for locked funds.
+> - Total coinbase potentially 4 Billion coins. Variables depending on behavior of coin owners, term depositing and period of time for locked funds.
 
 ## Term Deposits
 
 | Time     | Start Coins | End Coins | Coin Gain | Interest |
 | :--------: | :--------: | :--------: | :--------: | :--------: |
-| 1 week | 1000 | 1021 | 21 | 2.10% |
-| 2 weeks | 1000 | 1043 | 43 | 4.30% |
-| 1 month | 1000 | 1096 | 96 | 9.60% |
-| 3 months | 1000 | 1331 | 331 | 33.10% |
-| 6 months | 1000 | 1929 | 929 | 92.90% |
-| 12 months | 1000 | 6933 | 5933 | 593.30% |
+| 1 week  | 100 | 100.592 | .592 | .59% |
+| 2 weeks  | 100 | 101.163 | 1.163 | 1.16% |
+| 1 month  | 100 | 102.397 | 2.397 | 2.40% |
+| 3 months  | 100 | 106.280 | 6.280 | 6.28% |
+| 6 months   | 100 | 110.646 | 10.646 | 10.65% |
+| 12 months | 100 | 118.065 | 18.065 | 18.07% |
+
+
 
 > **Note:**
 > 
 > - When a Term Deposit matures, it stops earning interest - you need to move it to start earning interest again.
-> - Bonus rates are paid on regular balances as well. 15% APR
+> -  Bonus rates are paid on regular balances as well.
+> - The bonus rate is locked at the time of the transaction, the rate you can achieve reduces over time due to the multiplier, but once you're earning that bonus rate, it doesn't reduce.
 
 ## Proof of Work
 
@@ -94,302 +91,55 @@ ASIC/GPU resistant. Pattern Search involves filling up RAM with pseudo-random da
 
 ### Compiling on Ubuntu (16.04 tested)):
 
-Note
----------------------
-Always use absolute paths to configure and compile ROIcoin and the dependencies,
+### Preparing your environment
 
-for example, when specifying the path of the dependency:
+As per the requirements and dependencies specifications in doc/build-unix.md, it may be necessary to install the required dependencies prior to downloading and compiling the source. Following the steps in this section will leave you with a fully prepared build environment.
 
-	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
+### For basic building
 
-Here BDB_PREFIX must be an absolute path - it is defined using $(pwd) which ensures
-the usage of the absolute path.
+sudo apt-get install build-essential libtool autotools-dev autoconf pkg-config libssl-dev libboost-all-dev git
 
-To Build
----------------------
+### For Berkeley DB 4.8
 
-```bash
-./autogen.sh
-CPPFLAGS="-std=c++11" ./configure --enable-tests=no
-make
-make install # optional
-```
+The wallet.dat file relies on BerkeleyDB (BDB), specifically version 4.8 to maintain binary compatibility. Ubuntu 14.04+ doesn't provide this version however, so you'll need to install it from the Bitcoin PPA.
 
-This will build ROIcoin-qt as well if the dependencies are met.
-It wont build the tests which take a long time.
+sudo apt-get install software-properties-common python-software-properties
 
-Dependencies
----------------------
+sudo add-apt-repository ppa:bitcoin/bitcoin
 
-These dependencies are required:
+sudo apt-get update
 
- Library     | Purpose          | Description
- ------------|------------------|----------------------
- libssl      | Crypto           | Random Number Generation, Elliptic Curve Cryptography
- libboost    | Utility          | Library for threading, data structures, etc
- libevent    | Networking       | OS independent asynchronous networking
+sudo apt-get install libdb4.8-dev libdb4.8++-dev
 
-Optional dependencies:
+### For QT5 GUI client building
 
- Library     | Purpose          | Description
- ------------|------------------|----------------------
- miniupnpc   | UPnP Support     | Firewall-jumping support
- libdb4.8    | Berkeley DB      | Wallet storage (only needed when wallet enabled)
- qt          | GUI              | GUI toolkit (only needed when GUI enabled)
- protobuf    | Payments in GUI  | Data interchange format used for payment protocol (only needed when GUI enabled)
- libqrencode | QR codes in GUI  | Optional for generating QR codes (only needed when GUI enabled)
- univalue    | Utility          | JSON parsing and encoding (bundled version will be used unless --with-system-univalue passed to configure)
- libzmq3     | ZMQ notification | Optional, allows generating ZMQ notifications (requires ZMQ version >= 4.x)
+If you are only intending to compile the CLI daemon, skip this step.
 
-For the versions used, see [dependencies.md](dependencies.md)
+sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler
 
-Memory Requirements
---------------------
+### For QR codes capabilities
 
-C++ compilers are memory-hungry. It is recommended to have at least 1.5 GB of
-memory available when compiling Bitcoin Core. On systems with less, gcc can be
-tuned to conserve memory with additional CXXFLAGS:
+If you are only intending to compile the CLI daemon, skip this step. 
 
+sudo apt-get install libqrencode-dev
 
-    ./configure CXXFLAGS="--param ggc-min-expand=1 --param ggc-min-heapsize=32768"
+### For Miniupnpc capabilities
 
-Dependency Build Instructions: Ubuntu & Debian
-----------------------------------------------
-Build requirements:
-
-    sudo apt-get install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils python3
-
-Options when installing required Boost library files:
-
-1. On at least Ubuntu 14.04+ and Debian 7+ there are generic names for the
-individual boost development packages, so the following can be used to only
-install necessary parts of boost:
-
-        sudo apt-get install libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-program-options-dev libboost-test-dev libboost-thread-dev
-
-2. If that doesn't work, you can install all boost development packages with:
-
-        sudo apt-get install libboost-all-dev
-
-BerkeleyDB is required for the wallet.
-
-**For Ubuntu only:** db4.8 packages are available [here](https://launchpad.net/~bitcoin/+archive/bitcoin).
-You can add the repository and install using the following commands:
-
-    sudo apt-get install software-properties-common
-    sudo add-apt-repository ppa:bitcoin/bitcoin
-    sudo apt-get update
-    sudo apt-get install libdb4.8-dev libdb4.8++-dev
-
-Ubuntu and Debian have their own libdb-dev and libdb++-dev packages, but these will install
-BerkeleyDB 5.1 or later, which break binary wallet compatibility with the distributed executables which
-are based on BerkeleyDB 4.8. If you do not care about wallet compatibility,
-pass `--with-incompatible-bdb` to configure.
-
-See the section "Disable-wallet mode" to build Bitcoin Core without wallet.
-
-Optional (see --with-miniupnpc and --enable-upnp-default):
-
-    sudo apt-get install libminiupnpc-dev
-
-ZMQ dependencies (provides ZMQ API 4.x):
-
-    sudo apt-get install libzmq3-dev
-
-Dependencies for the GUI: Ubuntu & Debian
------------------------------------------
-
-If you want to build Bitcoin-Qt, make sure that the required packages for Qt development
-are installed. Either Qt 5 or Qt 4 are necessary to build the GUI.
-If both Qt 4 and Qt 5 are installed, Qt 5 will be used. Pass `--with-gui=qt4` to configure to choose Qt4.
-To build without GUI pass `--without-gui`.
-
-To build with Qt 5 (recommended) you need the following:
-
-    sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler
-
-Alternatively, to build with Qt 4 you need the following:
-
-    sudo apt-get install libqt4-dev libprotobuf-dev protobuf-compiler
-
-libqrencode (optional) can be installed with:
-
-    sudo apt-get install libqrencode-dev
-
-Once these are installed, they will be found by configure and a ROIcoin-qt executable will be
-built by default.
-
-Dependency Build Instructions: Ubuntu 18.04LTS
-----------------------------------------------
-
-You will need to specifically install libssl1.0-dev
-
-    sudo add-apt-repository universe
-    sudo add-apt-repository ppa:bitcoin/bitcoin
-    sudo apt-get update
-    sudo apt-get install build-essential make g++
-    sudo apt-get install libssl1.0-dev libboost-all-dev libqrencode-dev libminiupnpc-dev software-properties-common libdb4.8-dev libdb4.8++-dev
-
-To build with Qt 5 (recommended) you also need the following:
-
-    sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler
-
-
-Dependency Build Instructions: Fedora
--------------------------------------
-Build requirements:
-
-    sudo dnf install gcc-c++ libtool make autoconf automake openssl-devel libevent-devel boost-devel libdb4-devel libdb4-cxx-devel python3
-
-Optional:
-
-    sudo dnf install miniupnpc-devel
-
-To build with Qt 5 (recommended) you need the following:
-
-    sudo dnf install qt5-qttools-devel qt5-qtbase-devel protobuf-devel
-
-libqrencode (optional) can be installed with:
-
-    sudo dnf install qrencode-devel
-
-Notes
------
-The release is built with GCC and then "strip ROIcoind" to strip the debug
-symbols, which reduces the executable size by about 90%.
-
-
-miniupnpc
----------
-
-[miniupnpc](http://miniupnp.free.fr/) may be used for UPnP port mapping.  It can be downloaded from [here](
-http://miniupnp.tuxfamily.org/files/).  UPnP support is compiled in and
-turned off by default.  See the configure options for upnp behavior desired:
-
-	--without-miniupnpc      No UPnP support miniupnp not required
-	--disable-upnp-default   (the default) UPnP support turned off by default at runtime
-	--enable-upnp-default    UPnP support turned on by default at runtime
-
-
-Berkeley DB
------------
-It is recommended to use Berkeley DB 4.8. If you have to build it yourself:
-
-```bash
-BITCOIN_ROOT=$(pwd)
-
-# Pick some path to install BDB to, here we create a directory within the ROIcoin directory
-BDB_PREFIX="${BITCOIN_ROOT}/db4"
-mkdir -p $BDB_PREFIX
-
-# Fetch the source and verify that it is not tampered with
-wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
-echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.30.NC.tar.gz' | sha256sum -c
-# -> db-4.8.30.NC.tar.gz: OK
-tar -xzvf db-4.8.30.NC.tar.gz
-
-# Build the library and install to our prefix
-cd db-4.8.30.NC/build_unix/
-#  Note: Do a static build so that it can be embedded into the executable, instead of having to find a .so at runtime
-../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
-make install
-
-# Configure Bitcoin Core to use our own-built instance of BDB
-cd $BITCOIN_ROOT
-./autogen.sh
-./configure LDFLAGS="-L${BDB_PREFIX}/lib/" CPPFLAGS="-I${BDB_PREFIX}/include/" # (other args...)
-```
-
-**Note**: You only need Berkeley DB if the wallet is enabled (see the section *Disable-Wallet mode* below).
-
-Boost
------
-If you need to build Boost yourself:
-
-	sudo su
-	./bootstrap.sh
-	./bjam install
-
-
-Security
---------
-To help make your ROIcoin installation more secure by making certain attacks impossible to
-exploit even if a vulnerability is found, binaries are hardened by default.
-This can be disabled with:
-
-Hardening Flags:
-
-	./configure --enable-hardening
-	./configure --disable-hardening
-
-
-Hardening enables the following features:
-
-* Position Independent Executable
-    Build position independent code to take advantage of Address Space Layout Randomization
-    offered by some kernels. Attackers who can cause execution of code at an arbitrary memory
-    location are thwarted if they don't know where anything useful is located.
-    The stack and heap are randomly located by default but this allows the code section to be
-    randomly located as well.
-
-    On an AMD64 processor where a library was not compiled with -fPIC, this will cause an error
-    such as: "relocation R_X86_64_32 against `......' can not be used when making a shared object;"
-
-    To test that you have built PIE executable, install scanelf, part of paxutils, and use:
-
-    	scanelf -e ./ROIcoin
-
-    The output should contain:
-
-     TYPE
-    ET_DYN
-
-* Non-executable Stack
-    If the stack is executable then trivial stack based buffer overflow exploits are possible if
-    vulnerable buffers are found. By default, ROIcoin should be built with a non-executable stack
-    but if one of the libraries it uses asks for an executable stack or someone makes a mistake
-    and uses a compiler extension which requires an executable stack, it will silently build an
-    executable without the non-executable stack protection.
-
-    To verify that the stack is non-executable after compiling use:
-    `scanelf -e ./ROIcoin`
-
-    the output should contain:
-	STK/REL/PTL
-	RW- R-- RW-
-
-    The STK RW- means that the stack is readable and writeable but not executable.
-
-Disable-wallet mode
---------------------
-When the intention is to run only a P2P node without a wallet, ROIcoin may be compiled in
-disable-wallet mode with:
-
-    ./configure --disable-wallet
-
-In this case there is no dependency on Berkeley DB 4.8.
-
-Mining is also possible in disable-wallet mode, but only using the `getblocktemplate` RPC
-call not `getwork`.
-
-Additional Configure Flags
---------------------------
-A list of additional configure flags can be displayed with:
-
-    ./configure --help
+sudo apt-get install libminiupnpc-dev
 
 ### Github Source Code: (note: do not "git" under sudo)
 
-git clone https://github.com/ROIcoin/ROIcoin.git ROIcoin
+git clone https://github.com/ROIcoin/ROI-Coin.git ROIcoin
 
 cd ROIcoin/
 
-```bash
+"sudo su":
+
 ./autogen.sh
-./configure --enable-tests=no
-make
-make install # optional
-```
+
+./configure
+
+make install
 
 ### Configuration options
 
@@ -431,9 +181,12 @@ nano ROIcoin.conf
 
 __The minimum recommended entries for the conf file are as follows:__
 
-rpcuser=xxxx  (Replace the strings of 'xxxx' with preferred data.)
-rpcpassword=xxxx
-rpcport=3377
+rpcuser=xxxx  (Replace the strings of 'xxxx' with preferred data.)<br />
+rpcpassword=xxxx<br />
+rpcport=3377<br />
+daemon=1<br />
+server=1<br />
+listen=1<br />
 
 
 
