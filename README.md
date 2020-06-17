@@ -15,7 +15,8 @@
 > * __AltMarkets Exchange:__ [https://altmarkets.io/trading/roibtc](https://altmarkets.io/trading/roibtc)
 > * __BitexLive Exchange:__ [https://bitexlive.com/exchange/USDT-ROI](https://bitexlive.com/exchange/USDT-ROI)
 > * __SuprNova Mining Pool:__ [https://roi.suprnova.cc](https://roi.suprnova.cc)
-> * __Rplant Mining Pool:__ [https://pool.rplant.xyz/](https://pool.rplant.xyz/)
+> * __Rplant Mining Pool:__ [https://pool.rplant.xyz](https://pool.rplant.xyz)
+> * __Coinspool Mining Pool:__ [http://www.coinspool.cc](http://www.coinspool.cc)
 
 
 ## What is ROI Coin?
